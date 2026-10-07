@@ -177,6 +177,7 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .warn-box{background:var(--warn-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--warn);font-weight:500;line-height:1.6}
 .info-box{background:var(--info-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--info);font-weight:500;line-height:1.6}
 .danger-box{background:var(--danger-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--danger);font-weight:500;line-height:1.6}
+.gold-box{background:var(--gold-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--gold);font-weight:600;line-height:1.6;border:1.5px dashed var(--gold)}
 .month-edit-list{max-height:340px;overflow-y:auto;padding-right:4px;margin-bottom:10px}
 .month-edit-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:10px;margin-bottom:8px}
 .month-edit-row .mlbl{font-weight:600;font-size:13px}
@@ -200,12 +201,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/fireba
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-/* ============================================================
-   🔴 ORGANIZATION LOGO URL
-   ============================================================ */
 const LOGO_URL = "https://i.postimg.cc/nhV81p6L/Picsart-25-06-03-16-35-57-097.png";
 
-/* ========== FIREBASE CONFIG ========== */
 const firebaseConfig = {
   apiKey: "AIzaSyBaErWDvk-fgo9aKI-Y0IewcJ_1FteZnNY",
   authDomain: "dp-seba.firebaseapp.com",
@@ -218,7 +215,6 @@ const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 
-/* ========== CONSTANTS ========== */
 const BN_MONTHS=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
 const BN_MONTHS_SHORT=['জানু','ফেব','মার্চ','এপ্রি','মে','জুন','জুলা','আগ','সেপ','অক্টো','নভে','ডিসে'];
 const ROLES={
@@ -251,7 +247,6 @@ const EXTRA_PAYMENT_PURPOSES=[
   {k:'advance',bn:'অগ্রিম চাঁদা'},{k:'donation',bn:'স্বেচ্ছা অনুদান'},{k:'other',bn:'অন্যান্য'}
 ];
 
-/* ========== ICONS ========== */
 const I={
   home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.6V21h14V9.6"/><path d="M9.5 21v-6h5v6"/></svg>',
   users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
@@ -285,11 +280,11 @@ const I={
   edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4v16h16v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>',
   trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>',
   list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>',
-  clipboard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1.5"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg>'
+  clipboard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1.5"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg>',
+  key:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m10.5 12.5 8-8M17 3l4 4M14 6l4 4"/></svg>'
 };
 function icon(n){return I[n]||''}
 
-/* ========== STATE ========== */
 const state={
   admin:null,role:null,tab:'dashboard',lang:'bn',theme:'light',
   stack:[],loading:true,memberFilter:'all',memberQ:'',
@@ -298,7 +293,6 @@ const state={
 };
 let DB={org:{},members:[],contributions:[],transactions:[],events:[],announcements:[],notifications:[],auditLogs:[],extraPayments:[]};
 
-/* ========== HELPERS ========== */
 const $=s=>document.querySelector(s);
 const pad2=n=>String(n).padStart(2,'0');
 const fmtN=n=>Math.round(n).toLocaleString('en-IN');
@@ -328,7 +322,6 @@ function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||8)}catch(e){}}
 function catBn(k,arr){const c=arr.find(x=>x.k===k);return c?c.bn:k}
 function purposeBn(k){const p=EXTRA_PAYMENT_PURPOSES.find(x=>x.k===k);return p?p.bn:k}
 
-/* ========== PHONE + SECRET CODE HELPERS ========== */
 const AUTH_DOMAIN = '@dpseba.local';
 
 function normalizePhone(raw){
@@ -341,88 +334,6 @@ function normalizePhone(raw){
   return s;
 }
 
-/* ========== PURE-JS SHA-256 (কোনো browser crypto API ছাড়া) ========== */
-function sha256Sync(ascii){
-  function rightRotate(value, amount){
-    return (value >>> amount) | (value << (32 - amount));
-  }
-  var mathPow = Math.pow;
-  var maxWord = mathPow(2, 32);
-  var lengthProperty = 'length';
-  var i, j;
-  var result = '';
-  var words = [];
-  var asciiBitLength = ascii[lengthProperty] * 8;
-
-  var hash = sha256Sync.h = sha256Sync.h || [];
-  var k = sha256Sync.k = sha256Sync.k || [];
-  var primeCounter = k[lengthProperty];
-
-  var isComposite = {};
-  for (var candidate = 2; primeCounter < 64; candidate++){
-    if(!isComposite[candidate]){
-      for(i = 0; i < 313; i += candidate){ isComposite[i] = candidate; }
-      hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;
-      k[primeCounter++] = (mathPow(candidate, 1/3) * maxWord) | 0;
-    }
-  }
-
-  ascii += '\x80';
-  while(ascii[lengthProperty] % 64 - 56) ascii += '\x00';
-  for(i = 0; i < ascii[lengthProperty]; i++){
-    j = ascii.charCodeAt(i);
-    if(j >> 8) return '';
-    words[i >> 2] |= j << ((3 - i) % 4) * 8;
-  }
-  words[words[lengthProperty]] = ((asciiBitLength / maxWord) | 0);
-  words[words[lengthProperty]] = (asciiBitLength);
-
-  for(j = 0; j < words[lengthProperty];){
-    var w = words.slice(j, j += 16);
-    var oldHash = hash;
-    hash = hash.slice(0, 8);
-
-    for(i = 0; i < 64; i++){
-      var i2 = i + j;
-      var w15 = w[i - 15], w2 = w[i - 2];
-      var a = hash[0], e = hash[4];
-      var temp1 = hash[7]
-        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
-        + ((e & hash[5]) ^ ((~e) & hash[6]))
-        + k[i]
-        + (w[i] = (i < 16) ? w[i] : (
-            w[i - 16]
-            + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3))
-            + w[i - 7]
-            + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))
-          ) | 0
-        );
-      var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
-        + ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
-
-      hash = [(temp1 + temp2) | 0].concat(hash);
-      hash[4] = (hash[4] + temp1) | 0;
-    }
-
-    for(i = 0; i < 8; i++){
-      hash[i] = (hash[i] + oldHash[i]) | 0;
-    }
-  }
-
-  for(i = 0; i < 8; i++){
-    for(j = 3; j + 1; j--){
-      var b = (hash[i] >> (j * 8)) & 255;
-      result += ((b < 16) ? 0 : '') + b.toString(16);
-    }
-  }
-  return result;
-}
-
-async function sha256(str){
-  return sha256Sync(str);
-}
-
-/* ========== DERIVED ========== */
 const DATA={
   stats(){
     let income=0,expense=0,contrib=0,extra=0,donation=0,eventExp=0,otherExp=0,otherInc=0;
@@ -465,7 +376,6 @@ const DATA={
   }
 };
 
-/* ========== AUDIT ========== */
 async function audit(action,target,oldVal,newVal,note){
   if(!state.admin) return;
   try{
@@ -478,7 +388,6 @@ async function audit(action,target,oldVal,newVal,note){
   }catch(e){console.warn('audit failed',e)}
 }
 
-/* ========== MODAL ========== */
 function openModal(opts){
   const root=$('#modalRoot');
   const back=document.createElement('div');
@@ -499,7 +408,6 @@ function confirmDialog(title,message,onYes,yesLabel){
 }
 function chev(){return '<div class="chev">'+icon('chevron')+'</div>'}
 
-/* ========== LOGIN ========== */
 function viewLogin(){
   return '<div class="content" style="padding-bottom:0"><div class="login">'+
     '<div class="login-bg"></div>'+
@@ -522,7 +430,6 @@ async function doLoginEmail(){
 }
 async function doLoginGoogle(){try{const provider=new GoogleAuthProvider();toast('Google লগইন…');await signInWithPopup(auth,provider);}catch(err){console.error(err);toast('Google লগইন ব্যর্থ','error')}}
 
-/* ========== RENDER ========== */
 function render(){
   const app=$('#app');
   if(state.loading){
@@ -576,7 +483,6 @@ function renderStack(){
 }
 function subHeader(title,right){return '<div class="subhd"><button class="icon-btn" data-act="back" style="width:34px;height:34px">'+icon('back')+'</button><h1>'+title+'</h1>'+(right||'')+'</div>'}
 
-/* ========== DASHBOARD ========== */
 function viewDashboard(){
   const now=new Date();const cy=now.getFullYear(),cm=now.getMonth()+1;
   const st=DATA.stats();const ms=DATA.monthStats(cy,cm);
@@ -627,7 +533,6 @@ function txRow(t){
   return '<div class="li"><div class="ic" style="background:'+meta.soft+';color:'+meta.color+'">'+icon(meta.icon)+'</div><div class="grow"><div class="t ell">'+(t.desc||'')+'</div><div class="s">'+fmtDateShort(t.date)+' · '+(t.category||'')+'</div></div><div class="amt '+(isInc?'pos':'neg')+'">'+(isInc?'+':'−')+money(t.amount).replace('৳ ','৳')+'</div></div>';
 }
 
-/* ========== MEMBERS ========== */
 function viewMembers(){
   const q=(state.memberQ||'').trim().toLowerCase();
   let list=DB.members.slice();
@@ -648,8 +553,8 @@ function viewMembers(){
       const s=DATA.memberSummary(m.id);
       const statusPill=(m.status==='active'?'active':(m.status==='inactive'?'inactive':(m.status==='suspended'?'suspended':'pending')));
       const statusLabel=m.status==='active'?'সক্রিয়':(m.status==='inactive'?'নিষ্ক্রিয়':(m.status==='suspended'?'সাসপেন্ডেড':'অপেক্ষমাণ'));
-      const accBadge = m.accountSetup ? '' : '<span class="pill important" style="margin-left:6px">অ্যাকাউন্ট বাকি</span>';
-      return '<div class="card" style="margin-bottom:10px;padding:13px" data-act="member" data-id="'+(m.id||'')+'"><div class="row">'+avatarHTML(m,46)+'<div class="grow"><div class="b ell" style="font-size:14px">'+mname(m)+accBadge+'</div><div class="tiny muted mt6">'+(m.id||'')+' · '+(m.phone||'—')+'</div></div><span class="pill '+statusPill+'">'+statusLabel+'</span></div><div class="row mt10" style="gap:8px;padding-top:10px;border-top:1px solid var(--border-2)"><div style="flex:1"><div class="tiny muted">পরিশোধিত</div><div class="b sm" style="color:var(--income)">'+money(s.paid)+'</div></div><div style="flex:1"><div class="tiny muted">বাকি</div><div class="b sm" style="color:'+(s.due>0?'var(--expense)':'var(--text-3)')+'">'+money(Math.max(s.due,0))+'</div></div><div style="flex:1"><div class="tiny muted">অতিরিক্ত</div><div class="b sm" style="color:var(--accent)">'+money(s.extraTotal)+'</div></div></div></div>';
+      const accBadge = m.accountSetup ? '<span class="pill paid" style="margin-left:6px">✅ সেটআপ</span>' : '<span class="pill important" style="margin-left:6px">⏳ অপেক্ষমাণ</span>';
+      return '<div class="card" style="margin-bottom:10px;padding:13px" data-act="member" data-id="'+(m.id||'')+'"><div class="row">'+avatarHTML(m,46)+'<div class="grow"><div class="b ell" style="font-size:14px">'+mname(m)+'</div><div class="tiny muted mt6">'+(m.id||'')+' · '+(m.phone||'—')+'</div><div class="mt6">'+accBadge+'</div></div><span class="pill '+statusPill+'">'+statusLabel+'</span></div><div class="row mt10" style="gap:8px;padding-top:10px;border-top:1px solid var(--border-2)"><div style="flex:1"><div class="tiny muted">পরিশোধিত</div><div class="b sm" style="color:var(--income)">'+money(s.paid)+'</div></div><div style="flex:1"><div class="tiny muted">বাকি</div><div class="b sm" style="color:'+(s.due>0?'var(--expense)':'var(--text-3)')+'">'+money(Math.max(s.due,0))+'</div></div><div style="flex:1"><div class="tiny muted">অতিরিক্ত</div><div class="b sm" style="color:var(--accent)">'+money(s.extraTotal)+'</div></div></div></div>';
     }).join('');
   }
   h+='</div>';return h;
@@ -665,7 +570,10 @@ function pageMember(id){
   const statusPill=(m.status==='active'?'active':(m.status==='inactive'?'inactive':(m.status==='suspended'?'suspended':'pending')));
   let h=subHeader('সদস্য প্রোফাইল','<button class="icon-btn" data-act="edit-member" data-id="'+(m.id||'')+'" style="width:34px;height:34px">'+icon('edit')+'</button>');
   h+='<div class="subbody">';
-  h+='<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:20px 16px"><div style="display:flex;justify-content:center">'+avatarHTML(m,74)+'</div><div class="bb" style="font-size:18px;margin-top:12px">'+mname(m)+'</div><div class="sm muted" style="margin-top:3px">'+(m.id||'')+'</div><div class="row" style="justify-content:center;gap:7px;margin-top:11px"><span class="pill '+statusPill+'">'+m.status+'</span>'+(m.accountSetup?'<span class="pill paid">অ্যাকাউন্ট সক্রিয়</span>':'<span class="pill important">অ্যাকাউন্ট সেটআপ বাকি</span>')+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px;text-align:left">'+infoCell('মোবাইল',m.phone||'—')+infoCell('অ্যাকাউন্ট',m.accountSetup?'✅ সেটআপ':'⏳ অপেক্ষমাণ')+infoCell('যোগদান',fmtDate(m.joinDate))+infoCell('মাসিক',money(m.monthly||0))+'</div></div></div>';
+  h+='<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:20px 16px"><div style="display:flex;justify-content:center">'+avatarHTML(m,74)+'</div><div class="bb" style="font-size:18px;margin-top:12px">'+mname(m)+'</div><div class="sm muted" style="margin-top:3px">'+(m.id||'')+'</div><div class="row" style="justify-content:center;gap:7px;margin-top:11px"><span class="pill '+statusPill+'">'+m.status+'</span>'+(m.accountSetup?'<span class="pill paid">✅ অ্যাকাউন্ট সক্রিয়</span>':'<span class="pill important">⏳ অ্যাকাউন্ট সেটআপ বাকি</span>')+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px;text-align:left">'+infoCell('মোবাইল',m.phone||'—')+infoCell('অ্যাকাউন্ট',m.accountSetup?'✅ সেটআপ':'⏳ অপেক্ষমাণ')+infoCell('যোগদান',fmtDate(m.joinDate))+infoCell('মাসিক',money(m.monthly||0))+'</div></div></div>';
+  if(!m.accountSetup){
+    h+='<div class="sec"><div class="info-box">📱 <b>ইউজার এখনো অ্যাকাউন্ট সেটআপ করেনি।</b><br>ইউজারকে বলুন <b>"DP সেবা"</b> অ্যাপে গিয়ে তার ফোন নাম্বার দিয়ে ৪-ডিজিট PIN সেট করতে।</div></div>';
+  }
   h+='<div class="sec"><div class="stat-grid"><div class="stat clickable" data-act="edit-expected" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('wallet')+'</div><div class="k">প্রত্যাশিত <span class="edit-hint">✎</span></div><div class="v">'+money(sum.expected)+'</div></div><div class="stat"><div class="ic" style="background:var(--income-soft);color:var(--income)">'+icon('check')+'</div><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">'+money(sum.paid)+'</div></div><div class="stat"><div class="ic" style="background:var(--expense-soft);color:var(--expense)">'+icon('minus')+'</div><div class="k">বাকি</div><div class="v" style="color:'+(sum.due>0?'var(--expense)':'var(--text-3)')+'">'+money(Math.max(sum.due,0))+'</div></div><div class="stat"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="k">অতিরিক্ত জমা</div><div class="v" style="color:var(--accent)">'+money(sum.extraTotal)+'</div></div></div><div class="prog mt14"><i style="width:'+sum.percent+'%"></i></div><div class="tiny muted mt6 center">প্রত্যাশিত কার্ডে ক্লিক করে প্রতি মাসের চাঁদা এডিট করুন</div></div>';
   const extras=DB.extraPayments.filter(x=>x.memberId===m.id).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   h+='<div class="sec"><div class="sec-hd"><h2>অতিরিক্ত জমা</h2><span class="link" data-act="add-extra-payment" data-id="'+(m.id||'')+'">+ জমা</span></div>';
@@ -691,7 +599,7 @@ function pageMember(id){
   h+='<div class="sec" style="padding-bottom:26px"><div class="sec-hd"><h2>ব্যবস্থাপনা</h2></div><div class="list">'+
     '<div class="li" data-act="edit-expected" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('calendar')+'</div><div class="grow"><div class="t">প্রত্যাশিত চাঁদা এডিট</div><div class="s">মাসভিত্তিক প্রত্যাশিত পরিমাণ</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="edit-member" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('edit')+'</div><div class="grow"><div class="t">তথ্য সম্পাদনা</div></div>'+chev()+'</div>'+
-    '<div class="li" data-act="reset-secret" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--warn-soft);color:var(--warn)">'+icon('shield')+'</div><div class="grow"><div class="t">গোপন কোড রিসেট</div><div class="s">নতুন ৬-ডিজিট সেট করুন</div></div>'+chev()+'</div>'+
+    '<div class="li" data-act="reset-pin" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--warn-soft);color:var(--warn)">'+icon('key')+'</div><div class="grow"><div class="t">PIN রিসেট</div><div class="s">ইউজারের PIN ভুলে গেলে নতুন সেট করুন</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="toggle-status" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--warn-soft);color:var(--warn)">'+icon('refresh')+'</div><div class="grow"><div class="t">স্ট্যাটাস পরিবর্তন</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="delete-member" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--danger-soft);color:var(--danger)">'+icon('trash')+'</div><div class="grow"><div class="t" style="color:var(--danger)">সদস্য মুছুন</div></div>'+chev()+'</div>'+
   '</div></div></div>';
@@ -699,7 +607,6 @@ function pageMember(id){
 }
 function infoCell(k,v){return '<div style="background:var(--card-2);border-radius:12px;padding:10px 12px"><div class="tiny muted">'+k+'</div><div class="b sm" style="margin-top:2px">'+v+'</div></div>'}
 
-/* ========== CONTRIBUTIONS ========== */
 function viewContributions(){
   const now=new Date();const cy=now.getFullYear(),cm=now.getMonth()+1;
   const y=state.contribYear||cy;const m=state.contribMonth||cm;
@@ -722,7 +629,6 @@ function viewContributions(){
   h+='</div>';return h;
 }
 
-/* ========== FINANCE ========== */
 function viewFinance(){
   let h='';
   h+='<div class="hd anim"><div><h1>আর্থিক ব্যবস্থাপনা</h1><div class="sub">আয়, ব্যয়, লেনদেন</div></div></div>';
@@ -783,7 +689,6 @@ function financeTransactions(){
   h+='</div>';return h;
 }
 
-/* ========== EXTRA PAYMENTS PAGE ========== */
 function pageExtras(){
   const list=DB.extraPayments.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));
   const total=list.reduce((a,b)=>a+(b.amount||0),0);
@@ -796,7 +701,6 @@ function pageExtras(){
   h+='</div></div>';return h;
 }
 
-/* ========== MORE ========== */
 function viewMore(){
   const logoSrc = LOGO_URL ? '<img src="'+LOGO_URL+'" alt="DP"/>' : '<div class="fallback">'+icon('shield')+'</div>';
   const noNormCount = DB.members.filter(m=>!m.phoneNorm && m.phone).length;
@@ -817,7 +721,6 @@ function viewMore(){
   return h;
 }
 
-/* ========== PAGES ========== */
 function pageAudit(){
   let h=subHeader('অডিট লগ');
   h+='<div class="subbody"><div class="sec" style="margin-top:16px"><div class="info-box">সকল কার্যক্রম লিপিবদ্ধ করা হয়</div></div>';
@@ -893,23 +796,21 @@ function pageSearch(){
   h+='</div>';return h;
 }
 
-/* ========== FORMS ========== */
 function formMember(existing){
   const isEdit=!!existing;
   const m=existing||{id:DATA.nextMemberId(),name:'',nameEn:'',phone:'',email:'',monthly:500,joinDate:toISO(new Date()),status:'active',color:'#0E5F30'};
   const phoneDisplay = m.phoneRaw || m.phone || '';
-  const authStatus = m.accountSetup ? '✅ ইউজার অ্যাকাউন্ট সেটআপ করেছে' : (isEdit ? '⏳ ইউজার এখনো পাসওয়ার্ড সেট করেনি' : '');
+  const authStatus = m.accountSetup ? '✅ ইউজার অ্যাকাউন্ট সেটআপ করেছে' : (isEdit ? '⏳ ইউজার এখনো PIN সেট করেনি' : '');
   openModal({
     title:isEdit?'সদস্য সম্পাদনা':'নতুন সদস্য',
     body:
       '<div class="field"><label>নাম (বাংলা)</label><input id="fmName" value="'+(m.name||'')+'"/></div>'+
       '<div class="field"><label>Full Name (English)</label><input id="fmNameEn" value="'+(m.nameEn||'')+'"/></div>'+
       '<div class="field-row"><div class="field"><label>আইডি</label><input id="fmId" value="'+(m.id||'')+'" '+(isEdit?'readonly':'')+'/></div><div class="field"><label>মাসিক (৳)</label><input id="fmMonthly" type="number" value="'+(m.monthly||500)+'"/></div></div>'+
-      '<div class="field"><label>ফোন নাম্বার (দেশের কোড সহ)</label><input id="fmPhone" type="tel" value="'+String(phoneDisplay).replace(/"/g,'&quot;')+'" placeholder="+880 1712 345678 বা 01712345678"/><div class="tiny muted" style="margin-top:5px;line-height:1.6">যেকোনো দেশের নাম্বার হতে পারে। + বা 00 দিয়ে শুরু করুন (যেমন +971...)। বাংলাদেশ হলে 01... দিলেও হবে। এই নাম্বার দিয়েই ইউজার লগইন করবে।</div></div>'+
+      '<div class="field"><label>ফোন নাম্বার (দেশের কোড সহ)</label><input id="fmPhone" type="tel" value="'+String(phoneDisplay).replace(/"/g,'&quot;')+'" placeholder="+880 1712 345678 বা 01712345678"/><div class="tiny muted" style="margin-top:5px;line-height:1.6">যেকোনো দেশের নাম্বার হতে পারে। + বা 00 দিয়ে শুরু করুন (যেমন +971...)। বাংলাদেশ হলে 01... দিলেও হবে। এই নাম্বার দিয়ে ইউজার নিজের ৪-ডিজিট PIN সেট করবে।</div></div>'+
       '<div class="field-row"><div class="field"><label>স্ট্যাটাস</label><select id="fmStatus">'+['active','inactive','suspended','pending'].map(k=>'<option value="'+k+'" '+(m.status===k?'selected':'')+'>'+k+'</option>').join('')+'</select></div><div class="field"><label>যোগদান</label><input id="fmJoin" type="date" value="'+(m.joinDate||toISO(new Date()))+'"/></div></div>'+
-      '<div class="field"><label>'+(isEdit?'৬-ডিজিট গোপন কোড (পরিবর্তন করতে চাইলে)':'৬-ডিজিট গোপন কোড (ইউজারকে জানান)')+'</label><input id="fmSecret" type="tel" inputmode="numeric" maxlength="6" placeholder="123456"/><div class="tiny muted" style="margin-top:5px;line-height:1.6">'+(isEdit?'খালি রাখলে পুরনো কোড বহাল থাকবে।':'ইউজার প্রথমবার পাসওয়ার্ড সেট করার সময় এবং পাসওয়ার্ড ভুলে গেলে এই কোড লাগবে।')+'</div></div>'+
       (authStatus ? '<div class="info-box" style="margin-top:10px">'+authStatus+'</div>' : '')+
-      '<div class="info-box" style="margin-top:10px">অ্যাডমিন শুধু সদস্য যোগ করেন — ইউজার নিজেই অ্যাপের <b>"প্রথমবার"</b> স্ক্রিন থেকে পাসওয়ার্ড সেট করবে।</div>',
+      '<div class="info-box" style="margin-top:10px">অ্যাডমিন শুধু সদস্য যোগ করেন — <b>ইউজার নিজেই</b> "DP সেবা" অ্যাপে তার ফোন নাম্বার দিয়ে ৪-ডিজিট PIN সেট করবে।</div>',
     footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="fmSave">'+(isEdit?'সংরক্ষণ':'যোগ করুন')+'</button>',
     onMount:function(mr){
       mr.querySelector('#fmSave').addEventListener('click',async function(){
@@ -919,9 +820,6 @@ function formMember(existing){
         if(!rawPhone){toast('ফোন নাম্বার দিন','error');return}
         const phoneNorm=normalizePhone(rawPhone);
         if(!phoneNorm||phoneNorm.length<7){toast('ফোন নাম্বার সঠিক নয়','error');return}
-        const secret=mr.querySelector('#fmSecret').value.trim();
-        if(!isEdit && !/^\d{6}$/.test(secret)){toast('৬-ডিজিট গোপন কোড দিন','error');return}
-        if(isEdit && secret && !/^\d{6}$/.test(secret)){toast('গোপন কোড ৬-ডিজিট হতে হবে','error');return}
 
         const newMonthly=parseInt(mr.querySelector('#fmMonthly').value)||0;
         const data={
@@ -939,17 +837,6 @@ function formMember(existing){
           color:m.color||'#0E5F30',
           updatedAt:Date.now()
         };
-
-        // গোপন কোড hash (phone + ":" + code)
-        if(secret){
-          try{
-            data.secretCodeHash = await sha256(phoneNorm + ':' + secret);
-            data.secretCodeSet = true;
-          }catch(err){
-            toast('কোড hash করতে সমস্যা: '+err.message,'error');
-            return;
-          }
-        }
 
         try{
           if(isEdit){
@@ -1172,39 +1059,17 @@ function formAnnouncement(){
     }
   });
 }
-function formResetSecret(memberId){
+function formResetPin(memberId){
   const m=DB.members.find(x=>x.id===memberId);
   if(!m){toast('সদস্য পাওয়া যায়নি','error');return}
-  const currentStatus = m.secretCodeSet ? '⚠️ বর্তমানে একটি গোপন কোড সেট আছে' : '⚠️ এখনো কোনো গোপন কোড সেট হয়নি';
   openModal({
-    title:'গোপন কোড রিসেট',
-    body:'<div class="warn-box">'+currentStatus+'। নতুন ৬-ডিজিট গোপন কোড সেট করলে পুরনোটা বাতিল হয়ে যাবে। সদস্যকে নতুন কোডটি জানাতে ভুলবেন না।</div>'+
-      '<div class="field" style="margin-top:14px"><label>নতুন ৬-ডিজিট গোপন কোড</label><input id="rsCode" type="tel" inputmode="numeric" maxlength="6" placeholder="123456"/></div>'+
-      '<div class="field"><label>আবার লিখুন</label><input id="rsCode2" type="tel" inputmode="numeric" maxlength="6" placeholder="123456"/></div>',
-    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="rsSave">সংরক্ষণ</button>',
-    onMount:function(mr){
-      mr.querySelector('#rsSave').addEventListener('click',async function(){
-        const v1=mr.querySelector('#rsCode').value.trim();
-        const v2=mr.querySelector('#rsCode2').value.trim();
-        if(!/^\d{6}$/.test(v1)){ toast('৬-ডিজিট কোড দিন','error'); return; }
-        if(v1 !== v2){ toast('দুটি কোড মিলছে না','error'); return; }
-        const norm = m.phoneNorm || normalizePhone(m.phone || '');
-        if(!norm){ toast('সদস্যের ফোন নাম্বার নেই','error'); return; }
-        try{
-          const h = await sha256(norm + ':' + v1);
-          await updateDoc(doc(db,'members',m._docId||m.id), {secretCodeHash:h, secretCodeSet:true, updatedAt:Date.now()});
-          audit('reset_secret', m.id, '', '');
-          closeModal();
-          toast('গোপন কোড আপডেট হয়েছে','success');
-        }catch(err){
-          toast('Error: '+err.message,'error');
-        }
-      });
-    }
+    title:'PIN রিসেট',
+    body:'<div class="gold-box">📱 সদস্য: <b>'+m.name+'</b><br>📞 ফোন: <b>'+m.phone+'</b><br><br>ইউজার তার ৪-ডিজিট PIN ভুলে গেলে এখানে নতুন PIN সেট করুন।<br><br><b>⚠️ গুরুত্বপূর্ণ:</b> এখানে শুধু আপনি নোট রাখতে পারবেন — আসল PIN পরিবর্তন করতে হলে ইউজার নিজেই তার অ্যাপের <b>"PIN পরিবর্তন"</b> অপশন ব্যবহার করবে।</div>'+
+      '<div class="info-box" style="margin-top:14px">💡 <b>PIN ভুলে যাওয়া ইউজারের জন্য:</b><br>১. Firebase Console → Authentication → Users<br>২. সেই ইউজারের ইমেইল খুঁজুন<br>৩. ইউজারটি Delete করুন<br>৪. Firestore-এ members/'+m.id+' ডকে <b>accountSetup: false</b> করে দিন এবং authUid ও authEmail ফিল্ড মুছে দিন<br>৫. ইউজার আবার তার অ্যাপে "একাউন্ট তৈরি" করে নতুন PIN সেট করবে</div>',
+    footer:'<button class="btn grow" data-mclose="1">বুঝেছি</button>'
   });
 }
 
-/* ========== NAV & CLICKS ========== */
 function pushPage(name,params){state.stack.push(Object.assign({name:name},params||{}));render()}
 function popPage(){state.stack.pop();render()}
 function switchTab(t){
@@ -1237,7 +1102,7 @@ document.addEventListener('click',function(ev){
     case 'add-member':formMember(null);break;
     case 'edit-member':{const m=DB.members.find(x=>x.id===el.dataset.id);if(m) formMember(m);break;}
     case 'edit-expected':formEditExpected(el.dataset.id);break;
-    case 'reset-secret':formResetSecret(el.dataset.id);break;
+    case 'reset-pin':formResetPin(el.dataset.id);break;
     case 'toggle-status':{const m=DB.members.find(x=>x.id===el.dataset.id);if(m){const order=['active','inactive','suspended','pending'];const i=order.indexOf(m.status||'active');const newS=order[(i+1)%order.length];updateDoc(doc(db,'members',m._docId||m.id),{status:newS}).then(()=>{audit('member_status',m.id,m.status,newS);toast('স্ট্যাটাস: '+newS,'success');}).catch(err=>toast('Error: '+err.message,'error'));}break;}
     case 'delete-member':{const m=DB.members.find(x=>x.id===el.dataset.id);if(!m) break;confirmDialog('সদস্য মুছুন?','সব চাঁদা, অতিরিক্ত জমা ও রেকর্ড মুছে যাবে।\n\n'+m.name,async function(){try{await deleteDoc(doc(db,'members',m._docId||m.id));const contribs=DB.contributions.filter(c=>c.memberId===m.id);for(const c of contribs){try{await deleteDoc(doc(db,'contributions',c.id))}catch(e){}}const extras=DB.extraPayments.filter(x=>x.memberId===m.id);for(const x of extras){try{await deleteDoc(doc(db,'extraPayments',x.id))}catch(e){}}audit('member_delete',m.id,m.name,'');popPage();toast('মুছে ফেলা হয়েছে','success');}catch(err){toast('Error: '+err.message,'error')}},'মুছুন');break;}
     case 'add-contribution':formAddContribution(null);break;
@@ -1291,7 +1156,6 @@ document.addEventListener('input',function(ev){
   if(ev.target.id==='globalSearch'){state.searchQ=ev.target.value;const pos=ev.target.selectionStart;render();const inp=$('#globalSearch');if(inp){inp.focus();try{inp.setSelectionRange(pos,pos)}catch(e){}}}
 });
 
-/* ========== FIREBASE AUTH & DATA ========== */
 state.loading=true;
 render();
 onAuthStateChanged(auth,async (user)=>{
@@ -1339,7 +1203,7 @@ function setupRealtimeListeners(){
   onSnapshot(query(collection(db,'auditLogs'),orderBy('ts','desc'),limit(200)),s=>{DB.auditLogs=s.docs.map(d=>({...d.data(),id:d.id}));if(!state.loading&&state.stack.length&&state.stack[state.stack.length-1].name==='audit') render()});
 }
 window.addEventListener('online',()=>{if(state.admin){render();toast('অনলাইন','success')}});
-window.addEventListener('offline',()=>{if(state.admin){render();toast('অফলাইন মোড')}});
+window.addEventListener('offline',()=>{if(state.admin){toast('অফলাইন মোড')}});
 </script>
 </body>
 </html>
