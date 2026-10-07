@@ -35,8 +35,8 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,var(--c),color-mix(in srgb,var(--c) 65%,#000));color:#fff;font-weight:700;flex:none;overflow:hidden}
 .avatar img{width:100%;height:100%;object-fit:cover}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:600;line-height:1.6}
-.pill.paid,.pill.active,.pill.approved{background:var(--income-soft);color:var(--income)}
-.pill.due,.pill.suspended,.pill.rejected{background:var(--expense-soft);color:var(--expense)}
+.pill.paid,.pill.active,.pill.approved,.pill.upcoming{background:var(--income-soft);color:var(--income)}
+.pill.due,.pill.suspended,.pill.rejected,.pill.past{background:var(--expense-soft);color:var(--expense)}
 .pill.partial,.pill.pending{background:var(--warn-soft);color:var(--warn)}
 .pill.inactive{background:var(--border);color:var(--text-3)}
 .pill.info{background:var(--info-soft);color:var(--info)}
@@ -44,6 +44,7 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .pill.important{background:var(--warn-soft);color:var(--warn)}
 .pill.normal{background:var(--info-soft);color:var(--info)}
 .pill.gold{background:var(--gold-soft);color:var(--gold)}
+.pill.event{background:var(--accent-soft);color:var(--accent)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;color:#fff;transition:transform .12s;background:linear-gradient(135deg,var(--primary-l),var(--primary));box-shadow:0 8px 20px -8px rgba(14,95,48,.7);width:100%}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
@@ -52,6 +53,7 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .btn.gold{background:linear-gradient(135deg,var(--gold),#B58414)}
 .btn.danger{background:linear-gradient(135deg,#E11D48,#B91C1C)}
 .btn.block{width:100%}
+.btn.small{padding:8px 14px;font-size:12.5px;border-radius:11px;width:auto}
 .icon-btn{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border-2);color:var(--text-2);transition:transform .12s;position:relative}
 .icon-btn:active{transform:scale(.92)}
 .icon-btn svg{width:19px;height:19px}
@@ -123,6 +125,7 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3.5px var(--primary-soft)}
 .field .hint{font-size:10.5px;color:var(--text-3);margin-top:5px;line-height:1.5}
 .field input.pin-input{text-align:center;font-size:24px;font-weight:700;letter-spacing:12px;font-family:'Courier New',monospace;padding-left:20px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:16px;font-size:12.5px;font-weight:600;z-index:200;opacity:0;pointer-events:none;transition:all .28s;max-width:88%;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.success{background:#16A34A;color:#fff}
@@ -185,6 +188,55 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .fatal{padding:30px 20px;text-align:center;color:var(--danger);font-size:14px;line-height:1.7;background:var(--card);margin:20px;border-radius:20px;box-shadow:var(--shadow);border:1px solid var(--border-2)}
 .fatal b{display:block;margin-bottom:8px;font-size:16px}
 .fatal pre{text-align:left;font-size:11px;background:var(--card-2);padding:10px;border-radius:10px;overflow:auto;white-space:pre-wrap;word-break:break-word;max-height:200px}
+/* ইভেন্ট */
+.event-upcoming{position:relative;overflow:hidden;border-radius:26px;padding:18px 20px 20px;background:linear-gradient(135deg,#7F1D1D 0%,#B91C1C 50%,#DC2626 100%);color:#fff;box-shadow:0 22px 46px -18px rgba(185,28,28,.7),0 8px 18px -8px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.18)}
+.event-upcoming::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.15) 45%,transparent 60%);pointer-events:none;animation:bc-shine 8s ease-in-out infinite}
+.event-upcoming::after{content:'';position:absolute;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%);top:-100px;right:-60px;pointer-events:none}
+.eu-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.35);padding:4px 11px;border-radius:99px;font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;position:relative;z-index:2}
+.eu-title{font-size:20px;font-weight:700;line-height:1.25;margin-top:12px;position:relative;z-index:2}
+.eu-desc{font-size:12.5px;opacity:.92;line-height:1.6;margin-top:8px;position:relative;z-index:2}
+.eu-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;position:relative;z-index:2}
+.eu-meta-item{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:10px 12px}
+.eu-meta-item .k{font-size:10px;opacity:.85;text-transform:uppercase;letter-spacing:.3px}
+.eu-meta-item .v{font-size:14.5px;font-weight:700;margin-top:3px}
+.event-small{background:var(--card);border:1px solid var(--border-2);border-radius:16px;padding:13px 14px;box-shadow:var(--shadow);cursor:pointer;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.event-small:active{background:var(--card-2)}
+.event-small .day-box{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1}
+.event-small .day-box .d{font-size:18px;font-weight:800}
+.event-small .day-box .m{font-size:9px;opacity:.9;margin-top:2px;font-weight:600}
+.event-small .info{flex:1;min-width:0}
+.event-small .info .t{font-size:13.5px;font-weight:700;line-height:1.3;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.event-small .info .s{font-size:11px;color:var(--text-3);margin-top:3px}
+/* স্ট্যাটাস */
+.status-card{background:var(--card);border:1px solid var(--border-2);border-radius:18px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px}
+.status-head{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.status-head .info{flex:1;min-width:0}
+.status-head .info .nm{font-size:13.5px;font-weight:700;line-height:1.3}
+.status-head .info .tm{font-size:10.5px;color:var(--text-3);margin-top:2px}
+.status-body{font-size:13.5px;line-height:1.65;word-break:break-word;white-space:pre-wrap}
+.status-img{margin-top:10px;border-radius:12px;overflow:hidden;background:var(--card-2)}
+.status-img img{width:100%;display:block;max-height:400px;object-fit:cover}
+.status-foot{display:flex;align-items:center;gap:14px;padding-top:10px;margin-top:10px;border-top:1px solid var(--border-2)}
+.status-action{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--text-2);padding:4px 8px;border-radius:9px;transition:all .15s}
+.status-action:active{background:var(--card-2)}
+.status-action.on{color:var(--accent)}
+.status-action svg{width:17px;height:17px}
+.status-action.liked svg{fill:var(--accent)}
+.status-action.mine{color:var(--danger)}
+.status-composer{background:var(--card);border:1px solid var(--border-2);border-radius:18px;padding:14px;box-shadow:var(--shadow);margin-bottom:10px}
+.status-composer .row-top{display:flex;gap:11px;align-items:flex-start}
+.status-composer textarea{flex:1;border:none;outline:none;background:none;font-family:inherit;font-size:14px;line-height:1.6;min-height:44px;max-height:150px;resize:none;padding:8px 0}
+.status-composer .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+/* পেমেন্ট রেডিও */
+.radio-group{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.radio-tile{display:block;position:relative;background:var(--card);border:2px solid var(--border);border-radius:14px;padding:12px 10px;text-align:center;cursor:pointer;transition:all .15s}
+.radio-tile input{position:absolute;opacity:0;pointer-events:none}
+.radio-tile .ic{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;background:var(--card-2);color:var(--text-2)}
+.radio-tile .ic svg{width:18px;height:18px}
+.radio-tile .lb{font-size:12px;font-weight:700;color:var(--text-2)}
+.radio-tile.on{border-color:var(--primary);background:var(--primary-soft)}
+.radio-tile.on .ic{background:var(--primary);color:#fff}
+.radio-tile.on .lb{color:var(--primary)}
 </style>
 </head>
 <body>
@@ -210,7 +262,7 @@ window.addEventListener('unhandledrejection', function(ev){
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, onSnapshot, query, where, limit } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, limit, orderBy } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
 const LOGO_URL = "https://i.postimg.cc/nhV81p6L/Picsart-25-06-03-16-35-57-097.png";
 const BKASH_NUMBER = "01700-000000";
@@ -232,6 +284,7 @@ const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 
 const BN_MONTHS = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+const BN_MONTHS_SHORT = ['জানু','ফেব','মার্চ','এপ্রি','মে','জুন','জুলা','আগ','সেপ','অক্টো','নভে','ডিসে'];
 const EXTRA_PURPOSES = {event:'ইভেন্টের জন্য',medical:'চিকিৎসা সহায়তা',education:'শিক্ষা সহায়তা',advance:'অগ্রিম চাঁদা',donation:'স্বেচ্ছা অনুদান',other:'অন্যান্য'};
 
 const I = {
@@ -262,7 +315,12 @@ const I = {
   receipt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2v20l2.5-1.6L9 22l2.5-1.6L14 22l2.5-1.6L19 22V2l-2.5 1.6L14 2l-2.5 1.6L9 2 6.5 3.6z"/><path d="M8 8h8M8 12h5"/></svg>',
   arrowDown:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
   arrowUp:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
-  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7.5 15.5l3.5-4.5 3 3L20 7"/></svg>'
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7.5 15.5l3.5-4.5 3 3L20 7"/></svg>',
+  calendar:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4.5" width="18" height="17" rx="3"/><path d="M16 2.5v4M8 2.5v4M3 10.5h18"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1l8.8 8.8 8.8-8.8a5 5 0 0 0 0-7.1z"/></svg>',
+  image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>'
 };
 function icon(n){ return I[n] || ''; }
 
@@ -274,9 +332,13 @@ const state = {
   myContribs: [], myExtras: [],
   inbox: [], sent: [], unreadCount: 0,
   openChat: null, chatMessages: [],
-  myRequests: []
+  myRequests: [],
+  statusFilter: 'all', statusQ: ''
 };
-const DB = {org:{}, announcements:[], allMembers:[], allContribs:[], allTransactions:[], allExtras:[]};
+const DB = {
+  org:{}, announcements:[], allMembers:[], allContribs:[], allTransactions:[], allExtras:[],
+  events:[], statusPosts:[], myLikes:{}
+};
 let unsubs = [];
 
 function $(s){ return document.querySelector(s); }
@@ -286,6 +348,7 @@ function money(n){ return '৳ ' + fmtN(n); }
 function money2(n){ return '৳ ' + Number(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function shortMoney(n){n=Math.abs(n);if(n>=1e7)return '৳'+(n/1e7).toFixed(2)+'কো';if(n>=1e5)return '৳'+(n/1e5).toFixed(2)+'লা';if(n>=1e3)return '৳'+(n/1e3).toFixed(1)+'হা';return '৳'+Math.round(n)}
 function MN(m){ return BN_MONTHS[m-1]; }
+function MNS(m){ return BN_MONTHS_SHORT[m-1]; }
 function toISO(d){ return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
 function parseISO(s){ if(!s) return new Date(); const p=s.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
 function fmtDate(iso){
@@ -306,6 +369,14 @@ function fmtTime(ts){
   if(diff === 1) return 'গতকাল';
   if(diff < 7) return diff+' দিন আগে';
   return d.getDate()+' '+MN(d.getMonth()+1);
+}
+function fmtTimeAgo(ts){
+  if(!ts) return '';
+  const sec = Math.floor((Date.now()-ts)/1000);
+  if(sec < 60) return 'এইমাত্র';
+  if(sec < 3600) return Math.floor(sec/60)+' মিনিট আগে';
+  if(sec < 86400) return Math.floor(sec/3600)+' ঘন্টা আগে';
+  return fmtTime(ts);
 }
 function avatarHTML(m, size){
   size = size || 46;
@@ -372,7 +443,6 @@ const DATA = {
     return state.myContribs.find(c => c.year === n.getFullYear() && c.month === n.getMonth()+1) || null;
   },
   memberById(id){ return DB.allMembers.find(m => m.id === id) || null; },
-  // সংগঠনের মোট হিসাব (সব সদস্যের ডেটা থেকে)
   orgStats(){
     let income=0, expense=0;
     let contribution=0, extra=0, donation=0, otherIncome=0, eventExp=0, otherExp=0;
@@ -386,7 +456,6 @@ const DATA = {
     });
     return {income:income, expense:expense, balance:income-expense, contribution:contribution, extra:extra, donation:donation, otherIncome:otherIncome, eventExp:eventExp, otherExp:otherExp};
   },
-  // একজন সদস্যের সংগঠনে মোট জমা
   memberTotalPaid(memberId){
     const cs = DB.allContribs.filter(c=>c.memberId===memberId);
     const paid = cs.reduce((a,b)=>a+(b.paidAmount||0),0);
@@ -394,17 +463,47 @@ const DATA = {
     const expected = cs.reduce((a,b)=>a+(b.amount||0),0);
     return { paid: paid, extras: extras, total: paid+extras, expected: expected, due: Math.max(expected-paid,0) };
   },
-  // একজন সদস্যের মাসিক চাঁদার হিস্টোরি
   memberContribs(memberId){
     return DB.allContribs.filter(c=>c.memberId===memberId).sort(function(a,b){
       return (b.year||0)-(a.year||0) || (b.month||0)-(a.month||0);
     });
   },
-  // একজন সদস্যের অতিরিক্ত জমা
   memberExtras(memberId){
     return DB.allExtras.filter(x=>x.memberId===memberId).sort(function(a,b){
       return (b.date||'').localeCompare(a.date||'');
     });
+  },
+  // ইভেন্ট
+  upcomingEvents(){
+    return DB.events.filter(e=>!e.isCompleted).sort(function(a,b){
+      return (a.date||'').localeCompare(b.date||'');
+    });
+  },
+  nextEvent(){
+    const up = this.upcomingEvents();
+    return up.length ? up[0] : null;
+  },
+  pastEvents(){
+    return DB.events.filter(e=>e.isCompleted).sort(function(a,b){
+      return (b.date||'').localeCompare(a.date||'');
+    });
+  },
+  allEventsSorted(){
+    return DB.events.slice().sort(function(a,b){
+      return (b.date||'').localeCompare(a.date||'');
+    });
+  },
+  eventById(id){ return DB.events.find(e=>e.id===id) || null; },
+  // স্ট্যাটাস
+  statusPostsSorted(){
+    return DB.statusPosts.slice().sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+  },
+  isLiked(postId){
+    return !!(DB.myLikes && DB.myLikes[postId]);
+  },
+  // পেমেন্ট
+  myPendingRequests(){
+    return (state.myRequests||[]).filter(r=>r.status==='pending');
   }
 };
 
@@ -449,7 +548,7 @@ function viewLogin(){
       '<button class="btn" data-act="do-login">লগইন করুন</button>'+
       '<button class="link-btn" data-act="login-tab" data-v="setup">প্রথমবার? একাউন্ট তৈরি করুন</button>'+
       '<div class="info-box mt10" style="text-align:center">PIN ভুলে গেলে অ্যাডমিনের সাথে যোগাযোগ করুন</div>';
-  } else if(state.loginTab === 'setup'){
+  } else {
     body =
       '<div class="info-box" style="margin-bottom:14px">প্রথমবারের জন্য আপনার ফোন নাম্বার দিন এবং নিজের পছন্দমতো একটি ৪-ডিজিট PIN সেট করুন।<br><br>⚠️ <b>শুধু অ্যাডমিন যাদের নাম্বার যোগ করেছেন তারাই</b> একাউন্ট তৈরি করতে পারবেন।</div>'+
       '<div class="err-box" id="suErr"></div>'+
@@ -593,6 +692,8 @@ function renderStack(){
   let body = '';
   if(p.name === 'memberProfile') body = pageMemberProfile(p.id);
   else if(p.name === 'chat') body = pageChat(p.id);
+  else if(p.name === 'eventDetail') body = pageEventDetail(p.id);
+  else if(p.name === 'allEvents') body = pageAllEvents();
   else body = subHeader('—') + '<div class="subbody"></div>';
   return '<div class="subpage">'+body+'</div>';
 }
@@ -604,15 +705,12 @@ function subHeader(title, right){
 function viewHome(){
   const m = state.member;
   const s = DATA.mySummary();
-  const tm = DATA.thisMonth();
   const org = DATA.orgStats();
-  const recent = state.myContribs.slice().sort(function(a,b){
-    return (b.year||0)-(a.year||0) || (b.month||0)-(a.month||0);
-  }).slice(0,3);
+  const nextEvent = DATA.nextEvent();
+  const pastEvents = DATA.pastEvents().slice(0,3);
+  const recentPosts = DATA.statusPostsSorted().slice(0,3);
   const logoSrc = LOGO_URL ? '<img src="'+LOGO_URL+'"/>' : '';
-  const statusPill = m.status==='active'?'active':(m.status==='inactive'?'inactive':(m.status==='suspended'?'suspended':'pending'));
-  const statusLabel = {active:'সক্রিয়',inactive:'নিষ্ক্রিয়',suspended:'সাসপেন্ডেড',pending:'অপেক্ষমাণ'}[m.status] || m.status;
-  const pendingReqCount = (state.myRequests||[]).filter(r=>r.status==='pending').length;
+  const pendingCount = DATA.myPendingRequests().length;
 
   let h = '';
   h += '<div class="hd"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">স্বাগতম</div><div class="bb" style="font-size:14px">'+m.name+'</div></div></div><div class="row gap6"><button class="icon-btn" data-act="toggle-theme">'+icon(state.theme==='dark'?'sun':'moon')+'</button></div></div>';
@@ -620,59 +718,78 @@ function viewHome(){
   // সংগঠনের ব্যালেন্স কার্ড
   h += '<div class="sec" style="margin-top:6px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">'+ORG_NAME+'</div><div class="bc-org-sub">সংগঠনের মোট হিসাব</div></div></div><div class="bc-label">মোট ব্যালেন্স</div><div class="bc-amount">'+money2(org.balance)+'</div><div class="bc-sub">সবার আয়-ব্যয় থেকে</div><div class="bc-stats"><div class="bc-stat"><div class="k">মোট আয়</div><div class="v">'+shortMoney(org.income)+'</div></div><div class="bc-stat"><div class="k">মোট ব্যয়</div><div class="v">'+shortMoney(org.expense)+'</div></div></div></div></div>';
 
-  // টাকা পাঠানোর reminder (pending requests থাকলে দেখাবে না)
-  if(pendingReqCount===0){
+  // ⚠️ আগামী ইভেন্ট — বড় কার্ড
+  if(nextEvent){
+    const evDate = parseISO(nextEvent.date);
+    h += '<div class="sec"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2><span class="link" data-act="page" data-page="allEvents">সব →</span></div>';
+    h += '<div class="event-upcoming" data-act="open-event" data-id="'+(nextEvent.id||'')+'">'+
+      '<div class="eu-badge">🎯 আগামী ইভেন্ট</div>'+
+      '<div class="eu-title">'+(nextEvent.title||'')+'</div>'+
+      (nextEvent.description ? '<div class="eu-desc">'+String(nextEvent.description).slice(0,200)+(nextEvent.description.length>200?'…':'')+'</div>' : '')+
+      '<div class="eu-meta">'+
+        '<div class="eu-meta-item"><div class="k">📅 ইভেন্টের তারিখ</div><div class="v">'+evDate.getDate()+' '+MNS(evDate.getMonth()+1)+' '+evDate.getFullYear()+'</div></div>'+
+        (nextEvent.deadline ? '<div class="eu-meta-item"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+fmtDate(nextEvent.deadline)+'</div></div>' : '')+
+        (nextEvent.fee ? '<div class="eu-meta-item"><div class="k">💰 চাঁদা</div><div class="v">'+money(nextEvent.fee)+'</div></div>' : '')+
+        (nextEvent.location ? '<div class="eu-meta-item"><div class="k">📍 স্থান</div><div class="v">'+nextEvent.location+'</div></div>' : '')+
+      '</div>'+
+    '</div>';
+    h += '</div>';
+  }
+
+  // 💰 টাকা পাঠানোর বাটন
+  if(pendingCount===0){
     h += '<div class="sec"><div class="card" style="background:linear-gradient(135deg,var(--gold-soft),var(--warn-soft));border:none;cursor:pointer" data-act="open-pay-notify"><div class="row"><div style="width:44px;height:44px;border-radius:14px;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('receipt')+'</div><div class="grow"><div class="bb" style="font-size:13.5px">💰 টাকা পাঠিয়েছেন?</div><div class="tiny muted mt6">অ্যাডমিনকে জানান — যাচাই করে যোগ করবেন</div></div></div></div></div>';
   } else {
-    h += '<div class="sec"><div class="card" style="background:linear-gradient(135deg,var(--warn-soft),var(--info-soft));border:none"><div class="row"><div style="width:44px;height:44px;border-radius:14px;background:var(--warn);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('clock')+'</div><div class="grow"><div class="bb" style="font-size:13.5px">⏳ '+pendingReqCount+' টি পেমেন্ট অপেক্ষমাণ</div><div class="tiny muted mt6">অ্যাডমিন যাচাই করছেন</div></div></div></div></div>';
+    h += '<div class="sec"><div class="card" style="background:linear-gradient(135deg,var(--warn-soft),var(--info-soft));border:none"><div class="row"><div style="width:44px;height:44px;border-radius:14px;background:var(--warn);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('clock')+'</div><div class="grow"><div class="bb" style="font-size:13.5px">⏳ '+pendingCount+' টি পেমেন্ট অপেক্ষমাণ</div><div class="tiny muted mt6">অ্যাডমিন যাচাই করছেন</div></div></div></div></div>';
   }
 
-  // নিজের হিসাব
-  h += '<div class="sec"><div class="sec-hd"><h2>আমার চাঁদা</h2><span class="link" data-act="tab" data-tab="my">বিস্তারিত →</span></div><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">'+money(s.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(s.due>0?'var(--expense)':'var(--text-3)')+'">'+money(s.due)+'</div></div><div class="stat"><div class="k">অতিরিক্ত</div><div class="v" style="color:var(--accent)">'+money(s.extras)+'</div></div></div></div>';
-
-  // এই মাসের চাঁদা
-  h += '<div class="sec"><div class="sec-hd"><h2>এই মাসের চাঁদা</h2></div>';
-  if(tm){
-    const st = tm.status || 'due';
-    const label = st==='paid' ? 'পরিশোধিত' : (st==='partial' ? 'আংশিক পরিশোধিত' : 'বাকি');
-    const pct = tm.amount ? Math.min(100, (tm.paidAmount||0)/tm.amount*100) : 0;
-    h += '<div class="card"><div class="between"><div><div class="bb" style="font-size:16px">'+MN(tm.month)+' '+tm.year+'</div><div class="tiny muted mt6">প্রত্যাশিত '+money(tm.amount||0)+'</div></div><span class="pill '+st+'">'+label+'</span></div><div class="prog mt14"><i style="width:'+pct+'%"></i></div><div class="between mt10"><span class="tiny muted">পরিশোধিত '+money(tm.paidAmount||0)+'</span>'+(tm.paidDate?'<span class="tiny muted">'+fmtDate(tm.paidDate)+'</span>':'')+'</div></div>';
+  // স্ট্যাটাস ফিড
+  h += '<div class="sec"><div class="sec-hd"><h2>📢 সংগঠনের ফিড</h2></div>';
+  h += '<div class="status-composer"><div class="row-top">'+avatarHTML(m,40)+'<textarea id="quickStatus" placeholder="কিছু শেয়ার করুন…"></textarea></div><div class="actions"><button class="btn small" data-act="post-status">'+icon('send')+' পোস্ট করুন</button></div></div>';
+  if(!recentPosts.length){
+    h += '<div class="card center" style="padding:20px"><div class="tiny muted">এখনো কোনো স্ট্যাটাস নেই — আপনিই প্রথম হোন!</div></div>';
   } else {
-    h += '<div class="card" style="text-align:center;padding:18px"><div class="tiny muted">এই মাসের কোনো রেকর্ড এখনো তৈরি হয়নি</div></div>';
+    h += recentPosts.map(postRow).join('');
+    h += '<button class="btn ghost block" data-act="tab" data-tab="members" style="margin-top:6px">সব ফিড দেখুন</button>';
   }
   h += '</div>';
+
+  // আমার হিসাব
+  h += '<div class="sec"><div class="sec-hd"><h2>💰 আমার চাঁদা</h2><span class="link" data-act="tab" data-tab="my">বিস্তারিত →</span></div><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">'+money(s.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(s.due>0?'var(--expense)':'var(--text-3)')+'">'+money(s.due)+'</div></div><div class="stat"><div class="k">অতিরিক্ত</div><div class="v" style="color:var(--accent)">'+money(s.extras)+'</div></div></div></div>';
 
   // bKash
-  h += '<div class="sec"><div class="sec-hd"><h2>bKash নাম্বার</h2></div><div class="bkash-card"><div class="bkash-brand"><span class="logo">bKash</span><span>'+BKASH_TYPE+'</span></div><div class="bkash-label">টাকা পাঠানোর নাম্বার</div><div class="bkash-num">'+BKASH_NUMBER+'</div><div class="bkash-hint">Reference-এ লিখুন: <b>'+(m.id||'')+'</b></div><button class="bkash-btn" data-act="copy-bkash">'+icon('copy')+' কপি করুন</button></div></div>';
+  h += '<div class="sec"><div class="sec-hd"><h2>💳 bKash নাম্বার</h2></div><div class="bkash-card"><div class="bkash-brand"><span class="logo">bKash</span><span>'+BKASH_TYPE+'</span></div><div class="bkash-label">টাকা পাঠানোর নাম্বার</div><div class="bkash-num">'+BKASH_NUMBER+'</div><div class="bkash-hint">Reference-এ লিখুন: <b>'+(m.id||'')+'</b></div><button class="bkash-btn" data-act="copy-bkash">'+icon('copy')+' কপি করুন</button></div></div>';
 
-  // সাম্প্রতিক চাঁদা
-  h += '<div class="sec"><div class="sec-hd"><h2>সাম্প্রতিক</h2></div>';
-  if(!recent.length){
-    h += '<div class="card" style="text-align:center;padding:18px"><div class="tiny muted">এখনো কোনো রেকর্ড নেই</div></div>';
-  } else {
-    h += '<div class="list">' + recent.map(function(c){
-      const st = c.status || 'due';
-      const bg = st==='paid' ? 'var(--income-soft)' : (st==='partial' ? 'var(--warn-soft)' : 'var(--expense-soft)');
-      const col = st==='paid' ? 'var(--income)' : (st==='partial' ? 'var(--warn)' : 'var(--expense)');
-      return '<div class="li"><div class="ic" style="background:'+bg+';color:'+col+'">'+(st==='paid'?icon('check'):icon('clock'))+'</div><div class="grow"><div class="t">'+MN(c.month)+' '+c.year+'</div><div class="s">'+(st==='paid'?'পরিশোধিত':(st==='partial'?'আংশিক':'বাকি'))+'</div></div><div class="amt '+(st==='paid'?'pos':'neg')+'">'+money(c.paidAmount||0)+'</div></div>';
-    }).join('') + '</div>';
-  }
-  h += '</div>';
-
-  // ঘোষণা
-  if(DB.announcements.length){
-    h += '<div class="sec" style="padding-bottom:26px"><div class="sec-hd"><h2>সাম্প্রতিক ঘোষণা</h2></div>';
-    h += DB.announcements.slice(0,2).map(function(a){
-      const pr = a.priority || 'normal';
-      const lbl = {urgent:'জরুরি',important:'গুরুত্বপূর্ণ',normal:'সাধারণ'}[pr];
-      return '<div class="card" style="margin-bottom:9px"><div class="between" style="align-items:flex-start;margin-bottom:6px"><div class="b" style="font-size:13.5px;line-height:1.4;flex:1">'+(a.title||'')+'</div><span class="pill '+pr+'" style="flex:none">'+lbl+'</span></div><div class="sm muted ell">'+(a.body||'')+'</div></div>';
+  // পুরনো ইভেন্ট
+  if(pastEvents.length){
+    h += '<div class="sec" style="padding-bottom:26px"><div class="sec-hd"><h2>📸 পূর্ববর্তী ইভেন্ট</h2><span class="link" data-act="page" data-page="allEvents">সব →</span></div>';
+    h += pastEvents.map(function(e){
+      const d = parseISO(e.date);
+      return '<div class="event-small" data-act="open-event" data-id="'+(e.id||'')+'"><div class="day-box"><span class="d">'+d.getDate()+'</span><span class="m">'+MNS(d.getMonth()+1)+'</span></div><div class="info"><div class="t">'+(e.title||'')+'</div><div class="s">'+fmtDate(e.date)+(e.location?' · '+e.location:'')+(e.fee?' · '+money(e.fee):'')+'</div></div></div>';
     }).join('');
     h += '</div>';
   }
   return h;
 }
 
-/* ========== সদস্য ডিরেক্টরি ========== */
+/* স্ট্যাটাস পোস্ট row */
+function postRow(p){
+  const isMine = p.memberId === state.member.id;
+  const liked = DATA.isLiked(p.id);
+  const likeCount = (p.likes||[]).length;
+  const fakeMember = {name:p.memberName, color:p.memberColor, photoUrl:p.memberPhotoUrl};
+  return '<div class="status-card">'+
+    '<div class="status-head">'+avatarHTML(fakeMember,40)+'<div class="info"><div class="nm">'+p.memberName+'</div><div class="tm">'+fmtTimeAgo(p.ts)+'</div></div></div>'+
+    '<div class="status-body">'+String(p.body||'').replace(/</g,'&lt;')+'</div>'+
+    (p.imageUrl ? '<div class="status-img"><img src="'+p.imageUrl+'" onerror="this.style.display=\'none\'"/></div>' : '')+
+    '<div class="status-foot">'+
+      '<button class="status-action'+(liked?' liked on':'')+'" data-act="like-status" data-id="'+(p.id||'')+'">'+icon('heart')+' <span>'+(likeCount>0?likeCount:'')+'</span></button>'+
+      (isMine ? '<button class="status-action mine" data-act="delete-status" data-id="'+(p.id||'')+'">'+icon('trash')+' মুছুন</button>' : '')+
+    '</div>'+
+  '</div>';
+}
+
+/* ========== সদস্য ডিরেক্টরি + ফিড ========== */
 function viewMembers(){
   const q = (state.memberQ||'').trim().toLowerCase();
   let list = DB.allMembers.slice();
@@ -683,12 +800,29 @@ function viewMembers(){
   });
   list.sort(function(a,b){ return String(a.id||'').localeCompare(String(b.id||'')); });
 
+  const tabs = [['members','সদস্য'],['feed','ফিড']];
+  const active = state.memberFilter==='feed' ? 'feed' : 'members';
+
   let h = '';
-  h += '<div class="hd"><div><h1>সদস্য ডিরেক্টরি</h1><div class="sub">'+DB.allMembers.length+' জন সদস্য</div></div></div>';
-  h += '<div class="sec" style="margin-top:0"><div class="searchbar">'+icon('search')+'<input id="memberSearch" type="text" placeholder="নাম, আইডি বা মোবাইল" value="'+(state.memberQ||'')+'"/></div></div>';
-  h += '<div class="chips" style="margin-top:14px">' + [['all','সব'],['active','সক্রিয়'],['inactive','নিষ্ক্রিয়']].map(function(f){
-    return '<button class="chip'+(state.memberFilter===f[0]?' on':'')+'" data-act="mfilter" data-v="'+f[0]+'">'+f[1]+'</button>';
-  }).join('') + '</div>';
+  h += '<div class="hd"><div><h1>সদস্য ও ফিড</h1><div class="sub">'+DB.allMembers.length+' জন সদস্য</div></div></div>';
+  h += '<div class="chips" style="margin-top:0"><button class="chip'+(active==='members'?' on':'')+'" data-act="mfilter" data-v="all">👥 সদস্য</button><button class="chip'+(active==='feed'?' on':'')+'" data-act="mfilter" data-v="feed">📢 ফিড</button><button class="chip'+(state.memberFilter==='active'?' on':'')+'" data-act="mfilter" data-v="active">✅ সক্রিয়</button><button class="chip'+(state.memberFilter==='inactive'?' on':'')+'" data-act="mfilter" data-v="inactive">❌ নিষ্ক্রিয়</button></div>';
+
+  if(active==='feed'){
+    // স্ট্যাটাস ফিড
+    h += '<div class="sec" style="margin-top:14px">';
+    h += '<div class="status-composer"><div class="row-top">'+avatarHTML(state.member,40)+'<textarea id="quickStatus" placeholder="কিছু শেয়ার করুন…"></textarea></div><div class="actions"><button class="btn small" data-act="post-status">'+icon('send')+' পোস্ট করুন</button></div></div>';
+    const posts = DATA.statusPostsSorted();
+    if(!posts.length){
+      h += '<div class="empty"><div class="eic">'+icon('chat')+'</div><h3>এখনো কোনো স্ট্যাটাস নেই</h3><p>আপনি প্রথম পোস্ট করুন</p></div>';
+    } else {
+      h += posts.map(postRow).join('');
+    }
+    h += '</div>';
+    return h;
+  }
+
+  // সদস্য তালিকা
+  h += '<div class="sec" style="margin-top:14px"><div class="searchbar">'+icon('search')+'<input id="memberSearch" type="text" placeholder="নাম, আইডি বা মোবাইল" value="'+(state.memberQ||'')+'"/></div></div>';
   h += '<div class="sec" style="margin-top:14px">';
   if(!list.length){
     h += '<div class="empty"><div class="eic">'+icon('users')+'</div><h3>কোনো সদস্য পাওয়া যায়নি</h3></div>';
@@ -707,7 +841,7 @@ function viewMembers(){
   return h;
 }
 
-/* ========== সদস্য প্রোফাইল ভিউ ========== */
+/* ========== সদস্য প্রোফাইল ========== */
 function pageMemberProfile(memberId){
   const m = DATA.memberById(memberId);
   if(!m) return subHeader('প্রোফাইল') + '<div class="subbody"><div class="empty"><h3>সদস্য পাওয়া যায়নি</h3></div></div>';
@@ -717,20 +851,16 @@ function pageMemberProfile(memberId){
   const cs = DATA.memberContribs(m.id);
   const ex = DATA.memberExtras(m.id);
   const t = DATA.memberTotalPaid(m.id);
-  
+  const myPosts = DB.statusPosts.filter(p=>p.memberId===m.id).sort(function(a,b){return (b.ts||0)-(a.ts||0)}).slice(0,3);
+
   let h = subHeader(isMe ? 'আমার প্রোফাইল' : m.name);
   h += '<div class="subbody">';
-  
-  // হেডার কার্ড
   h += '<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:22px 16px"><div style="display:flex;justify-content:center">'+avatarHTML(m,84)+'</div><div class="bb" style="font-size:18px;margin-top:12px">'+m.name+'</div><div class="sm muted" style="margin-top:3px">'+(m.id||'')+'</div><div class="row" style="justify-content:center;margin-top:11px"><span class="pill '+statusPill+'">'+statusLabel+'</span></div></div></div>';
 
-  // হিসাব সংক্ষেপ
   h += '<div class="sec"><div class="sec-hd"><h2>💰 হিসাব সংক্ষেপ</h2></div><div class="stat-grid"><div class="stat"><div class="k">মোট জমা</div><div class="v" style="color:var(--income)">'+money(t.total)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(t.due>0?'var(--expense)':'var(--text-3)')+'">'+money(t.due)+'</div></div></div></div>';
 
-  // বিস্তারিত
   h += '<div class="sec"><div class="card"><div class="row" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div class="grow"><div class="tiny muted">চাঁদা পরিশোধিত</div></div><div class="b sm" style="color:var(--income)">'+money(t.paid)+'</div></div><div class="row" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div class="grow"><div class="tiny muted">অতিরিক্ত জমা</div></div><div class="b sm" style="color:var(--accent)">'+money(t.extras)+'</div></div><div class="row" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div class="grow"><div class="tiny muted">মোট প্রত্যাশিত</div></div><div class="b sm">'+money(t.expected)+'</div></div><div class="row" style="padding:9px 0"><div class="grow"><div class="tiny muted">মাসিক চাঁদা</div></div><div class="b sm">'+money(m.monthly||0)+'</div></div></div></div>';
 
-  // চাঁদার হিস্টোরি
   if(cs.length){
     h += '<div class="sec"><div class="sec-hd"><h2>চাঁদার হিস্টোরি</h2><span class="tiny muted">'+cs.length+' টি</span></div>';
     h += cs.slice(0,12).map(function(c){
@@ -744,7 +874,6 @@ function pageMemberProfile(memberId){
     h += '</div>';
   }
 
-  // অতিরিক্ত জমা
   if(ex.length){
     h += '<div class="sec"><div class="sec-hd"><h2>অতিরিক্ত জমা</h2><span class="tiny muted">'+money(t.extras)+'</span></div>';
     h += '<div class="list">'+ex.slice(0,8).map(function(x){
@@ -752,10 +881,14 @@ function pageMemberProfile(memberId){
     }).join('')+'</div></div>';
   }
 
-  // ফোন (শুধু নিজের হলে বা সদস্য অ্যাপে সবার দৃশ্যমান)
-  if(m.phone) h += '<div class="sec"><div class="card"><div class="row"><div style="width:32px;color:var(--primary)">'+icon('phone')+'</div><div class="grow"><div class="tiny muted">মোবাইল</div><div class="b sm">'+m.phone+'</div></div></div></div></div>';
+  if(myPosts.length){
+    h += '<div class="sec"><div class="sec-hd"><h2>সাম্প্রতিক স্ট্যাটাস</h2></div>';
+    h += myPosts.map(postRow).join('');
+    h += '</div>';
+  }
 
-  // মেসেজ বাটন
+  if(m.phone && !isMe) h += '<div class="sec"><div class="card"><div class="row"><div style="width:32px;color:var(--primary)">'+icon('phone')+'</div><div class="grow"><div class="tiny muted">মোবাইল</div><div class="b sm">'+m.phone+'</div></div></div></div></div>';
+
   if(!isMe){
     h += '<div class="sec" style="padding-bottom:26px"><button class="btn" data-act="open-chat" data-id="'+(m.id||'')+'">'+icon('chat')+' মেসেজ পাঠান</button></div>';
   } else {
@@ -765,24 +898,22 @@ function pageMemberProfile(memberId){
   return h;
 }
 
-/* ========== আমার হিসাব (নতুন ট্যাব) ========== */
+/* ========== আমার হিসাব ========== */
 function viewMyAccount(){
   const m = state.member;
   const s = DATA.mySummary();
   const cs = state.myContribs.slice().sort(function(a,b){ return (b.year||0)-(a.year||0)||(b.month||0)-(a.month||0); });
   const ex = state.myExtras.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
   const reqs = (state.myRequests||[]).slice().sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+  const myPosts = DB.statusPosts.filter(p=>p.memberId===m.id).sort(function(a,b){return (b.ts||0)-(a.ts||0)});
 
   let h = '';
   h += '<div class="hd"><div><h1>আমার হিসাব</h1><div class="sub">বিস্তারিত হিস্টোরি</div></div></div>';
 
-  // সামারি
   h += '<div class="sec" style="margin-top:0"><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">'+money(s.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(s.due>0?'var(--expense)':'var(--text-3)')+'">'+money(s.due)+'</div></div><div class="stat"><div class="k">অতিরিক্ত</div><div class="v" style="color:var(--accent)">'+money(s.extras)+'</div></div></div></div>';
 
-  // "টাকা পাঠিয়েছি" বাটন
   h += '<div class="sec"><button class="btn gold block" data-act="open-pay-notify">'+icon('receipt')+' 💰 আমি টাকা পাঠিয়েছি (অ্যাডমিনকে জানান)</button><div class="tiny muted center mt6" style="line-height:1.6">bKash-এ টাকা পাঠানোর পর এই বাটনে চাপ দিলে অ্যাডমিন জানতে পারবেন</div></div>';
 
-  // পেমেন্ট রিকোয়েস্ট হিস্টোরি
   if(reqs.length){
     h += '<div class="sec"><div class="sec-hd"><h2>আমার পেমেন্ট রিকোয়েস্ট</h2><span class="tiny muted">'+reqs.length+' টি</span></div>';
     h += '<div class="list">'+reqs.slice(0,8).map(function(r){
@@ -790,11 +921,11 @@ function viewMyAccount(){
       const lbl = st==='pending' ? 'অপেক্ষমাণ' : (st==='approved' ? '✓ অনুমোদিত' : '✕ বাতিল');
       const col = st==='approved' ? 'var(--income)' : (st==='rejected' ? 'var(--expense)' : 'var(--warn)');
       const bg = st==='approved' ? 'var(--income-soft)' : (st==='rejected' ? 'var(--expense-soft)' : 'var(--warn-soft)');
-      return '<div class="li"><div class="ic" style="background:'+bg+';color:'+col+'">'+(st==='approved'?icon('check'):(st==='rejected'?icon('x'):icon('clock')))+'</div><div class="grow"><div class="t">'+money(r.amount)+' · '+(r.forMonth?MN(r.forMonth)+' '+r.forYear:'—')+'</div><div class="s">'+fmtDate(r.date)+(r.note?' · '+r.note:'')+'</div></div><span class="pill '+st+'">'+lbl+'</span></div>';
+      const typeLabel = r.type==='event' ? ('🎉 '+(r.eventTitle||'ইভেন্ট')) : (r.forMonth ? (MN(r.forMonth)+' '+r.forYear) : '—');
+      return '<div class="li"><div class="ic" style="background:'+bg+';color:'+col+'">'+(st==='approved'?icon('check'):(st==='rejected'?icon('x'):icon('clock')))+'</div><div class="grow"><div class="t">'+money(r.amount)+' · '+typeLabel+'</div><div class="s">'+fmtDate(r.date)+(r.note?' · '+r.note:'')+'</div></div><span class="pill '+st+'">'+lbl+'</span></div>';
     }).join('')+'</div></div>';
   }
 
-  // চাঁদার পূর্ণ হিস্টোরি
   if(cs.length){
     h += '<div class="sec"><div class="sec-hd"><h2>চাঁদার হিস্টোরি</h2><span class="tiny muted">'+cs.length+' টি</span></div>';
     h += cs.map(function(c){
@@ -809,13 +940,106 @@ function viewMyAccount(){
     h += '<div class="sec"><div class="empty"><div class="eic">'+icon('wallet')+'</div><h3>এখনো কোনো চাঁদার রেকর্ড নেই</h3></div></div>';
   }
 
-  // অতিরিক্ত জমার হিস্টোরি
   if(ex.length){
-    h += '<div class="sec" style="padding-bottom:26px"><div class="sec-hd"><h2>অতিরিক্ত জমার হিস্টোরি</h2><span class="tiny muted">'+ex.length+' টি</span></div>';
+    h += '<div class="sec"><div class="sec-hd"><h2>অতিরিক্ত জমার হিস্টোরি</h2><span class="tiny muted">'+ex.length+' টি</span></div>';
     h += '<div class="list">'+ex.map(function(x){
       return '<div class="li"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div class="t">'+(EXTRA_PURPOSES[x.purpose]||x.purposeBn||'অতিরিক্ত জমা')+'</div><div class="s">'+fmtDate(x.date)+(x.note?' · '+x.note:'')+'</div></div><div class="amt" style="color:var(--accent)">'+money(x.amount)+'</div></div>';
     }).join('')+'</div></div>';
   }
+
+  if(myPosts.length){
+    h += '<div class="sec" style="padding-bottom:26px"><div class="sec-hd"><h2>আমার স্ট্যাটাস</h2></div>';
+    h += myPosts.map(postRow).join('');
+    h += '</div>';
+  }
+  return h;
+}
+
+/* ========== ইভেন্ট পেজগুলো ========== */
+function pageAllEvents(){
+  let h = subHeader('সব ইভেন্ট');
+  h += '<div class="subbody">';
+  const upcoming = DATA.upcomingEvents();
+  const past = DATA.pastEvents();
+  
+  if(upcoming.length){
+    h += '<div class="sec" style="margin-top:16px"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2><span class="tiny muted">'+upcoming.length+' টি</span></div>';
+    upcoming.forEach(function(e){
+      const d = parseISO(e.date);
+      h += '<div class="card" style="margin-bottom:10px;cursor:pointer;border-left:4px solid var(--primary)" data-act="open-event" data-id="'+(e.id||'')+'">'+
+        '<div class="between" style="align-items:flex-start"><div class="grow"><div class="bb" style="font-size:15px;line-height:1.3">'+(e.title||'')+'</div>'+
+        (e.description?'<div class="sm muted mt6" style="line-height:1.6">'+String(e.description).slice(0,120)+'</div>':'')+
+        '<div class="row mt10" style="gap:12px;flex-wrap:wrap">'+
+          '<div class="tiny muted">📅 '+fmtDate(e.date)+'</div>'+
+          (e.deadline?'<div class="tiny muted">⏰ '+fmtDate(e.deadline)+'</div>':'')+
+          (e.fee?'<div class="tiny" style="color:var(--gold);font-weight:700">💰 '+money(e.fee)+'</div>':'')+
+        '</div></div><span class="pill upcoming">আগামী</span></div></div>';
+    });
+    h += '</div>';
+  }
+  
+  if(past.length){
+    h += '<div class="sec"><div class="sec-hd"><h2>📸 পূর্ববর্তী ইভেন্ট</h2><span class="tiny muted">'+past.length+' টি</span></div>';
+    past.forEach(function(e){
+      const d = parseISO(e.date);
+      h += '<div class="event-small" data-act="open-event" data-id="'+(e.id||'')+'"><div class="day-box"><span class="d">'+d.getDate()+'</span><span class="m">'+MNS(d.getMonth()+1)+'</span></div><div class="info"><div class="t">'+(e.title||'')+'</div><div class="s">'+fmtDate(e.date)+(e.location?' · '+e.location:'')+(e.fee?' · '+money(e.fee):'')+'</div></div></div>';
+    });
+    h += '</div>';
+  }
+  
+  if(!upcoming.length && !past.length){
+    h += '<div class="empty"><div class="eic">'+icon('calendar')+'</div><h3>এখনো কোনো ইভেন্ট নেই</h3><p>অ্যাডমিন এখনো কোনো ইভেন্ট যোগ করেননি</p></div>';
+  }
+  
+  h += '</div>';
+  return h;
+}
+
+function pageEventDetail(eventId){
+  const e = DATA.eventById(eventId);
+  if(!e) return subHeader('ইভেন্ট')+'<div class="subbody"><div class="empty"><h3>ইভেন্ট পাওয়া যায়নি</h3></div></div>';
+  const d = parseISO(e.date);
+  const isUpcoming = !e.isCompleted;
+  
+  let h = subHeader(isUpcoming ? 'আগামী ইভেন্ট' : 'পূর্ববর্তী ইভেন্ট');
+  h += '<div class="subbody">';
+  
+  if(isUpcoming){
+    h += '<div class="sec" style="margin-top:16px"><div class="event-upcoming" style="padding:20px">'+
+      '<div class="eu-badge">🎯 '+(e.isCompleted?'সম্পন্ন':'আগামী ইভেন্ট')+'</div>'+
+      '<div class="eu-title" style="font-size:22px">'+(e.title||'')+'</div>'+
+      '<div class="eu-meta">'+
+        '<div class="eu-meta-item"><div class="k">📅 ইভেন্টের তারিখ</div><div class="v">'+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div></div>'+
+        (e.deadline ? '<div class="eu-meta-item"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+fmtDate(e.deadline)+'</div></div>' : '')+
+        (e.fee ? '<div class="eu-meta-item"><div class="k">💰 চাঁদা</div><div class="v">'+money(e.fee)+'</div></div>' : '')+
+        (e.location ? '<div class="eu-meta-item"><div class="k">📍 স্থান</div><div class="v">'+e.location+'</div></div>' : '')+
+      '</div>'+
+    '</div></div>';
+  } else {
+    h += '<div class="sec" style="margin-top:16px"><div class="card" style="padding:20px;background:linear-gradient(135deg,var(--primary-soft),var(--card-2));border:none">'+
+      '<div class="row"><div style="width:70px;height:70px;border-radius:18px;background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1"><div style="font-size:26px;font-weight:800">'+d.getDate()+'</div><div style="font-size:11px;opacity:.9;margin-top:3px;font-weight:600">'+MNS(d.getMonth()+1)+' '+d.getFullYear()+'</div></div><div class="grow"><span class="pill paid" style="margin-bottom:4px">✓ সম্পন্ন</span><div class="bb" style="font-size:16px;line-height:1.3;margin-top:4px">'+(e.title||'')+'</div></div></div>'+
+    '</div></div>';
+  }
+  
+  if(e.description){
+    h += '<div class="sec"><div class="sec-hd"><h2>📝 বিবরণ</h2></div><div class="card"><div class="sm" style="line-height:1.75;white-space:pre-wrap">'+String(e.description).replace(/</g,'&lt;')+'</div></div></div>';
+  }
+  
+  // তথ্য সংক্ষেপ
+  h += '<div class="sec"><div class="card"><div class="row" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div class="grow"><div class="tiny muted">তারিখ</div></div><div class="b sm">'+fmtDate(e.date)+'</div></div>';
+  if(e.deadline) h += '<div class="row" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div class="grow"><div class="tiny muted">টাকা দেওয়ার শেষ তারিখ</div></div><div class="b sm">'+fmtDate(e.deadline)+'</div></div>';
+  if(e.fee) h += '<div class="row" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div class="grow"><div class="tiny muted">প্রতি সদস্যের চাঁদা</div></div><div class="b sm" style="color:var(--gold)">'+money(e.fee)+'</div></div>';
+  if(e.location) h += '<div class="row" style="padding:9px 0"><div class="grow"><div class="tiny muted">স্থান</div></div><div class="b sm">'+e.location+'</div></div>';
+  h += '</div></div>';
+  
+  // ইভেন্ট ফি পাঠানোর সুবিধা (শুধু upcoming)
+  if(isUpcoming){
+    h += '<div class="sec" style="padding-bottom:26px"><button class="btn gold block" data-act="open-pay-notify" data-event="'+(e.id||'')+'">'+icon('receipt')+' 💰 এই ইভেন্টের টাকা পাঠিয়েছি</button><div class="tiny muted center mt6">bKash নাম্বার: '+BKASH_NUMBER+' — Reference: '+(state.member.id||'')+'</div></div>';
+  } else {
+    h += '<div class="sec" style="padding-bottom:26px"><div class="info-box">✅ এই ইভেন্ট সম্পন্ন হয়েছে</div></div>';
+  }
+  
+  h += '</div>';
   return h;
 }
 
@@ -992,44 +1216,183 @@ function formChangePin(){
     }
   });
 }
-function formPayNotify(){
+
+/* ========== পেমেন্ট নোটিফিকেশন (নতুন ভার্সন) ========== */
+function formPayNotify(eventPreselect){
   const m = state.member;
   const now = new Date();
+  const upcoming = DATA.upcomingEvents();
+  const preselected = eventPreselect ? DATA.eventById(eventPreselect) : null;
+  
+  // পুরনো ২৪ মাস: বর্তমান থেকে ২৩ মাস পিছনে
+  const monthOptions = [];
+  for(let i=0;i<24;i++){
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    monthOptions.push({m:d.getMonth()+1, y:d.getFullYear()});
+  }
+  
   openModal({
-    title: 'আমি টাকা পাঠিয়েছি',
-    body: '<div class="info-box" style="margin-bottom:14px">bKash-এ টাকা পাঠানোর পর এই ফর্মটি পূরণ করুন। অ্যাডমিন দেখে যাচাই করে আপনার চাঁদায় যোগ করবেন।</div>'+
-      '<div class="field"><label>টাকার পরিমাণ (৳)</label><input id="pnAmt" type="number" placeholder="যেমন: 500"/></div>'+
-      '<div class="field-row"><div class="field"><label>কোন মাসের জন্য</label><select id="pnMonth">'+BN_MONTHS.map((nm,i)=>'<option value="'+(i+1)+'" '+(i+1===now.getMonth()+1?'selected':'')+'>'+nm+'</option>').join('')+'</select></div><div class="field"><label>বছর</label><input id="pnYear" type="number" value="'+now.getFullYear()+'"/></div></div>'+
+    title: '💰 টাকা পাঠানোর নোটিফিকেশন',
+    body: '<div class="info-box" style="margin-bottom:14px">bKash-এ টাকা পাঠানোর পর এই ফর্মটি পূরণ করুন। অ্যাডমিন দেখে যাচাই করে যোগ করবেন।</div>'+
+      '<div class="field"><label>কী ধরনের পেমেন্ট?</label><div class="radio-group" id="pnTypeGroup">'+
+        '<label class="radio-tile'+(preselected?'':' on')+'" data-tile="monthly"><input type="radio" name="pnType" value="monthly" '+(preselected?'':'checked')+'/><div class="ic">'+icon('wallet')+'</div><div class="lb">মাসিক চাঁদা</div></label>'+
+        '<label class="radio-tile'+(preselected?' on':'')+'" data-tile="event"><input type="radio" name="pnType" value="event" '+(preselected?'checked':'')+'/><div class="ic">'+icon('calendar')+'</div><div class="lb">ইভেন্ট ফি</div></label>'+
+      '</div></div>'+
+      '<div id="pnMonthlySection" '+(preselected?'style="display:none"':'')+'>'+
+        '<div class="field"><label>কোন মাসের চাঁদা?</label><select id="pnMonth">'+monthOptions.map(function(o,i){
+          const isCurrent = o.m===now.getMonth()+1 && o.y===now.getFullYear();
+          return '<option value="'+o.y+'-'+o.m+'" '+(i===0?'selected':'')+'>'+MN(o.m)+' '+o.y+(isCurrent?' (এখন)':'')+'</option>';
+        }).join('')+'</select><div class="hint">পূর্ববর্তী মাসও সিলেক্ট করতে পারবেন</div></div>'+
+      '</div>'+
+      '<div id="pnEventSection" '+(preselected?'':'style="display:none"')+'>'+
+        '<div class="field"><label>কোন ইভেন্ট?</label><select id="pnEvent">'+(upcoming.length?'':'<option value="">কোনো আগামী ইভেন্ট নেই</option>')+upcoming.map(function(e){return '<option value="'+(e.id||'')+'" '+(preselected&&preselected.id===e.id?'selected':'')+'>'+e.title+' — '+fmtDate(e.date)+'</option>';}).join('')+'</select>'+(preselected?'<div class="hint">পূর্বনির্বাচিত: '+preselected.title+'</div>':'')+'</div>'+
+      '</div>'+
+      '<div class="field"><label>টাকার পরিমাণ (৳)</label><input id="pnAmt" type="number" placeholder="যেমন: 500" '+(preselected&&preselected.fee?'value="'+preselected.fee+'"':'')+'/></div>'+
       '<div class="field"><label>কবে পাঠিয়েছেন</label><input id="pnDate" type="date" value="'+toISO(now)+'"/></div>'+
       '<div class="field"><label>নোট (ঐচ্ছিক)</label><input id="pnNote" placeholder="যেমন: bKash ref 8XX1234..."/></div>'+
       '<div class="info-box" style="text-align:left">📱 bKash নাম্বার: <b>'+BKASH_NUMBER+'</b><br>Reference-এ লিখুন: <b>'+(m.id||'')+'</b></div>',
     footer: '<button class="btn ghost" data-mclose="1">বাতিল</button><button class="btn gold" id="pnSave">অ্যাডমিনকে জানান</button>',
     onMount: function(mr){
+      // radio tile আপডেট
+      function updateTiles(){
+        const checked = mr.querySelector('input[name="pnType"]:checked');
+        const v = checked ? checked.value : 'monthly';
+        mr.querySelectorAll('.radio-tile').forEach(function(t){
+          t.classList.toggle('on', t.dataset.tile===v);
+        });
+        mr.querySelector('#pnMonthlySection').style.display = v==='monthly' ? 'block' : 'none';
+        mr.querySelector('#pnEventSection').style.display = v==='event' ? 'block' : 'none';
+        // চেকবক্স sync
+        mr.querySelectorAll('.radio-tile').forEach(function(t){
+          const inp = t.querySelector('input');
+          inp.checked = (t.dataset.tile===v);
+        });
+      }
+      mr.querySelectorAll('.radio-tile').forEach(function(t){
+        t.addEventListener('click', function(e){
+          e.preventDefault();
+          const v = t.dataset.tile;
+          mr.querySelectorAll('.radio-tile').forEach(function(x){ x.classList.toggle('on', x.dataset.tile===v); });
+          mr.querySelectorAll('input[name="pnType"]').forEach(function(x){ x.checked = x.value===v; });
+          mr.querySelector('#pnMonthlySection').style.display = v==='monthly' ? 'block' : 'none';
+          mr.querySelector('#pnEventSection').style.display = v==='event' ? 'block' : 'none';
+        });
+      });
+      updateTiles();
+      
       mr.querySelector('#pnSave').addEventListener('click', async function(){
+        const typeInp = mr.querySelector('input[name="pnType"]:checked');
+        const type = typeInp ? typeInp.value : 'monthly';
         const amt = parseInt(mr.querySelector('#pnAmt').value)||0;
-        const mm = parseInt(mr.querySelector('#pnMonth').value)||1;
-        const yy = parseInt(mr.querySelector('#pnYear').value)||now.getFullYear();
         const date = mr.querySelector('#pnDate').value || toISO(now);
         const note = mr.querySelector('#pnNote').value.trim();
         if(amt<=0){ toast('সঠিক পরিমাণ দিন','error'); return; }
+        
+        const data = {
+          memberId: m.id,
+          memberName: m.name,
+          authUid: state.user.uid,
+          amount: amt,
+          date: date,
+          note: note,
+          status: 'pending',
+          ts: Date.now(),
+          type: type
+        };
+        
+        if(type==='monthly'){
+          const val = mr.querySelector('#pnMonth').value;
+          const parts = val.split('-');
+          data.forYear = parseInt(parts[0]);
+          data.forMonth = parseInt(parts[1]);
+          data.eventId = null;
+          data.eventTitle = null;
+        } else {
+          const evId = mr.querySelector('#pnEvent').value;
+          if(!evId){ toast('ইভেন্ট সিলেক্ট করুন','error'); return; }
+          const ev = DATA.eventById(evId);
+          if(!ev){ toast('ইভেন্ট পাওয়া যায়নি','error'); return; }
+          data.eventId = evId;
+          data.eventTitle = ev.title;
+          data.forMonth = null;
+          data.forYear = null;
+        }
+        
         try{
-          await addDoc(collection(db,'paymentRequests'), {
-            memberId: m.id,
-            memberName: m.name,
-            authUid: state.user.uid,
-            amount: amt,
-            forMonth: mm,
-            forYear: yy,
-            date: date,
-            note: note,
-            status: 'pending',
-            ts: Date.now()
-          });
+          await addDoc(collection(db,'paymentRequests'), data);
           closeModal();
           toast('✓ অ্যাডমিনকে জানানো হয়েছে!','success');
           vibrate(20);
         }catch(err){
           console.error(err);
+          toast('Error: '+err.message,'error');
+        }
+      });
+    }
+  });
+}
+
+/* ========== স্ট্যাটাস পোস্ট ========== */
+async function postStatus(){
+  const ta = document.getElementById('quickStatus');
+  if(!ta) return;
+  const body = ta.value.trim();
+  if(!body){ toast('কিছু লিখুন','error'); return; }
+  if(body.length > 2000){ toast('অনেক বড় — ছোট করুন','error'); return; }
+  const m = state.member;
+  try{
+    await addDoc(collection(db,'statusPosts'), {
+      memberId: m.id,
+      memberName: m.name,
+      memberPhotoUrl: m.photoUrl || '',
+      memberColor: m.color || '#0E5F30',
+      body: body,
+      imageUrl: '',
+      likes: [],
+      ts: Date.now()
+    });
+    ta.value = '';
+    toast('✓ পোস্ট হয়েছে','success');
+    vibrate(15);
+  }catch(err){
+    console.error(err);
+    toast('Error: '+err.message,'error');
+  }
+}
+
+async function toggleLike(postId){
+  const p = DB.statusPosts.find(function(x){return x.id===postId});
+  if(!p) return;
+  const uid = state.user.uid;
+  const likes = (p.likes||[]).slice();
+  const idx = likes.indexOf(uid);
+  if(idx>=0) likes.splice(idx,1);
+  else likes.push(uid);
+  try{
+    await updateDoc(doc(db,'statusPosts',postId), { likes: likes });
+    // local update
+    DB.myLikes[postId] = idx<0;
+    vibrate(8);
+  }catch(err){
+    console.error(err);
+    toast('Error: '+err.message,'error');
+  }
+}
+
+function deleteStatusConfirm(postId){
+  const p = DB.statusPosts.find(function(x){return x.id===postId});
+  if(!p) return;
+  openModal({
+    title: 'পোস্ট মুছুন?',
+    body: '<div class="warn-box">আপনি কি নিশ্চিত? পোস্টটি স্থায়ীভাবে মুছে যাবে।</div>',
+    footer: '<button class="btn ghost" data-mclose="1">বাতিল</button><button class="btn danger" id="dsYes">মুছুন</button>',
+    onMount: function(mr){
+      mr.querySelector('#dsYes').addEventListener('click', async function(){
+        try{
+          await deleteDoc(doc(db,'statusPosts',postId));
+          closeModal();
+          toast('পোস্ট মুছে ফেলা হয়েছে');
+        }catch(err){
           toast('Error: '+err.message,'error');
         }
       });
@@ -1069,6 +1432,7 @@ document.addEventListener('click', function(ev){
   if(act === 'back'){ popPage(); return; }
   if(act === 'mfilter'){ state.memberFilter = el.dataset.v; render(); return; }
   if(act === 'open-member'){ pushPage('memberProfile', {id: el.dataset.id}); return; }
+  if(act === 'open-event'){ pushPage('eventDetail', {id: el.dataset.id}); return; }
   if(act === 'open-chat'){
     const id = el.dataset.id;
     if(!id) return;
@@ -1079,7 +1443,10 @@ document.addEventListener('click', function(ev){
   if(act === 'send-chat'){ sendChat(el.dataset.id); return; }
   if(act === 'edit-my-name'){ formEditMyName(); return; }
   if(act === 'change-pin'){ formChangePin(); return; }
-  if(act === 'open-pay-notify'){ formPayNotify(); return; }
+  if(act === 'open-pay-notify'){ formPayNotify(el.dataset.event); return; }
+  if(act === 'post-status'){ postStatus(); return; }
+  if(act === 'like-status'){ toggleLike(el.dataset.id); return; }
+  if(act === 'delete-status'){ deleteStatusConfirm(el.dataset.id); return; }
   if(act === 'toggle-theme'){
     state.theme = state.theme==='dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = state.theme;
@@ -1166,6 +1533,7 @@ onAuthStateChanged(auth, async function(user){
     state.myRequests = [];
     state.tab = 'home';
     state.stack = [];
+    DB.myLikes = {};
     state.loading = false;
     render();
     return;
@@ -1211,7 +1579,9 @@ async function loadInitialData(){
       getDocs(collection(db,'contributions')),
       getDocs(collection(db,'transactions')),
       getDocs(collection(db,'extraPayments')),
-      getDocs(query(collection(db,'paymentRequests'), where('authUid','==',state.user.uid)))
+      getDocs(query(collection(db,'paymentRequests'), where('authUid','==',state.user.uid))),
+      getDocs(collection(db,'events')),
+      getDocs(collection(db,'statusPosts'))
     ]);
     state.myContribs = results[0].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
     state.myExtras = results[1].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
@@ -1223,6 +1593,13 @@ async function loadInitialData(){
     DB.allTransactions = results[5].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
     DB.allExtras = results[6].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
     state.myRequests = results[7].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+    DB.events = results[8].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+    DB.statusPosts = results[9].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+    // আমার like গুলো বের করি
+    DB.myLikes = {};
+    DB.statusPosts.forEach(function(p){
+      if((p.likes||[]).indexOf(state.user.uid)>=0) DB.myLikes[p.id] = true;
+    });
   }catch(err){
     console.error('load failed', err);
     toast('ডেটা লোড ব্যর্থ: '+err.message,'error');
@@ -1293,7 +1670,6 @@ function setupRealtime(){
     }
   ));
 
-  // সব চাঁদা (সংগঠনের হিসাবের জন্য)
   unsubs.push(onSnapshot(
     collection(db,'contributions'),
     { includeMetadataChanges: false },
@@ -1303,7 +1679,6 @@ function setupRealtime(){
     }
   ));
 
-  // সব লেনদেন (সংগঠনের হিসাবের জন্য)
   unsubs.push(onSnapshot(
     collection(db,'transactions'),
     { includeMetadataChanges: false },
@@ -1313,7 +1688,6 @@ function setupRealtime(){
     }
   ));
 
-  // সব অতিরিক্ত জমা
   unsubs.push(onSnapshot(
     collection(db,'extraPayments'),
     { includeMetadataChanges: false },
@@ -1323,7 +1697,39 @@ function setupRealtime(){
     }
   ));
 
-  // আমার পেমেন্ট রিকোয়েস্ট
+  // ইভেন্ট real-time
+  unsubs.push(onSnapshot(
+    collection(db,'events'),
+    { includeMetadataChanges: false },
+    function(s){
+      const oldCount = DB.events.length;
+      DB.events = s.docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+      if(!state.loading){
+        render();
+        if(!s.metadata.fromCache && DB.events.length > oldCount) showUpdateBanner('নতুন ইভেন্ট যোগ হয়েছে');
+      }
+    }
+  ));
+
+  // স্ট্যাটাস real-time
+  unsubs.push(onSnapshot(
+    collection(db,'statusPosts'),
+    { includeMetadataChanges: false },
+    function(s){
+      const oldCount = DB.statusPosts.length;
+      DB.statusPosts = s.docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+      // like sync
+      DB.myLikes = {};
+      DB.statusPosts.forEach(function(p){
+        if((p.likes||[]).indexOf(uid)>=0) DB.myLikes[p.id] = true;
+      });
+      if(!state.loading){
+        render();
+        if(!s.metadata.fromCache && DB.statusPosts.length > oldCount) showUpdateBanner('নতুন স্ট্যাটাস এসেছে');
+      }
+    }
+  ));
+
   unsubs.push(onSnapshot(
     query(collection(db,'paymentRequests'), where('authUid','==',uid)),
     { includeMetadataChanges: false },
@@ -1333,7 +1739,6 @@ function setupRealtime(){
     }
   ));
 
-  // inbox messages
   unsubs.push(onSnapshot(
     query(collection(db,'messages'), where('toId','==',mid)),
     { includeMetadataChanges: false },
@@ -1354,7 +1759,6 @@ function setupRealtime(){
     }
   ));
 
-  // sent messages
   unsubs.push(onSnapshot(
     query(collection(db,'messages'), where('fromId','==',mid)),
     { includeMetadataChanges: false },
