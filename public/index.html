@@ -35,19 +35,21 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,var(--c),color-mix(in srgb,var(--c) 65%,#000));color:#fff;font-weight:700;flex:none;overflow:hidden}
 .avatar img{width:100%;height:100%;object-fit:cover}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:600;line-height:1.6}
-.pill.paid,.pill.active{background:var(--income-soft);color:var(--income)}
-.pill.due,.pill.suspended{background:var(--expense-soft);color:var(--expense)}
+.pill.paid,.pill.active,.pill.approved{background:var(--income-soft);color:var(--income)}
+.pill.due,.pill.suspended,.pill.rejected{background:var(--expense-soft);color:var(--expense)}
 .pill.partial,.pill.pending{background:var(--warn-soft);color:var(--warn)}
 .pill.inactive{background:var(--border);color:var(--text-3)}
 .pill.info{background:var(--info-soft);color:var(--info)}
 .pill.urgent{background:var(--danger-soft);color:var(--danger)}
 .pill.important{background:var(--warn-soft);color:var(--warn)}
 .pill.normal{background:var(--info-soft);color:var(--info)}
+.pill.gold{background:var(--gold-soft);color:var(--gold)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;color:#fff;transition:transform .12s;background:linear-gradient(135deg,var(--primary-l),var(--primary));box-shadow:0 8px 20px -8px rgba(14,95,48,.7);width:100%}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
 .btn.ghost{background:var(--card);color:var(--text);border:1.5px solid var(--border);box-shadow:none}
 .btn.soft{background:var(--primary-soft);color:var(--primary);box-shadow:none}
+.btn.gold{background:linear-gradient(135deg,var(--gold),#B58414)}
 .btn.danger{background:linear-gradient(135deg,#E11D48,#B91C1C)}
 .btn.block{width:100%}
 .icon-btn{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border-2);color:var(--text-2);transition:transform .12s;position:relative}
@@ -62,8 +64,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .bc-header{display:flex;align-items:center;gap:12px;position:relative;z-index:2;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.15)}
 .bc-logo{width:52px;height:52px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;padding:4px;flex:none;box-shadow:0 6px 14px rgba(0,0,0,.25);overflow:hidden}
 .bc-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:11px}
-.bc-logo .fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-l),var(--primary));border-radius:11px;color:#fff}
-.bc-logo .fallback svg{width:26px;height:26px}
 .bc-org{flex:1;min-width:0}
 .bc-org-name{font-size:14.5px;font-weight:700;line-height:1.2;letter-spacing:-.2px}
 .bc-org-sub{font-size:10.5px;opacity:.82;margin-top:2px;font-weight:500}
@@ -121,7 +121,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .field input,.field select,.field textarea{width:100%;height:46px;border-radius:13px;border:1.5px solid var(--border);background:var(--card);padding:0 13px;outline:none;font-size:14px}
 .field textarea{height:auto;min-height:90px;padding:11px 13px;resize:vertical;line-height:1.6}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3.5px var(--primary-soft)}
-.field input:disabled{background:var(--card-2);color:var(--text-3)}
 .field .hint{font-size:10.5px;color:var(--text-3);margin-top:5px;line-height:1.5}
 .field input.pin-input{text-align:center;font-size:24px;font-weight:700;letter-spacing:12px;font-family:'Courier New',monospace;padding-left:20px}
 .toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:16px;font-size:12.5px;font-weight:600;z-index:200;opacity:0;pointer-events:none;transition:all .28s;max-width:88%;text-align:center}
@@ -259,7 +258,11 @@ const I = {
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>',
   search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>',
   lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="11" width="17" height="10" rx="2.5"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
-  key:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="m10.5 12.5 8-8M17 3l4 4M14 6l4 4"/></svg>'
+  key:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="m10.5 12.5 8-8M17 3l4 4M14 6l4 4"/></svg>',
+  receipt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 2v20l2.5-1.6L9 22l2.5-1.6L14 22l2.5-1.6L19 22V2l-2.5 1.6L14 2l-2.5 1.6L9 2 6.5 3.6z"/><path d="M8 8h8M8 12h5"/></svg>',
+  arrowDown:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
+  arrowUp:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+  chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7.5 15.5l3.5-4.5 3 3L20 7"/></svg>'
 };
 function icon(n){ return I[n] || ''; }
 
@@ -270,9 +273,10 @@ const state = {
   stack: [], memberFilter: 'all', memberQ: '',
   myContribs: [], myExtras: [],
   inbox: [], sent: [], unreadCount: 0,
-  openChat: null, chatMessages: []
+  openChat: null, chatMessages: [],
+  myRequests: []
 };
-const DB = {org:{}, announcements:[], allMembers:[]};
+const DB = {org:{}, announcements:[], allMembers:[], allContribs:[], allTransactions:[], allExtras:[]};
 let unsubs = [];
 
 function $(s){ return document.querySelector(s); }
@@ -280,6 +284,7 @@ function pad2(n){ return String(n).padStart(2,'0'); }
 function fmtN(n){ return Math.round(n).toLocaleString('en-IN'); }
 function money(n){ return '৳ ' + fmtN(n); }
 function money2(n){ return '৳ ' + Number(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function shortMoney(n){n=Math.abs(n);if(n>=1e7)return '৳'+(n/1e7).toFixed(2)+'কো';if(n>=1e5)return '৳'+(n/1e5).toFixed(2)+'লা';if(n>=1e3)return '৳'+(n/1e3).toFixed(1)+'হা';return '৳'+Math.round(n)}
 function MN(m){ return BN_MONTHS[m-1]; }
 function toISO(d){ return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
 function parseISO(s){ if(!s) return new Date(); const p=s.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); }
@@ -330,7 +335,6 @@ function normalizePhone(raw){
   return s;
 }
 function authEmailFromPhone(phoneNorm){ return phoneNorm + AUTH_DOMAIN; }
-// ৪ ডিজিট PIN → ৬+ অক্ষরের password (Firebase-এর requirement)
 function makeAuthPassword(pin){ return String(pin) + PIN_SUFFIX; }
 
 let _updateBannerTimer = null;
@@ -367,7 +371,41 @@ const DATA = {
     const n = new Date();
     return state.myContribs.find(c => c.year === n.getFullYear() && c.month === n.getMonth()+1) || null;
   },
-  memberById(id){ return DB.allMembers.find(m => m.id === id) || null; }
+  memberById(id){ return DB.allMembers.find(m => m.id === id) || null; },
+  // সংগঠনের মোট হিসাব (সব সদস্যের ডেটা থেকে)
+  orgStats(){
+    let income=0, expense=0;
+    let contribution=0, extra=0, donation=0, otherIncome=0, eventExp=0, otherExp=0;
+    DB.allTransactions.forEach(function(t){
+      if(t.type==='contribution'){contribution+=t.amount;income+=t.amount}
+      else if(t.type==='extra_payment'){extra+=t.amount;income+=t.amount}
+      else if(t.type==='donation'){donation+=t.amount;income+=t.amount}
+      else if(t.type==='other_income'){otherIncome+=t.amount;income+=t.amount}
+      else if(t.type==='event_expense'){eventExp+=t.amount;expense+=t.amount}
+      else if(t.type==='other_expense'){otherExp+=t.amount;expense+=t.amount}
+    });
+    return {income:income, expense:expense, balance:income-expense, contribution:contribution, extra:extra, donation:donation, otherIncome:otherIncome, eventExp:eventExp, otherExp:otherExp};
+  },
+  // একজন সদস্যের সংগঠনে মোট জমা
+  memberTotalPaid(memberId){
+    const cs = DB.allContribs.filter(c=>c.memberId===memberId);
+    const paid = cs.reduce((a,b)=>a+(b.paidAmount||0),0);
+    const extras = DB.allExtras.filter(x=>x.memberId===memberId).reduce((a,b)=>a+(b.amount||0),0);
+    const expected = cs.reduce((a,b)=>a+(b.amount||0),0);
+    return { paid: paid, extras: extras, total: paid+extras, expected: expected, due: Math.max(expected-paid,0) };
+  },
+  // একজন সদস্যের মাসিক চাঁদার হিস্টোরি
+  memberContribs(memberId){
+    return DB.allContribs.filter(c=>c.memberId===memberId).sort(function(a,b){
+      return (b.year||0)-(a.year||0) || (b.month||0)-(a.month||0);
+    });
+  },
+  // একজন সদস্যের অতিরিক্ত জমা
+  memberExtras(memberId){
+    return DB.allExtras.filter(x=>x.memberId===memberId).sort(function(a,b){
+      return (b.date||'').localeCompare(a.date||'');
+    });
+  }
 };
 
 function render(){
@@ -530,6 +568,7 @@ function renderTab(){
   switch(state.tab){
     case 'home': return viewHome();
     case 'members': return viewMembers();
+    case 'my': return viewMyAccount();
     case 'messages': return viewMessages();
     case 'profile': return viewProfile();
     default: return viewHome();
@@ -539,6 +578,7 @@ function renderBottomNav(){
   const items = [
     {k:'home', ic:'home', bn:'হোম'},
     {k:'members', ic:'users', bn:'সদস্য'},
+    {k:'my', ic:'wallet', bn:'আমার হিসাব'},
     {k:'messages', ic:'chat', bn:'মেসেজ', badge: state.unreadCount},
     {k:'profile', ic:'user', bn:'প্রোফাইল'}
   ];
@@ -560,23 +600,37 @@ function subHeader(title, right){
   return '<div class="subhd"><button class="icon-btn" data-act="back" style="width:34px;height:34px">'+icon('back')+'</button><h1>'+title+'</h1>'+(right||'')+'</div>';
 }
 
+/* ========== হোম ========== */
 function viewHome(){
   const m = state.member;
   const s = DATA.mySummary();
   const tm = DATA.thisMonth();
+  const org = DATA.orgStats();
   const recent = state.myContribs.slice().sort(function(a,b){
     return (b.year||0)-(a.year||0) || (b.month||0)-(a.month||0);
   }).slice(0,3);
-  const topNotices = DB.announcements.slice(0,2);
   const logoSrc = LOGO_URL ? '<img src="'+LOGO_URL+'"/>' : '';
   const statusPill = m.status==='active'?'active':(m.status==='inactive'?'inactive':(m.status==='suspended'?'suspended':'pending'));
   const statusLabel = {active:'সক্রিয়',inactive:'নিষ্ক্রিয়',suspended:'সাসপেন্ডেড',pending:'অপেক্ষমাণ'}[m.status] || m.status;
+  const pendingReqCount = (state.myRequests||[]).filter(r=>r.status==='pending').length;
 
   let h = '';
   h += '<div class="hd"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">স্বাগতম</div><div class="bb" style="font-size:14px">'+m.name+'</div></div></div><div class="row gap6"><button class="icon-btn" data-act="toggle-theme">'+icon(state.theme==='dark'?'sun':'moon')+'</button></div></div>';
 
-  h += '<div class="sec" style="margin-top:6px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">'+ORG_NAME+'</div><div class="bc-org-sub">'+(m.id||'')+' · '+statusLabel+'</div></div></div><div class="bc-label">এখন পর্যন্ত পরিশোধিত</div><div class="bc-amount">'+money2(s.paid)+'</div><div class="bc-sub">মোট প্রত্যাশিত '+money(s.expected)+'</div><div class="bc-stats"><div class="bc-stat"><div class="k">বাকি</div><div class="v">'+money(s.due)+'</div></div><div class="bc-stat"><div class="k">অতিরিক্ত জমা</div><div class="v">'+money(s.extras)+'</div></div></div></div></div>';
+  // সংগঠনের ব্যালেন্স কার্ড
+  h += '<div class="sec" style="margin-top:6px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">'+ORG_NAME+'</div><div class="bc-org-sub">সংগঠনের মোট হিসাব</div></div></div><div class="bc-label">মোট ব্যালেন্স</div><div class="bc-amount">'+money2(org.balance)+'</div><div class="bc-sub">সবার আয়-ব্যয় থেকে</div><div class="bc-stats"><div class="bc-stat"><div class="k">মোট আয়</div><div class="v">'+shortMoney(org.income)+'</div></div><div class="bc-stat"><div class="k">মোট ব্যয়</div><div class="v">'+shortMoney(org.expense)+'</div></div></div></div></div>';
 
+  // টাকা পাঠানোর reminder (pending requests থাকলে দেখাবে না)
+  if(pendingReqCount===0){
+    h += '<div class="sec"><div class="card" style="background:linear-gradient(135deg,var(--gold-soft),var(--warn-soft));border:none;cursor:pointer" data-act="open-pay-notify"><div class="row"><div style="width:44px;height:44px;border-radius:14px;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('receipt')+'</div><div class="grow"><div class="bb" style="font-size:13.5px">💰 টাকা পাঠিয়েছেন?</div><div class="tiny muted mt6">অ্যাডমিনকে জানান — যাচাই করে যোগ করবেন</div></div></div></div></div>';
+  } else {
+    h += '<div class="sec"><div class="card" style="background:linear-gradient(135deg,var(--warn-soft),var(--info-soft));border:none"><div class="row"><div style="width:44px;height:44px;border-radius:14px;background:var(--warn);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('clock')+'</div><div class="grow"><div class="bb" style="font-size:13.5px">⏳ '+pendingReqCount+' টি পেমেন্ট অপেক্ষমাণ</div><div class="tiny muted mt6">অ্যাডমিন যাচাই করছেন</div></div></div></div></div>';
+  }
+
+  // নিজের হিসাব
+  h += '<div class="sec"><div class="sec-hd"><h2>আমার চাঁদা</h2><span class="link" data-act="tab" data-tab="my">বিস্তারিত →</span></div><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">'+money(s.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(s.due>0?'var(--expense)':'var(--text-3)')+'">'+money(s.due)+'</div></div><div class="stat"><div class="k">অতিরিক্ত</div><div class="v" style="color:var(--accent)">'+money(s.extras)+'</div></div></div></div>';
+
+  // এই মাসের চাঁদা
   h += '<div class="sec"><div class="sec-hd"><h2>এই মাসের চাঁদা</h2></div>';
   if(tm){
     const st = tm.status || 'due';
@@ -588,9 +642,11 @@ function viewHome(){
   }
   h += '</div>';
 
-  h += '<div class="sec"><div class="sec-hd"><h2>bKash দিয়ে চাঁদা পাঠান</h2></div><div class="bkash-card"><div class="bkash-brand"><span class="logo">bKash</span><span>'+BKASH_TYPE+'</span></div><div class="bkash-label">টাকা পাঠানোর নাম্বার</div><div class="bkash-num">'+BKASH_NUMBER+'</div><div class="bkash-hint">Send Money অপশনে গিয়ে উপরের নাম্বারে টাকা পাঠান। Reference-এ লিখুন: <b>'+(m.id||'')+'</b></div><button class="bkash-btn" data-act="copy-bkash">'+icon('copy')+' নাম্বার কপি করুন</button></div></div>';
+  // bKash
+  h += '<div class="sec"><div class="sec-hd"><h2>bKash নাম্বার</h2></div><div class="bkash-card"><div class="bkash-brand"><span class="logo">bKash</span><span>'+BKASH_TYPE+'</span></div><div class="bkash-label">টাকা পাঠানোর নাম্বার</div><div class="bkash-num">'+BKASH_NUMBER+'</div><div class="bkash-hint">Reference-এ লিখুন: <b>'+(m.id||'')+'</b></div><button class="bkash-btn" data-act="copy-bkash">'+icon('copy')+' কপি করুন</button></div></div>';
 
-  h += '<div class="sec"><div class="sec-hd"><h2>সাম্প্রতিক চাঁদা</h2></div>';
+  // সাম্প্রতিক চাঁদা
+  h += '<div class="sec"><div class="sec-hd"><h2>সাম্প্রতিক</h2></div>';
   if(!recent.length){
     h += '<div class="card" style="text-align:center;padding:18px"><div class="tiny muted">এখনো কোনো রেকর্ড নেই</div></div>';
   } else {
@@ -603,42 +659,20 @@ function viewHome(){
   }
   h += '</div>';
 
-  if(topNotices.length){
-    h += '<div class="sec"><div class="sec-hd"><h2>সাম্প্রতিক ঘোষণা</h2></div>';
-    h += topNotices.map(function(a){
+  // ঘোষণা
+  if(DB.announcements.length){
+    h += '<div class="sec" style="padding-bottom:26px"><div class="sec-hd"><h2>সাম্প্রতিক ঘোষণা</h2></div>';
+    h += DB.announcements.slice(0,2).map(function(a){
       const pr = a.priority || 'normal';
       const lbl = {urgent:'জরুরি',important:'গুরুত্বপূর্ণ',normal:'সাধারণ'}[pr];
       return '<div class="card" style="margin-bottom:9px"><div class="between" style="align-items:flex-start;margin-bottom:6px"><div class="b" style="font-size:13.5px;line-height:1.4;flex:1">'+(a.title||'')+'</div><span class="pill '+pr+'" style="flex:none">'+lbl+'</span></div><div class="sm muted ell">'+(a.body||'')+'</div></div>';
     }).join('');
     h += '</div>';
   }
-
-  const all = state.myContribs.slice().sort(function(a,b){
-    return (b.year||0)-(a.year||0) || (b.month||0)-(a.month||0);
-  });
-  if(all.length){
-    h += '<div class="sec"><div class="sec-hd"><h2>সব চাঁদা</h2><span class="tiny muted">'+all.length+' টি</span></div>';
-    h += all.map(function(c){
-      const st = c.status || 'due';
-      const label = st==='paid' ? 'পরিশোধিত' : (st==='partial' ? 'আংশিক' : 'বাকি');
-      const bg = st==='paid' ? 'var(--income-soft)' : (st==='partial' ? 'var(--warn-soft)' : 'var(--expense-soft)');
-      const col = st==='paid' ? 'var(--income)' : (st==='partial' ? 'var(--warn)' : 'var(--expense)');
-      return '<div class="card" style="margin-bottom:9px;padding:14px"><div class="between"><div class="row"><div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:'+bg+';color:'+col+'">'+c.month+'</div><div><div class="b" style="font-size:14px">'+MN(c.month)+' '+c.year+'</div><div class="tiny muted mt6">প্রত্যাশিত '+money(c.amount||0)+'</div></div></div><span class="pill '+st+'">'+label+'</span></div></div>';
-    }).join('');
-    h += '</div>';
-  }
-
-  if(state.myExtras.length){
-    h += '<div class="sec" style="padding-bottom:26px"><div class="sec-hd"><h2>অতিরিক্ত জমা</h2><span class="tiny muted">'+money(s.extras)+'</span></div>';
-    h += '<div class="list">' + state.myExtras.slice().sort(function(a,b){
-      return (b.date||'').localeCompare(a.date||'');
-    }).map(function(x){
-      return '<div class="li"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div class="t">'+(EXTRA_PURPOSES[x.purpose]||x.purposeBn||'অতিরিক্ত জমা')+'</div><div class="s">'+fmtDate(x.date)+(x.note?' · '+x.note:'')+'</div></div><div class="amt" style="color:var(--accent)">'+money(x.amount)+'</div></div>';
-    }).join('') + '</div></div>';
-  }
   return h;
 }
 
+/* ========== সদস্য ডিরেক্টরি ========== */
 function viewMembers(){
   const q = (state.memberQ||'').trim().toLowerCase();
   let list = DB.allMembers.slice();
@@ -659,26 +693,69 @@ function viewMembers(){
   if(!list.length){
     h += '<div class="empty"><div class="eic">'+icon('users')+'</div><h3>কোনো সদস্য পাওয়া যায়নি</h3></div>';
   } else {
-    h += '<div class="dir-grid">' + list.map(function(m){
-      return '<button class="dir-tile" data-act="open-member" data-id="'+(m.id||'')+'">'+avatarHTML(m,60)+'<div class="nm">'+(m.name||'')+'</div><div class="id">'+(m.id||'')+'</div></button>';
-    }).join('') + '</div>';
+    h += list.map(function(m){
+      const t = DATA.memberTotalPaid(m.id);
+      return '<div class="card" style="margin-bottom:10px;padding:13px" data-act="open-member" data-id="'+(m.id||'')+'">'+
+        '<div class="row">'+avatarHTML(m,46)+'<div class="grow"><div class="b ell" style="font-size:14px">'+m.name+'</div><div class="tiny muted mt6">'+(m.id||'')+'</div></div></div>'+
+        '<div class="row mt10" style="gap:8px;padding-top:10px;border-top:1px solid var(--border-2)">'+
+          '<div style="flex:1"><div class="tiny muted">জমা</div><div class="b sm" style="color:var(--income)">'+money(t.total)+'</div></div>'+
+          '<div style="flex:1"><div class="tiny muted">বাকি</div><div class="b sm" style="color:'+(t.due>0?'var(--expense)':'var(--text-3)')+'">'+money(t.due)+'</div></div>'+
+        '</div></div>';
+    }).join('');
   }
   h += '</div>';
   return h;
 }
+
+/* ========== সদস্য প্রোফাইল ভিউ ========== */
 function pageMemberProfile(memberId){
   const m = DATA.memberById(memberId);
   if(!m) return subHeader('প্রোফাইল') + '<div class="subbody"><div class="empty"><h3>সদস্য পাওয়া যায়নি</h3></div></div>';
   const isMe = m.id === state.member.id;
   const statusPill = m.status==='active'?'active':(m.status==='inactive'?'inactive':(m.status==='suspended'?'suspended':'pending'));
   const statusLabel = {active:'সক্রিয়',inactive:'নিষ্ক্রিয়',suspended:'সাসপেন্ডেড',pending:'অপেক্ষমাণ'}[m.status] || m.status;
+  const cs = DATA.memberContribs(m.id);
+  const ex = DATA.memberExtras(m.id);
+  const t = DATA.memberTotalPaid(m.id);
+  
   let h = subHeader(isMe ? 'আমার প্রোফাইল' : m.name);
   h += '<div class="subbody">';
+  
+  // হেডার কার্ড
   h += '<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:22px 16px"><div style="display:flex;justify-content:center">'+avatarHTML(m,84)+'</div><div class="bb" style="font-size:18px;margin-top:12px">'+m.name+'</div><div class="sm muted" style="margin-top:3px">'+(m.id||'')+'</div><div class="row" style="justify-content:center;margin-top:11px"><span class="pill '+statusPill+'">'+statusLabel+'</span></div></div></div>';
-  h += '<div class="sec"><div class="list">';
-  if(m.phone) h += '<div class="li"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('phone')+'</div><div class="grow"><div class="tiny muted">মোবাইল</div><div class="b sm">'+m.phone+'</div></div></div>';
-  if(m.joinDate) h += '<div class="li"><div class="ic" style="background:var(--info-soft);color:var(--info)">'+icon('clock')+'</div><div class="grow"><div class="tiny muted">যোগদান</div><div class="b sm">'+fmtDate(m.joinDate)+'</div></div></div>';
-  h += '</div></div>';
+
+  // হিসাব সংক্ষেপ
+  h += '<div class="sec"><div class="sec-hd"><h2>💰 হিসাব সংক্ষেপ</h2></div><div class="stat-grid"><div class="stat"><div class="k">মোট জমা</div><div class="v" style="color:var(--income)">'+money(t.total)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(t.due>0?'var(--expense)':'var(--text-3)')+'">'+money(t.due)+'</div></div></div></div>';
+
+  // বিস্তারিত
+  h += '<div class="sec"><div class="card"><div class="row" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div class="grow"><div class="tiny muted">চাঁদা পরিশোধিত</div></div><div class="b sm" style="color:var(--income)">'+money(t.paid)+'</div></div><div class="row" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div class="grow"><div class="tiny muted">অতিরিক্ত জমা</div></div><div class="b sm" style="color:var(--accent)">'+money(t.extras)+'</div></div><div class="row" style="padding:9px 0;border-bottom:1px solid var(--border-2)"><div class="grow"><div class="tiny muted">মোট প্রত্যাশিত</div></div><div class="b sm">'+money(t.expected)+'</div></div><div class="row" style="padding:9px 0"><div class="grow"><div class="tiny muted">মাসিক চাঁদা</div></div><div class="b sm">'+money(m.monthly||0)+'</div></div></div></div>';
+
+  // চাঁদার হিস্টোরি
+  if(cs.length){
+    h += '<div class="sec"><div class="sec-hd"><h2>চাঁদার হিস্টোরি</h2><span class="tiny muted">'+cs.length+' টি</span></div>';
+    h += cs.slice(0,12).map(function(c){
+      const st = c.status||'due';
+      const label = st==='paid'?'পরিশোধিত':(st==='partial'?'আংশিক':'বাকি');
+      const bg = st==='paid' ? 'var(--income-soft)' : (st==='partial' ? 'var(--warn-soft)' : 'var(--expense-soft)');
+      const col = st==='paid' ? 'var(--income)' : (st==='partial' ? 'var(--warn)' : 'var(--expense)');
+      return '<div style="display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--card);border:1px solid var(--border-2);border-radius:14px;margin-bottom:7px;box-shadow:var(--shadow)"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:'+bg+';color:'+col+'">'+c.month+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+MN(c.month)+' '+c.year+'</div><div class="tiny muted">প্রত্যাশিত '+money(c.amount||0)+' · পরিশোধিত '+money(c.paidAmount||0)+'</div></div><span class="pill '+st+'">'+label+'</span></div>';
+    }).join('');
+    if(cs.length>12) h += '<div class="tiny muted center mt10">আরও '+(cs.length-12)+' টি</div>';
+    h += '</div>';
+  }
+
+  // অতিরিক্ত জমা
+  if(ex.length){
+    h += '<div class="sec"><div class="sec-hd"><h2>অতিরিক্ত জমা</h2><span class="tiny muted">'+money(t.extras)+'</span></div>';
+    h += '<div class="list">'+ex.slice(0,8).map(function(x){
+      return '<div class="li"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div class="t">'+(EXTRA_PURPOSES[x.purpose]||x.purposeBn||'অতিরিক্ত জমা')+'</div><div class="s">'+fmtDate(x.date)+(x.note?' · '+x.note:'')+'</div></div><div class="amt" style="color:var(--accent)">'+money(x.amount)+'</div></div>';
+    }).join('')+'</div></div>';
+  }
+
+  // ফোন (শুধু নিজের হলে বা সদস্য অ্যাপে সবার দৃশ্যমান)
+  if(m.phone) h += '<div class="sec"><div class="card"><div class="row"><div style="width:32px;color:var(--primary)">'+icon('phone')+'</div><div class="grow"><div class="tiny muted">মোবাইল</div><div class="b sm">'+m.phone+'</div></div></div></div></div>';
+
+  // মেসেজ বাটন
   if(!isMe){
     h += '<div class="sec" style="padding-bottom:26px"><button class="btn" data-act="open-chat" data-id="'+(m.id||'')+'">'+icon('chat')+' মেসেজ পাঠান</button></div>';
   } else {
@@ -688,6 +765,61 @@ function pageMemberProfile(memberId){
   return h;
 }
 
+/* ========== আমার হিসাব (নতুন ট্যাব) ========== */
+function viewMyAccount(){
+  const m = state.member;
+  const s = DATA.mySummary();
+  const cs = state.myContribs.slice().sort(function(a,b){ return (b.year||0)-(a.year||0)||(b.month||0)-(a.month||0); });
+  const ex = state.myExtras.slice().sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
+  const reqs = (state.myRequests||[]).slice().sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+
+  let h = '';
+  h += '<div class="hd"><div><h1>আমার হিসাব</h1><div class="sub">বিস্তারিত হিস্টোরি</div></div></div>';
+
+  // সামারি
+  h += '<div class="sec" style="margin-top:0"><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">'+money(s.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(s.due>0?'var(--expense)':'var(--text-3)')+'">'+money(s.due)+'</div></div><div class="stat"><div class="k">অতিরিক্ত</div><div class="v" style="color:var(--accent)">'+money(s.extras)+'</div></div></div></div>';
+
+  // "টাকা পাঠিয়েছি" বাটন
+  h += '<div class="sec"><button class="btn gold block" data-act="open-pay-notify">'+icon('receipt')+' 💰 আমি টাকা পাঠিয়েছি (অ্যাডমিনকে জানান)</button><div class="tiny muted center mt6" style="line-height:1.6">bKash-এ টাকা পাঠানোর পর এই বাটনে চাপ দিলে অ্যাডমিন জানতে পারবেন</div></div>';
+
+  // পেমেন্ট রিকোয়েস্ট হিস্টোরি
+  if(reqs.length){
+    h += '<div class="sec"><div class="sec-hd"><h2>আমার পেমেন্ট রিকোয়েস্ট</h2><span class="tiny muted">'+reqs.length+' টি</span></div>';
+    h += '<div class="list">'+reqs.slice(0,8).map(function(r){
+      const st = r.status;
+      const lbl = st==='pending' ? 'অপেক্ষমাণ' : (st==='approved' ? '✓ অনুমোদিত' : '✕ বাতিল');
+      const col = st==='approved' ? 'var(--income)' : (st==='rejected' ? 'var(--expense)' : 'var(--warn)');
+      const bg = st==='approved' ? 'var(--income-soft)' : (st==='rejected' ? 'var(--expense-soft)' : 'var(--warn-soft)');
+      return '<div class="li"><div class="ic" style="background:'+bg+';color:'+col+'">'+(st==='approved'?icon('check'):(st==='rejected'?icon('x'):icon('clock')))+'</div><div class="grow"><div class="t">'+money(r.amount)+' · '+(r.forMonth?MN(r.forMonth)+' '+r.forYear:'—')+'</div><div class="s">'+fmtDate(r.date)+(r.note?' · '+r.note:'')+'</div></div><span class="pill '+st+'">'+lbl+'</span></div>';
+    }).join('')+'</div></div>';
+  }
+
+  // চাঁদার পূর্ণ হিস্টোরি
+  if(cs.length){
+    h += '<div class="sec"><div class="sec-hd"><h2>চাঁদার হিস্টোরি</h2><span class="tiny muted">'+cs.length+' টি</span></div>';
+    h += cs.map(function(c){
+      const st = c.status||'due';
+      const label = st==='paid'?'পরিশোধিত':(st==='partial'?'আংশিক':'বাকি');
+      const bg = st==='paid' ? 'var(--income-soft)' : (st==='partial' ? 'var(--warn-soft)' : 'var(--expense-soft)');
+      const col = st==='paid' ? 'var(--income)' : (st==='partial' ? 'var(--warn)' : 'var(--expense)');
+      return '<div class="card" style="margin-bottom:9px;padding:14px"><div class="between"><div class="row"><div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:'+bg+';color:'+col+'">'+c.month+'</div><div><div class="b" style="font-size:14px">'+MN(c.month)+' '+c.year+'</div><div class="tiny muted mt6">প্রত্যাশিত '+money(c.amount||0)+'</div></div></div><span class="pill '+st+'">'+label+'</span></div><div class="between mt10"><span class="tiny muted">পরিশোধিত: '+money(c.paidAmount||0)+'</span>'+(c.paidDate?'<span class="tiny muted">'+fmtDate(c.paidDate)+'</span>':'')+'</div></div>';
+    }).join('');
+    h += '</div>';
+  } else {
+    h += '<div class="sec"><div class="empty"><div class="eic">'+icon('wallet')+'</div><h3>এখনো কোনো চাঁদার রেকর্ড নেই</h3></div></div>';
+  }
+
+  // অতিরিক্ত জমার হিস্টোরি
+  if(ex.length){
+    h += '<div class="sec" style="padding-bottom:26px"><div class="sec-hd"><h2>অতিরিক্ত জমার হিস্টোরি</h2><span class="tiny muted">'+ex.length+' টি</span></div>';
+    h += '<div class="list">'+ex.map(function(x){
+      return '<div class="li"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div class="t">'+(EXTRA_PURPOSES[x.purpose]||x.purposeBn||'অতিরিক্ত জমা')+'</div><div class="s">'+fmtDate(x.date)+(x.note?' · '+x.note:'')+'</div></div><div class="amt" style="color:var(--accent)">'+money(x.amount)+'</div></div>';
+    }).join('')+'</div></div>';
+  }
+  return h;
+}
+
+/* ========== মেসেজ ========== */
 function viewMessages(){
   let h = '';
   h += '<div class="hd"><div><h1>মেসেজ</h1><div class="sub">'+state.inbox.length+' টি প্রাপ্ত · '+state.sent.length+' টি প্রেরিত</div></div></div>';
@@ -766,6 +898,7 @@ async function sendChat(toId){
   }catch(err){ toast('পাঠানো যায়নি: '+err.message,'error'); }
 }
 
+/* ========== প্রোফাইল ========== */
 function viewProfile(){
   const m = state.member;
   const s = DATA.mySummary();
@@ -789,6 +922,7 @@ function viewProfile(){
   return h;
 }
 
+/* ========== Modals ========== */
 function openModal(opts){
   const root = $('#modalRoot');
   const back = document.createElement('div');
@@ -834,8 +968,7 @@ function formChangePin(){
     title: 'PIN পরিবর্তন',
     body: '<div class="field"><label>বর্তমান ৪-ডিজিট PIN</label><input id="cpOld" type="tel" inputmode="numeric" maxlength="4" class="pin-input" placeholder="----"/></div>'+
       '<div class="field"><label>নতুন ৪-ডিজিট PIN</label><input id="cpNew" type="tel" inputmode="numeric" maxlength="4" class="pin-input" placeholder="----"/></div>'+
-      '<div class="field"><label>নতুন PIN আবার</label><input id="cpNew2" type="tel" inputmode="numeric" maxlength="4" class="pin-input" placeholder="----"/></div>'+
-      '<div class="info-box">PIN পরিবর্তনের পরই কাজ করবে। নতুন PIN মনে রাখুন।</div>',
+      '<div class="field"><label>নতুন PIN আবার</label><input id="cpNew2" type="tel" inputmode="numeric" maxlength="4" class="pin-input" placeholder="----"/></div>',
     footer: '<button class="btn ghost" data-mclose="1">বাতিল</button><button class="btn" id="cpSave">পরিবর্তন</button>',
     onMount: function(mr){
       mr.querySelector('#cpSave').addEventListener('click', async function(){
@@ -859,7 +992,52 @@ function formChangePin(){
     }
   });
 }
+function formPayNotify(){
+  const m = state.member;
+  const now = new Date();
+  openModal({
+    title: 'আমি টাকা পাঠিয়েছি',
+    body: '<div class="info-box" style="margin-bottom:14px">bKash-এ টাকা পাঠানোর পর এই ফর্মটি পূরণ করুন। অ্যাডমিন দেখে যাচাই করে আপনার চাঁদায় যোগ করবেন।</div>'+
+      '<div class="field"><label>টাকার পরিমাণ (৳)</label><input id="pnAmt" type="number" placeholder="যেমন: 500"/></div>'+
+      '<div class="field-row"><div class="field"><label>কোন মাসের জন্য</label><select id="pnMonth">'+BN_MONTHS.map((nm,i)=>'<option value="'+(i+1)+'" '+(i+1===now.getMonth()+1?'selected':'')+'>'+nm+'</option>').join('')+'</select></div><div class="field"><label>বছর</label><input id="pnYear" type="number" value="'+now.getFullYear()+'"/></div></div>'+
+      '<div class="field"><label>কবে পাঠিয়েছেন</label><input id="pnDate" type="date" value="'+toISO(now)+'"/></div>'+
+      '<div class="field"><label>নোট (ঐচ্ছিক)</label><input id="pnNote" placeholder="যেমন: bKash ref 8XX1234..."/></div>'+
+      '<div class="info-box" style="text-align:left">📱 bKash নাম্বার: <b>'+BKASH_NUMBER+'</b><br>Reference-এ লিখুন: <b>'+(m.id||'')+'</b></div>',
+    footer: '<button class="btn ghost" data-mclose="1">বাতিল</button><button class="btn gold" id="pnSave">অ্যাডমিনকে জানান</button>',
+    onMount: function(mr){
+      mr.querySelector('#pnSave').addEventListener('click', async function(){
+        const amt = parseInt(mr.querySelector('#pnAmt').value)||0;
+        const mm = parseInt(mr.querySelector('#pnMonth').value)||1;
+        const yy = parseInt(mr.querySelector('#pnYear').value)||now.getFullYear();
+        const date = mr.querySelector('#pnDate').value || toISO(now);
+        const note = mr.querySelector('#pnNote').value.trim();
+        if(amt<=0){ toast('সঠিক পরিমাণ দিন','error'); return; }
+        try{
+          await addDoc(collection(db,'paymentRequests'), {
+            memberId: m.id,
+            memberName: m.name,
+            authUid: state.user.uid,
+            amount: amt,
+            forMonth: mm,
+            forYear: yy,
+            date: date,
+            note: note,
+            status: 'pending',
+            ts: Date.now()
+          });
+          closeModal();
+          toast('✓ অ্যাডমিনকে জানানো হয়েছে!','success');
+          vibrate(20);
+        }catch(err){
+          console.error(err);
+          toast('Error: '+err.message,'error');
+        }
+      });
+    }
+  });
+}
 
+/* ========== Navigation ========== */
 function pushPage(name, params){
   state.stack.push(Object.assign({name:name}, params||{}));
   render();
@@ -901,6 +1079,7 @@ document.addEventListener('click', function(ev){
   if(act === 'send-chat'){ sendChat(el.dataset.id); return; }
   if(act === 'edit-my-name'){ formEditMyName(); return; }
   if(act === 'change-pin'){ formChangePin(); return; }
+  if(act === 'open-pay-notify'){ formPayNotify(); return; }
   if(act === 'toggle-theme'){
     state.theme = state.theme==='dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = state.theme;
@@ -984,6 +1163,7 @@ onAuthStateChanged(auth, async function(user){
     state.unreadCount = 0;
     state.openChat = null;
     state.chatMessages = [];
+    state.myRequests = [];
     state.tab = 'home';
     state.stack = [];
     state.loading = false;
@@ -1027,7 +1207,11 @@ async function loadInitialData(){
       getDocs(query(collection(db,'contributions'), where('memberId','==',mid))),
       getDocs(query(collection(db,'extraPayments'), where('memberId','==',mid))),
       getDocs(collection(db,'announcements')),
-      getDocs(collection(db,'members'))
+      getDocs(collection(db,'members')),
+      getDocs(collection(db,'contributions')),
+      getDocs(collection(db,'transactions')),
+      getDocs(collection(db,'extraPayments')),
+      getDocs(query(collection(db,'paymentRequests'), where('authUid','==',state.user.uid)))
     ]);
     state.myContribs = results[0].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
     state.myExtras = results[1].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
@@ -1035,31 +1219,32 @@ async function loadInitialData(){
       return (b.date||'').localeCompare(a.date||'');
     });
     DB.allMembers = results[3].docs.map(function(d){ return Object.assign({}, d.data(), {_docId:d.id}); });
+    DB.allContribs = results[4].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+    DB.allTransactions = results[5].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+    DB.allExtras = results[6].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+    state.myRequests = results[7].docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
   }catch(err){
     console.error('load failed', err);
-    toast('ডেটা লোড ব্যর্থ','error');
+    toast('ডেটা লোড ব্যর্থ: '+err.message,'error');
   }
 }
 
 function setupRealtime(){
   const mid = state.member.id;
+  const uid = state.user.uid;
 
   unsubs.push(onSnapshot(
     query(collection(db,'contributions'), where('memberId','==',mid)),
     { includeMetadataChanges: false },
     function(s){
-      const prevCount = state.myContribs.length;
       const prevPaid = state.myContribs.reduce(function(a,b){ return a + (b.paidAmount||0); }, 0);
       state.myContribs = s.docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
       const newPaid = state.myContribs.reduce(function(a,b){ return a + (b.paidAmount||0); }, 0);
       if(!state.loading){
         render();
-        if(!s.metadata.fromCache && (newPaid > prevPaid || state.myContribs.length > prevCount)){
-          showUpdateBanner('চাঁদার তথ্য আপডেট হয়েছে');
-        }
+        if(!s.metadata.fromCache && newPaid > prevPaid) showUpdateBanner('আপনার চাঁদা আপডেট হয়েছে');
       }
-    },
-    function(err){ console.warn('contributions snapshot error:', err); }
+    }
   ));
 
   unsubs.push(onSnapshot(
@@ -1070,12 +1255,9 @@ function setupRealtime(){
       state.myExtras = s.docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
       if(!state.loading){
         render();
-        if(!s.metadata.fromCache && state.myExtras.length > prevCount){
-          showUpdateBanner('অতিরিক্ত জমা আপডেট হয়েছে');
-        }
+        if(!s.metadata.fromCache && state.myExtras.length > prevCount) showUpdateBanner('নতুন অতিরিক্ত জমা এসেছে');
       }
-    },
-    function(err){ console.warn('extraPayments snapshot error:', err); }
+    }
   ));
 
   unsubs.push(onSnapshot(
@@ -1087,12 +1269,9 @@ function setupRealtime(){
         .sort(function(a,b){ return (b.date||'').localeCompare(a.date||''); });
       if(!state.loading){
         render();
-        if(!s.metadata.fromCache && DB.announcements.length > oldCount){
-          showUpdateBanner('নতুন ঘোষণা এসেছে');
-        }
+        if(!s.metadata.fromCache && DB.announcements.length > oldCount) showUpdateBanner('নতুন ঘোষণা এসেছে');
       }
-    },
-    function(err){ console.warn('announcements snapshot error:', err); }
+    }
   ));
 
   unsubs.push(onSnapshot(
@@ -1106,21 +1285,55 @@ function setupRealtime(){
       if(!state.loading){
         render();
         if(!s.metadata.fromCache && state.member){
-          if(old.name && old.name !== state.member.name){
-            showUpdateBanner('আপনার নাম আপডেট হয়েছে');
-          } else if(old.status && old.status !== state.member.status){
-            showUpdateBanner('আপনার স্ট্যাটাস আপডেট হয়েছে');
-          } else if(old.monthly !== undefined && old.monthly !== state.member.monthly){
-            showUpdateBanner('মাসিক চাঁদা আপডেট হয়েছে');
-          } else if(old.phone && old.phone !== state.member.phone){
-            showUpdateBanner('আপনার নাম্বার আপডেট হয়েছে');
-          }
+          if(old.name && old.name !== state.member.name) showUpdateBanner('আপনার নাম আপডেট হয়েছে');
+          else if(old.status && old.status !== state.member.status) showUpdateBanner('আপনার স্ট্যাটাস আপডেট হয়েছে');
+          else if(old.monthly !== undefined && old.monthly !== state.member.monthly) showUpdateBanner('মাসিক চাঁদা আপডেট হয়েছে');
         }
       }
-    },
-    function(err){ console.warn('members snapshot error:', err); }
+    }
   ));
 
+  // সব চাঁদা (সংগঠনের হিসাবের জন্য)
+  unsubs.push(onSnapshot(
+    collection(db,'contributions'),
+    { includeMetadataChanges: false },
+    function(s){
+      DB.allContribs = s.docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+      if(!state.loading) render();
+    }
+  ));
+
+  // সব লেনদেন (সংগঠনের হিসাবের জন্য)
+  unsubs.push(onSnapshot(
+    collection(db,'transactions'),
+    { includeMetadataChanges: false },
+    function(s){
+      DB.allTransactions = s.docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+      if(!state.loading) render();
+    }
+  ));
+
+  // সব অতিরিক্ত জমা
+  unsubs.push(onSnapshot(
+    collection(db,'extraPayments'),
+    { includeMetadataChanges: false },
+    function(s){
+      DB.allExtras = s.docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+      if(!state.loading) render();
+    }
+  ));
+
+  // আমার পেমেন্ট রিকোয়েস্ট
+  unsubs.push(onSnapshot(
+    query(collection(db,'paymentRequests'), where('authUid','==',uid)),
+    { includeMetadataChanges: false },
+    function(s){
+      state.myRequests = s.docs.map(function(d){ return Object.assign({}, d.data(), {id:d.id}); });
+      if(!state.loading) render();
+    }
+  ));
+
+  // inbox messages
   unsubs.push(onSnapshot(
     query(collection(db,'messages'), where('toId','==',mid)),
     { includeMetadataChanges: false },
@@ -1136,14 +1349,12 @@ function setupRealtime(){
       }
       if(!state.loading){
         render();
-        if(!s.metadata.fromCache && state.unreadCount > oldUnread){
-          showUpdateBanner('নতুন মেসেজ এসেছে');
-        }
+        if(!s.metadata.fromCache && state.unreadCount > oldUnread) showUpdateBanner('নতুন মেসেজ এসেছে');
       }
-    },
-    function(err){ console.warn('inbox snapshot error:', err); }
+    }
   ));
 
+  // sent messages
   unsubs.push(onSnapshot(
     query(collection(db,'messages'), where('fromId','==',mid)),
     { includeMetadataChanges: false },
@@ -1156,8 +1367,7 @@ function setupRealtime(){
           .sort(function(a,b){ return (a.ts||0)-(b.ts||0); });
       }
       if(!state.loading) render();
-    },
-    function(err){ console.warn('sent snapshot error:', err); }
+    }
   ));
 }
 
