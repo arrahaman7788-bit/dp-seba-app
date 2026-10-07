@@ -213,12 +213,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/fireba
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, getDocs, addDoc, updateDoc, onSnapshot, query, where, limit } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-/* ============ কনফিগারেশন ============ */
 const LOGO_URL = "https://i.postimg.cc/nhV81p6L/Picsart-25-06-03-16-35-57-097.png";
 const BKASH_NUMBER = "01700-000000";
 const BKASH_TYPE = "পার্সোনাল";
 const ORG_NAME = "দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন";
 const AUTH_DOMAIN = "@dpseba.local";
+const PIN_SUFFIX = "@dpseba_pin_v1";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBaErWDvk-fgo9aKI-Y0IewcJ_1FteZnNY",
@@ -330,6 +330,8 @@ function normalizePhone(raw){
   return s;
 }
 function authEmailFromPhone(phoneNorm){ return phoneNorm + AUTH_DOMAIN; }
+// ৪ ডিজিট PIN → ৬+ অক্ষরের password (Firebase-এর requirement)
+function makeAuthPassword(pin){ return String(pin) + PIN_SUFFIX; }
 
 let _updateBannerTimer = null;
 let _updateBannerLastShown = 0;
@@ -459,7 +461,7 @@ async function doLogin(){
   const email = authEmailFromPhone(phoneNorm);
   try{
     toast('লগইন হচ্ছে…');
-    await signInWithEmailAndPassword(auth, email, pin);
+    await signInWithEmailAndPassword(auth, email, makeAuthPassword(pin));
   }catch(err){
     console.error(err);
     let msg = 'লগইন ব্যর্থ';
@@ -492,15 +494,15 @@ async function doSetup(){
     if(md.accountSetup === true){ showErr('এই অ্যাকাউন্ট আগেই তৈরি হয়েছে — লগইন করুন'); return; }
 
     const email = authEmailFromPhone(phoneNorm);
+    const pass = makeAuthPassword(pin1);
     let uid = null;
     try{
-      const cred = await createUserWithEmailAndPassword(auth, email, pin1);
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
       uid = cred.user.uid;
     }catch(err){
       if(err.code === 'auth/email-already-in-use'){
-        // সম্ভবত আগে তৈরি হয়েছিল কিন্তু accountSetup হয়নি
         try{
-          const cred2 = await signInWithEmailAndPassword(auth, email, pin1);
+          const cred2 = await signInWithEmailAndPassword(auth, email, pass);
           uid = cred2.user.uid;
         }catch(err2){
           showErr('এই নাম্বারে ইতিমধ্যে Firebase অ্যাকাউন্ট আছে কিন্তু PIN আলাদা। অ্যাডমিনের সাথে যোগাযোগ করুন।');
@@ -844,9 +846,9 @@ function formChangePin(){
         if(!/^\d{4}$/.test(p1)){ toast('নতুন ৪-ডিজিট PIN দিন','error'); return; }
         if(p1 !== p2){ toast('দুটি PIN মিলছে না','error'); return; }
         try{
-          const cred = EmailAuthProvider.credential(auth.currentUser.email, oldP);
+          const cred = EmailAuthProvider.credential(auth.currentUser.email, makeAuthPassword(oldP));
           await reauthenticateWithCredential(auth.currentUser, cred);
-          await updatePassword(auth.currentUser, p1);
+          await updatePassword(auth.currentUser, makeAuthPassword(p1));
           closeModal();
           toast('PIN পরিবর্তিত হয়েছে','success');
         }catch(err){
@@ -938,7 +940,6 @@ document.addEventListener('input', function(ev){
     const inp = $('#memberSearch');
     if(inp){ inp.focus(); try{ inp.setSelectionRange(pos,pos); }catch(e){} }
   }
-  // PIN input restrict to numbers only
   if(ev.target.classList && ev.target.classList.contains('pin-input')){
     ev.target.value = ev.target.value.replace(/\D/g,'').slice(0,4);
   }
