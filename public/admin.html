@@ -42,6 +42,7 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .pill.extra{background:var(--accent-soft);color:var(--accent)}
 .pill.urgent{background:var(--danger-soft);color:var(--danger)}
 .pill.important{background:var(--warn-soft);color:var(--warn)}
+.pill.gold{background:var(--gold-soft);color:var(--gold)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;color:#fff;transition:transform .12s;background:linear-gradient(135deg,var(--primary-l),var(--primary));box-shadow:0 8px 20px -8px rgba(14,95,48,.7)}
 .btn:active{transform:scale(.97)}
 .btn.ghost{background:var(--card);color:var(--text);border:1.5px solid var(--border);box-shadow:none}
@@ -291,7 +292,7 @@ const state={
   contribYear:null,contribMonth:null,finTab:'summary',
   txType:'all',txLimit:40,searchQ:'',notifTarget:'all'
 };
-let DB={org:{},members:[],contributions:[],transactions:[],events:[],announcements:[],notifications:[],auditLogs:[],extraPayments:[]};
+let DB={org:{},members:[],contributions:[],transactions:[],events:[],announcements:[],notifications:[],auditLogs:[],extraPayments:[],paymentRequests:[]};
 
 const $=s=>document.querySelector(s);
 const pad2=n=>String(n).padStart(2,'0');
@@ -477,6 +478,7 @@ function renderStack(){
     case 'notifications':body=pageNotifications();break;
     case 'settings':body=pageSettings();break;
     case 'search':body=pageSearch();break;
+    case 'paymentRequests':body=pagePaymentRequests();break;
     default:body=subHeader('—')+'<div class="subbody"></div>';
   }
   return '<div class="subpage" id="subpage">'+body+'</div>';
@@ -493,11 +495,16 @@ function viewDashboard(){
   const recentTx=DB.transactions.slice(0,5);
   const role=ROLES[state.role]||ROLES.admin;
   const logoSrc = LOGO_URL ? '<img src="'+LOGO_URL+'" alt="DP"/>' : '<div class="fallback">'+icon('shield')+'</div>';
+  const pendingCount=DB.paymentRequests.filter(r=>r.status==='pending').length;
 
   let h='';
-  h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">'+role.bn+'</div><div class="bb" style="font-size:14px">'+state.admin.name+'</div></div></div><div class="row gap6"><button class="icon-btn" data-act="page" data-page="search">'+icon('search')+'</button><button class="icon-btn" data-act="page" data-page="audit">'+icon('clipboard')+'</button></div></div>';
+  h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">'+role.bn+'</div><div class="bb" style="font-size:14px">'+state.admin.name+'</div></div></div><div class="row gap6"><button class="icon-btn" data-act="page" data-page="paymentRequests" style="position:relative">'+icon('receipt')+(pendingCount>0?'<span style="position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 4px;border-radius:99px;background:var(--gold);color:#fff;font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)">'+pendingCount+'</span>':'')+'</button></div></div>';
 
   h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · স্হাপিত ২০২৪ খ্রি.</div></div></div><div class="bc-label">সংগঠনের মোট ব্যালেন্স</div><div class="bc-amount">'+money2(st.balance)+'</div><div class="bc-sub">সর্বশেষ হালনাগাদ · '+fmtDate(toISO(now))+'</div><div class="bc-stats"><div class="bc-stat"><div class="k">মোট আয়</div><div class="v">'+shortMoney(st.income)+'</div></div><div class="bc-stat"><div class="k">মোট ব্যয়</div><div class="v">'+shortMoney(st.expense)+'</div></div></div></div></div>';
+
+  if(pendingCount>0){
+    h+='<div class="sec anim anim-d2"><div class="card" style="background:linear-gradient(135deg,var(--gold-soft),var(--warn-soft));border:none;cursor:pointer" data-act="page" data-page="paymentRequests"><div class="row"><div style="width:44px;height:44px;border-radius:14px;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('receipt')+'</div><div class="grow"><div class="bb" style="font-size:14px">⏳ '+pendingCount+' টি পেমেন্ট রিকোয়েস্ট</div><div class="tiny muted mt6">ইউজাররা টাকা পাঠিয়েছে — যাচাই করুন</div></div>'+icon('chevron')+'</div></div></div>';
+  }
 
   h+='<div class="sec anim anim-d2"><div class="sec-hd"><h2>দ্রুত কার্যক্রম</h2></div><div class="qa-grid">'+
       '<button class="qa" data-act="add-member"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('plus')+'</div><span>সদস্য যোগ</span></button>'+
@@ -599,7 +606,7 @@ function pageMember(id){
   h+='<div class="sec" style="padding-bottom:26px"><div class="sec-hd"><h2>ব্যবস্থাপনা</h2></div><div class="list">'+
     '<div class="li" data-act="edit-expected" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('calendar')+'</div><div class="grow"><div class="t">প্রত্যাশিত চাঁদা এডিট</div><div class="s">মাসভিত্তিক প্রত্যাশিত পরিমাণ</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="edit-member" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('edit')+'</div><div class="grow"><div class="t">তথ্য সম্পাদনা</div></div>'+chev()+'</div>'+
-    '<div class="li" data-act="reset-pin" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--warn-soft);color:var(--warn)">'+icon('key')+'</div><div class="grow"><div class="t">PIN রিসেট</div><div class="s">ইউজারের PIN ভুলে গেলে নতুন সেট করুন</div></div>'+chev()+'</div>'+
+    '<div class="li" data-act="reset-pin" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--warn-soft);color:var(--warn)">'+icon('key')+'</div><div class="grow"><div class="t">PIN রিসেট</div><div class="s">ইউজারের PIN ভুলে গেলে</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="toggle-status" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--warn-soft);color:var(--warn)">'+icon('refresh')+'</div><div class="grow"><div class="t">স্ট্যাটাস পরিবর্তন</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="delete-member" data-id="'+(m.id||'')+'"><div class="ic" style="background:var(--danger-soft);color:var(--danger)">'+icon('trash')+'</div><div class="grow"><div class="t" style="color:var(--danger)">সদস্য মুছুন</div></div>'+chev()+'</div>'+
   '</div></div></div>';
@@ -701,13 +708,66 @@ function pageExtras(){
   h+='</div></div>';return h;
 }
 
+function pagePaymentRequests(){
+  const all=DB.paymentRequests.slice().sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const pending=all.filter(r=>r.status==='pending');
+  const approved=all.filter(r=>r.status==='approved');
+  const rejected=all.filter(r=>r.status==='rejected');
+  const totalPending=pending.reduce((a,b)=>a+(b.amount||0),0);
+  const totalApproved=approved.reduce((a,b)=>a+(b.amount||0),0);
+
+  let h=subHeader('পেমেন্ট রিকোয়েস্ট');
+  h+='<div class="subbody">';
+  h+='<div class="sec" style="margin-top:16px"><div class="stat-grid cols-3"><div class="stat"><div class="k">অপেক্ষমাণ</div><div class="v" style="color:var(--warn)">'+pending.length+'</div></div><div class="stat"><div class="k">অনুমোদিত</div><div class="v" style="color:var(--income)">'+approved.length+'</div></div><div class="stat"><div class="k">প্রত্যাখ্যাত</div><div class="v" style="color:var(--expense)">'+rejected.length+'</div></div></div>';
+  if(pending.length>0){
+    h+='<div class="card mt10" style="background:linear-gradient(135deg,var(--gold-soft),var(--warn-soft));border:none"><div class="tiny muted">অপেক্ষমাণ মোট</div><div class="bb" style="font-size:22px;color:var(--gold);margin-top:3px">'+money2(totalPending)+'</div><div class="tiny muted mt6">'+pending.length+' জনের কাছ থেকে</div></div>';
+  }
+  h+='</div>';
+
+  if(pending.length>0){
+    h+='<div class="sec"><div class="sec-hd"><h2>⏳ অপেক্ষমাণ রিকোয়েস্ট</h2><span class="pill important">'+pending.length+'</span></div>';
+    h+=pending.map(r=>{
+      return '<div class="card" style="margin-bottom:10px;border-left:4px solid var(--gold)">'+
+        '<div class="row"><div class="grow"><div class="b" style="font-size:14px">'+r.memberName+' <span class="tiny muted">('+r.memberId+')</span></div>'+
+        '<div class="tiny muted mt6">'+fmtDate(r.date)+(r.forMonth?(' · '+MN(r.forMonth)+' '+r.forYear):'')+'</div>'+
+        (r.note?'<div class="tiny muted mt6">📝 '+r.note+'</div>':'')+'</div>'+
+        '<div style="text-align:right;flex:none"><div class="bb" style="font-size:18px;color:var(--gold)">'+money(r.amount)+'</div></div></div>'+
+        '<div class="row mt10" style="gap:8px;padding-top:10px;border-top:1px solid var(--border-2)">'+
+          '<button class="btn danger small grow" data-act="reject-payment" data-id="'+r.id+'">✕ বাতিল</button>'+
+          '<button class="btn small grow" style="background:linear-gradient(135deg,var(--income),#0E7A38)" data-act="approve-payment" data-id="'+r.id+'">✓ অনুমোদন</button>'+
+        '</div>'+
+      '</div>';
+    }).join('');
+    h+='</div>';
+  }
+
+  if(approved.length>0){
+    h+='<div class="sec"><div class="sec-hd"><h2>✅ সাম্প্রতিক অনুমোদিত</h2><span class="tiny muted">'+approved.length+' টি · '+shortMoney(totalApproved)+'</span></div>';
+    h+='<div class="list">'+approved.slice(0,10).map(r=>'<div class="li"><div class="ic" style="background:var(--income-soft);color:var(--income)">'+icon('check')+'</div><div class="grow"><div class="t">'+r.memberName+'</div><div class="s">'+fmtDate(r.date)+(r.approvedAt?' · অনুমোদিত '+fmtDate(toISO(new Date(r.approvedAt))):'')+'</div></div><div class="amt pos">'+money(r.amount)+'</div></div>').join('')+'</div></div>';
+  }
+
+  if(rejected.length>0){
+    h+='<div class="sec" style="padding-bottom:26px"><div class="sec-hd"><h2>❌ বাতিলকৃত</h2></div>';
+    h+='<div class="list">'+rejected.slice(0,5).map(r=>'<div class="li"><div class="ic" style="background:var(--expense-soft);color:var(--expense)">'+icon('x')+'</div><div class="grow"><div class="t">'+r.memberName+'</div><div class="s">'+fmtDate(r.date)+(r.rejectReason?' · '+r.rejectReason:'')+'</div></div><div class="amt neg">'+money(r.amount)+'</div></div>').join('')+'</div></div>';
+  }
+
+  if(!all.length){
+    h+='<div class="empty"><div class="eic">'+icon('receipt')+'</div><h3>কোনো পেমেন্ট রিকোয়েস্ট নেই</h3><p>ইউজাররা টাকা পাঠালে এখানে দেখাবে</p></div>';
+  }
+
+  h+='</div>';
+  return h;
+}
+
 function viewMore(){
   const logoSrc = LOGO_URL ? '<img src="'+LOGO_URL+'" alt="DP"/>' : '<div class="fallback">'+icon('shield')+'</div>';
   const noNormCount = DB.members.filter(m=>!m.phoneNorm && m.phone).length;
   const noAccCount = DB.members.filter(m=>!m.accountSetup).length;
+  const pendingPayCount=DB.paymentRequests.filter(r=>r.status==='pending').length;
   let h='<div class="hd anim"><h1>আরও</h1></div>';
   h+='<div class="sec anim anim-d1" style="margin-top:0"><div class="card" style="text-align:center;padding:22px"><div style="width:70px;height:70px;border-radius:20px;background:#fff;padding:4px;margin:0 auto 12px;box-shadow:0 8px 20px -6px rgba(14,95,48,.4);overflow:hidden;display:flex;align-items:center;justify-content:center">'+logoSrc+'</div><div class="bb" style="font-size:16px">'+state.admin.name+'</div><div class="sm muted mt6">'+state.admin.email+'</div><div class="row" style="justify-content:center;margin-top:11px"><span class="pill" style="background:'+ROLES[state.role].soft+';color:'+ROLES[state.role].color+'">'+ROLES[state.role].bn+'</span></div><div class="tiny muted mt14" style="line-height:1.7">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন<br>DP সেবা · স্হাপিত ২০২৪ খ্রি.</div></div></div>';
   h+='<div class="sec anim anim-d2"><div class="list">'+
+    '<div class="li" data-act="page" data-page="paymentRequests"><div class="ic" style="background:var(--gold-soft);color:var(--gold)">'+icon('receipt')+'</div><div class="grow"><div class="t">পেমেন্ট রিকোয়েস্ট</div><div class="s">'+pendingPayCount+' টি অপেক্ষমাণ</div></div>'+(pendingPayCount>0?'<span class="pill important" style="flex:none">'+pendingPayCount+'</span>':'')+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="extras"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div class="t">অতিরিক্ত জমা</div><div class="s">'+DB.extraPayments.length+' টি · '+shortMoney(DATA.totalExtra())+'</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="audit"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('clipboard')+'</div><div class="grow"><div class="t">অডিট লগ</div><div class="s">'+DB.auditLogs.length+' টি এন্ট্রি</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="announcements"><div class="ic" style="background:var(--warn-soft);color:var(--warn)">'+icon('megaphone')+'</div><div class="grow"><div class="t">ঘোষণা</div><div class="s">'+DB.announcements.length+' টি ঘোষণা</div></div>'+chev()+'</div>'+
@@ -1063,10 +1123,115 @@ function formResetPin(memberId){
   const m=DB.members.find(x=>x.id===memberId);
   if(!m){toast('সদস্য পাওয়া যায়নি','error');return}
   openModal({
-    title:'PIN রিসেট',
-    body:'<div class="gold-box">📱 সদস্য: <b>'+m.name+'</b><br>📞 ফোন: <b>'+m.phone+'</b><br><br>ইউজার তার ৪-ডিজিট PIN ভুলে গেলে এখানে নতুন PIN সেট করুন।<br><br><b>⚠️ গুরুত্বপূর্ণ:</b> এখানে শুধু আপনি নোট রাখতে পারবেন — আসল PIN পরিবর্তন করতে হলে ইউজার নিজেই তার অ্যাপের <b>"PIN পরিবর্তন"</b> অপশন ব্যবহার করবে।</div>'+
-      '<div class="info-box" style="margin-top:14px">💡 <b>PIN ভুলে যাওয়া ইউজারের জন্য:</b><br>১. Firebase Console → Authentication → Users<br>২. সেই ইউজারের ইমেইল খুঁজুন<br>৩. ইউজারটি Delete করুন<br>৪. Firestore-এ members/'+m.id+' ডকে <b>accountSetup: false</b> করে দিন এবং authUid ও authEmail ফিল্ড মুছে দিন<br>৫. ইউজার আবার তার অ্যাপে "একাউন্ট তৈরি" করে নতুন PIN সেট করবে</div>',
+    title:'PIN রিসেট নির্দেশনা',
+    body:'<div class="gold-box">📱 সদস্য: <b>'+m.name+'</b><br>📞 ফোন: <b>'+m.phone+'</b><br><br>ইউজার তার ৪-ডিজিট PIN ভুলে গেলে নিচের ধাপ অনুসরণ করুন।</div>'+
+      '<div class="info-box" style="margin-top:14px;text-align:left;line-height:1.8">💡 <b>PIN রিসেট করার ধাপ:</b><br>১. Firebase Console → <b>Authentication</b> → Users<br>২. ইমেইল খুঁজুন: <b style="font-family:monospace;font-size:11px">'+(m.authEmail||normalizePhone(m.phone||'')+'@dpseba.local')+'</b><br>৩. সেই ইউজারটি <b>Delete</b> করুন<br>৪. Firestore-এ <b>members/'+m.id+'</b> ডকে:<br>&nbsp;&nbsp;&nbsp;• <b>accountSetup: false</b> করুন<br>&nbsp;&nbsp;&nbsp;• <b>authUid</b> ও <b>authEmail</b> ফিল্ড মুছে দিন<br>৫. ইউজার আবার তার অ্যাপে "একাউন্ট তৈরি" করে নতুন PIN সেট করবে।</div>',
     footer:'<button class="btn grow" data-mclose="1">বুঝেছি</button>'
+  });
+}
+
+async function approvePayment(reqId){
+  const r=DB.paymentRequests.find(x=>x.id===reqId);
+  if(!r){toast('রিকোয়েস্ট পাওয়া যায়নি','error');return}
+  if(r.status!=='pending'){toast('এই রিকোয়েস্ট আগেই প্রসেস হয়েছে','error');return}
+  const m=DB.members.find(x=>x.id===r.memberId);
+  if(!m){toast('সদস্য পাওয়া যায়নি','error');return}
+  openModal({
+    title:'পেমেন্ট অনুমোদন',
+    body:
+      '<div class="info-box"><b>'+r.memberName+'</b> ('+r.memberId+')<br>'+
+      'পরিমাণ: <b style="font-size:18px;color:var(--gold)">'+money(r.amount)+'</b><br>'+
+      'তারিখ: '+fmtDate(r.date)+'<br>'+
+      (r.forMonth?('মাস: '+MN(r.forMonth)+' '+r.forYear):'')+
+      (r.note?'<br>নোট: '+r.note:'')+'</div>'+
+      '<div class="warn-box mt14">⚠️ অনুমোদন করলে এই টাকা <b>'+MN(r.forMonth||new Date().getMonth()+1)+' '+(r.forYear||new Date().getFullYear())+'</b> মাসের চাঁদায় যোগ হবে।</div>',
+    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" style="background:linear-gradient(135deg,var(--income),#0E7A38)" id="apYes">✓ অনুমোদন করুন</button>',
+    onMount:function(mr){
+      mr.querySelector('#apYes').addEventListener('click',async function(){
+        closeModal();
+        try{
+          const yy=r.forYear||new Date().getFullYear();
+          const mm=r.forMonth||(new Date().getMonth()+1);
+          const cid='CN-'+r.memberId+'-'+yy+pad2(mm);
+          const existing=DB.contributions.find(function(c){return c.id===cid});
+          if(existing){
+            const newPaid=(existing.paidAmount||0)+r.amount;
+            const newSt=newPaid>=existing.amount?'paid':(newPaid>0?'partial':'due');
+            await updateDoc(doc(db,'contributions',cid),{
+              paidAmount:newPaid,
+              status:newSt,
+              paidDate:r.date||toISO(new Date()),
+              updatedAt:Date.now()
+            });
+          } else {
+            await setDoc(doc(db,'contributions',cid),{
+              memberId:r.memberId,
+              year:yy,
+              month:mm,
+              amount:m.monthly||r.amount,
+              paidAmount:r.amount,
+              status:r.amount>=m.monthly?'paid':'partial',
+              paidDate:r.date||toISO(new Date()),
+              createdAt:Date.now()
+            });
+          }
+          await addDoc(collection(db,'transactions'),{
+            date:r.date||toISO(new Date()),
+            type:'contribution',
+            amount:r.amount,
+            category:'মাসিক চাঁদা',
+            desc:m.name+' — '+MN(mm)+' '+yy+' (payment request)',
+            ref:r.memberId,
+            refType:'member',
+            addedBy:state.admin.name,
+            createdAt:Date.now()
+          });
+          await updateDoc(doc(db,'paymentRequests',reqId),{
+            status:'approved',
+            approvedAt:Date.now(),
+            approvedBy:state.admin.name
+          });
+          audit('payment_approved',r.memberId,'',r.amount+'৳ '+MN(mm));
+          toast('✓ অনুমোদিত! '+money(r.amount)+' যোগ হয়েছে','success');
+        }catch(err){
+          console.error(err);
+          toast('Error: '+err.message,'error');
+        }
+      });
+    }
+  });
+}
+
+async function rejectPayment(reqId){
+  const r=DB.paymentRequests.find(x=>x.id===reqId);
+  if(!r){toast('রিকোয়েস্ট পাওয়া যায়নি','error');return}
+  if(r.status!=='pending'){toast('এই রিকোয়েস্ট আগেই প্রসেস হয়েছে','error');return}
+  openModal({
+    title:'রিকোয়েস্ট বাতিল',
+    body:
+      '<div class="info-box"><b>'+r.memberName+'</b><br>পরিমাণ: '+money(r.amount)+'</div>'+
+      '<div class="field mt14"><label>কারণ (ঐচ্ছিক)</label><input id="rjReason" placeholder="যেমন: পরিমাণ মেলেনি"/></div>'+
+      '<div class="warn-box">⚠️ বাতিল করলে কোনো চাঁদা যোগ হবে না।</div>',
+    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn danger grow" id="rjYes">✕ নিশ্চিত বাতিল</button>',
+    onMount:function(mr){
+      mr.querySelector('#rjYes').addEventListener('click',async function(){
+        const reason=mr.querySelector('#rjReason').value.trim();
+        closeModal();
+        try{
+          await updateDoc(doc(db,'paymentRequests',reqId),{
+            status:'rejected',
+            rejectedAt:Date.now(),
+            rejectReason:reason,
+            rejectedBy:state.admin.name
+          });
+          audit('payment_rejected',r.memberId,'',r.amount+'৳');
+          toast('রিকোয়েস্ট বাতিল হয়েছে');
+        }catch(err){
+          console.error(err);
+          toast('Error: '+err.message,'error');
+        }
+      });
+    }
   });
 }
 
@@ -1114,6 +1279,8 @@ document.addEventListener('click',function(ev){
     case 'add-expense':formExpense();break;
     case 'add-announcement':formAnnouncement();break;
     case 'delete-announcement':{const a=DB.announcements.find(x=>x.id===el.dataset.id);if(!a) break;confirmDialog('ঘোষণা মুছুন?',a.title,async function(){try{await deleteDoc(doc(db,'announcements',a.id));toast('মুছে ফেলা হয়েছে','success')}catch(err){toast('Error: '+err.message,'error')}},'মুছুন');break;}
+    case 'approve-payment':approvePayment(el.dataset.id);break;
+    case 'reject-payment':rejectPayment(el.dataset.id);break;
     case 'migrate-phone':{
       const noNorm = DB.members.filter(m => !m.phoneNorm && m.phone);
       if(!noNorm.length){ toast('সব সদস্য ইতিমধ্যেই আপ-টু-ডেট ✓','success'); break; }
@@ -1176,13 +1343,14 @@ async function loadAllData(){
   try{
     const orgSnap=await getDoc(doc(db,'org','settings'));
     if(orgSnap.exists()) DB.org=orgSnap.data();
-    const [m,c,tx,a,n,ep]=await Promise.all([
+    const [m,c,tx,a,n,ep,pr]=await Promise.all([
       getDocs(collection(db,'members')),
       getDocs(collection(db,'contributions')),
       getDocs(collection(db,'transactions')),
       getDocs(collection(db,'announcements')),
       getDocs(collection(db,'notifications')),
-      getDocs(collection(db,'extraPayments'))
+      getDocs(collection(db,'extraPayments')),
+      getDocs(collection(db,'paymentRequests'))
     ]);
     DB.members=m.docs.map(d=>({...d.data(),_docId:d.id}));
     DB.contributions=c.docs.map(d=>({...d.data(),id:d.id}));
@@ -1190,6 +1358,7 @@ async function loadAllData(){
     DB.announcements=a.docs.map(d=>({...d.data(),id:d.id}));
     DB.notifications=n.docs.map(d=>({...d.data(),id:d.id}));
     DB.extraPayments=ep.docs.map(d=>({...d.data(),id:d.id}));
+    DB.paymentRequests=pr.docs.map(d=>({...d.data(),id:d.id}));
   }catch(err){console.error('Load failed:',err);toast('ডেটা লোড ব্যর্থ: '+err.message,'error')}
 }
 function setupRealtimeListeners(){
@@ -1199,6 +1368,7 @@ function setupRealtimeListeners(){
   onSnapshot(collection(db,'announcements'),s=>{DB.announcements=s.docs.map(d=>({...d.data(),id:d.id}));if(!state.loading)render()});
   onSnapshot(collection(db,'notifications'),s=>{DB.notifications=s.docs.map(d=>({...d.data(),id:d.id}));if(!state.loading)render()});
   onSnapshot(collection(db,'extraPayments'),s=>{DB.extraPayments=s.docs.map(d=>({...d.data(),id:d.id}));if(!state.loading)render()});
+  onSnapshot(collection(db,'paymentRequests'),s=>{DB.paymentRequests=s.docs.map(d=>({...d.data(),id:d.id}));if(!state.loading)render()});
   onSnapshot(doc(db,'org','settings'),s=>{if(s.exists())DB.org=s.data();if(!state.loading)render()});
   onSnapshot(query(collection(db,'auditLogs'),orderBy('ts','desc'),limit(200)),s=>{DB.auditLogs=s.docs.map(d=>({...d.data(),id:d.id}));if(!state.loading&&state.stack.length&&state.stack[state.stack.length-1].name==='audit') render()});
 }
