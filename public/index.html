@@ -10,24 +10,81 @@
 <title>DP সেবা</title>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--primary:#0E5F30;--primary-d:#083A1C;--primary-l:#1B8044;--primary-soft:#E5F2EA;--primary-soft2:#CDE6D9;--accent:#C41E3A;--accent-soft:#FCE7EC;--gold:#D4A017;--gold-soft:#FBF3DC;--income:#16A34A;--income-soft:#E6F7EE;--expense:#DC2626;--expense-soft:#FDE8ED;--event:#EA580C;--event-soft:#FEF0E7;--warn:#D97706;--warn-soft:#FEF3C7;--info:#0284C7;--info-soft:#E0F2FE;--danger:#B91C1C;--danger-soft:#FEE2E2;--bg:#F0F5F2;--bg-2:#E1EBE6;--card:#FFFFFF;--card-2:#F6FAF8;--text:#0A1A12;--text-2:#4E5F55;--text-3:#8B9A92;--border:#DCE7E1;--border-2:#E9F2ED;--shadow:0 4px 16px rgba(14,95,48,.07);--radius:20px;--nav-h:70px}
-[data-theme="dark"]{--primary:#22A155;--primary-d:#0E5F30;--primary-l:#3DC76F;--primary-soft:#0A2A18;--primary-soft2:#123A22;--accent:#FF4D6D;--accent-soft:#3A0F1A;--gold:#FBBF24;--gold-soft:#3A2E10;--income:#2ECC71;--income-soft:#12301F;--expense:#FF5C7A;--expense-soft:#3A1520;--event:#FB923C;--event-soft:#3A2110;--warn:#FBBF24;--warn-soft:#3A2E10;--info:#38BDF8;--info-soft:#0C2A3A;--danger:#F87171;--danger-soft:#3A1010;--bg:#06100B;--bg-2:#030806;--card:#0F1A15;--card-2:#15241D;--text:#E8F5EE;--text-2:#95B3A5;--text-3:#627A70;--border:#1C2E24;--border-2:#15241C;--shadow:0 4px 16px rgba(0,0,0,.35)}
+:root{
+  --primary:#0E5F30;--primary-d:#083A1C;--primary-l:#1B8044;
+  --primary-soft:#E5F2EA;--primary-soft2:#CDE6D9;
+  --accent:#C41E3A;--accent-soft:#FCE7EC;
+  --gold:#D4A017;--gold-soft:#FBF3DC;
+  --income:#16A34A;--income-soft:#E6F7EE;
+  --expense:#DC2626;--expense-soft:#FDE8ED;
+  --event:#EA580C;--event-soft:#FEF0E7;
+  --warn:#D97706;--warn-soft:#FEF3C7;
+  --info:#0284C7;--info-soft:#E0F2FE;
+  --danger:#B91C1C;--danger-soft:#FEE2E2;
+  --bg:#EAF4EE;--bg-2:#D4E7DC;
+  --text:#0A1A12;--text-2:#4E5F55;--text-3:#8B9A92;
+  --border:#DCE7E1;--border-2:#E9F2ED;
+  --card:rgba(255,255,255,.72);
+  --card-2:rgba(255,255,255,.5);
+  --card-border:rgba(255,255,255,.85);
+  --glass-hi:rgba(255,255,255,.95);
+  --shadow:0 8px 24px -10px rgba(14,95,48,.16),0 2px 6px -2px rgba(14,95,48,.06);
+  --radius:20px;--nav-h:66px;
+}
+[data-theme="dark"]{
+  --primary:#22A155;--primary-d:#0E5F30;--primary-l:#3DC76F;
+  --primary-soft:#0A2A18;--primary-soft2:#123A22;
+  --accent:#FF4D6D;--accent-soft:#3A0F1A;
+  --gold:#FBBF24;--gold-soft:#3A2E10;
+  --income:#2ECC71;--income-soft:#12301F;
+  --expense:#FF5C7A;--expense-soft:#3A1520;
+  --event:#FB923C;--event-soft:#3A2110;
+  --warn:#FBBF24;--warn-soft:#3A2E10;
+  --info:#38BDF8;--info-soft:#0C2A3A;
+  --danger:#F87171;--danger-soft:#3A1010;
+  --bg:#06100B;--bg-2:#030806;
+  --text:#E8F5EE;--text-2:#95B3A5;--text-3:#627A70;
+  --border:#1C2E24;--border-2:#15241C;
+  --card:rgba(15,26,21,.62);
+  --card-2:rgba(21,36,29,.5);
+  --card-border:rgba(255,255,255,.09);
+  --glass-hi:rgba(255,255,255,.09);
+  --shadow:0 8px 24px -10px rgba(0,0,0,.55),0 2px 6px -2px rgba(0,0,0,.35);
+}
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;height:100%;overflow:hidden}
 body{font-family:'Hind Siliguri',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg-2);color:var(--text);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 ::-webkit-scrollbar{width:0;height:0}
-#app{position:relative;max-width:540px;margin:0 auto;height:100dvh;height:100vh;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 90px rgba(0,0,0,.12)}
+#app{
+  position:relative;max-width:540px;margin:0 auto;
+  height:100dvh;height:100vh;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 0 90px rgba(0,0,0,.15);
+  background:
+    radial-gradient(circle at 12% 6%,rgba(34,161,85,.24),transparent 42%),
+    radial-gradient(circle at 90% 80%,rgba(196,30,58,.16),transparent 46%),
+    radial-gradient(circle at 45% 102%,rgba(212,160,23,.16),transparent 46%),
+    linear-gradient(160deg,#EAF4EE 0%,#D4E7DC 100%);
+  background-attachment:fixed;
+}
+[data-theme="dark"] #app{
+  background:
+    radial-gradient(circle at 12% 6%,rgba(34,161,85,.24),transparent 42%),
+    radial-gradient(circle at 90% 80%,rgba(255,77,109,.14),transparent 46%),
+    radial-gradient(circle at 45% 102%,rgba(251,191,36,.12),transparent 46%),
+    linear-gradient(160deg,#0A1810 0%,#030806 100%);
+  background-attachment:fixed;
+}
 .content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav-h) + 26px)}
-.hd{padding:16px 18px 10px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hd{padding:14px 18px 8px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .hd h1{font-size:20px;font-weight:700;margin:0}
 .hd .sub{font-size:12px;color:var(--text-2);margin-top:2px}
-.sec{padding:0 18px;margin-top:18px}
+.sec{padding:0 18px;margin-top:14px}
 .sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .sec-hd h2{font-size:15px;font-weight:700;margin:0}
 .sec-hd .link{font-size:12px;color:var(--primary);font-weight:600;cursor:pointer}
-.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border-2);padding:16px}
 .row{display:flex;align-items:center;gap:12px}
 .between{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .muted{color:var(--text-2)}.tiny{font-size:11px}.sm{font-size:12px}
@@ -35,54 +92,190 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .center{text-align:center}.gap6{gap:6px}.gap10{gap:10px}
 .mt6{margin-top:6px}.mt10{margin-top:10px}.mt14{margin-top:14px}
+
+/* GLASS CARD */
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  border:1px solid var(--card-border);
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+}
+.card::before{
+  content:'';position:absolute;top:0;left:14px;right:14px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);
+  pointer-events:none;
+}
+
 .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,var(--c,#0E5F30),#000);color:#fff;font-weight:700;flex:none;overflow:hidden;position:relative}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:600;line-height:1.6}
 .pill.paid,.pill.active,.pill.approved,.pill.upcoming{background:var(--income-soft);color:var(--income)}
 .pill.due,.pill.suspended,.pill.rejected{background:var(--expense-soft);color:var(--expense)}
 .pill.partial,.pill.pending{background:var(--warn-soft);color:var(--warn)}
 .pill.na,.pill.inactive,.pill.past{background:var(--border);color:var(--text-3)}
 .pill.info{background:var(--info-soft);color:var(--info)}
-.pill.extra{background:var(--accent-soft);color:var(--accent)}
-.pill.urgent{background:var(--danger-soft);color:var(--danger)}
 .pill.important{background:var(--warn-soft);color:var(--warn)}
 .pill.gold{background:var(--gold-soft);color:var(--gold)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;color:#fff;transition:transform .12s;background:linear-gradient(135deg,var(--primary-l),var(--primary));box-shadow:0 8px 20px -8px rgba(14,95,48,.7)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;color:#fff;transition:transform .12s;background:linear-gradient(135deg,var(--primary-l),var(--primary));box-shadow:0 8px 20px -8px rgba(14,95,48,.65)}
 .btn:active{transform:scale(.97)}
-.btn.ghost{background:var(--card);color:var(--text);border:1.5px solid var(--border);box-shadow:none}
-.btn.soft{background:var(--primary-soft);color:var(--primary);box-shadow:none}
-.btn.danger{background:linear-gradient(135deg,#E11D48,#B91C1C)}
+.btn.ghost{background:var(--card);color:var(--text);border:1.5px solid var(--border);box-shadow:none;backdrop-filter:blur(12px)}
 .btn.small{padding:8px 14px;font-size:12.5px;border-radius:11px}
-.btn.xs{padding:6px 11px;font-size:11.5px;border-radius:10px;gap:5px}
+.btn.xs{padding:5px 10px;font-size:11px;border-radius:9px;gap:4px}
 .btn.block{width:100%}
-.icon-btn{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border-2);color:var(--text-2);transition:transform .12s;flex:none}
+.icon-btn{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--card-border);color:var(--text-2);transition:transform .12s;flex:none;backdrop-filter:blur(12px)}
 .icon-btn:active{transform:scale(.92)}
 .icon-btn svg{width:19px;height:19px}
-.balance-card{position:relative;overflow:hidden;border-radius:26px;padding:18px 20px 20px;background:radial-gradient(circle at 90% 10%,rgba(212,160,23,.35),transparent 40%),radial-gradient(circle at 10% 90%,rgba(196,30,58,.28),transparent 45%),linear-gradient(135deg,#0A4A24 0%,#0E5F30 45%,#1B8044 100%);color:#fff;box-shadow:0 22px 46px -18px rgba(14,95,48,.85);border:1px solid rgba(255,255,255,.18)}
-[data-theme="dark"] .balance-card{background:radial-gradient(circle at 90% 10%,rgba(251,191,36,.28),transparent 40%),radial-gradient(circle at 10% 90%,rgba(255,77,109,.25),transparent 45%),linear-gradient(135deg,#041A0C 0%,#0E5F30 45%,#167A3A 100%)}
-.bc-header{display:flex;align-items:center;gap:12px;position:relative;z-index:2;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.15)}
-.bc-logo{width:52px;height:52px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;padding:4px;flex:none;overflow:hidden}
-.bc-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:11px}
-.bc-logo .fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-l),var(--primary));border-radius:11px;color:#fff;font-weight:700}
+
+/* ==== BALANCE CARD (SMALLER) ==== */
+.balance-card{
+  position:relative;overflow:hidden;border-radius:22px;
+  padding:14px 16px 14px;
+  background:linear-gradient(135deg,rgba(14,95,48,.95) 0%,rgba(27,128,68,.92) 45%,rgba(10,74,36,.95) 100%);
+  color:#fff;
+  box-shadow:0 18px 38px -16px rgba(14,95,48,.7),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.15);
+  border:1px solid rgba(255,255,255,.22);
+  backdrop-filter:blur(14px);
+}
+.balance-card::before{
+  content:'';position:absolute;top:-45%;left:-20%;right:-20%;height:95%;
+  background:radial-gradient(ellipse at 30% 0%,rgba(255,255,255,.35),transparent 62%);
+  pointer-events:none;
+}
+.balance-card::after{
+  content:'';position:absolute;bottom:-35%;right:-20%;width:75%;height:75%;
+  background:radial-gradient(circle,rgba(212,160,23,.4),transparent 65%);
+  pointer-events:none;
+}
+.bc-header{display:flex;align-items:center;gap:10px;position:relative;z-index:2;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.18)}
+.bc-logo{width:42px;height:42px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;padding:3px;flex:none;overflow:hidden;box-shadow:0 6px 16px -6px rgba(0,0,0,.3)}
+.bc-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px}
+.bc-logo .fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-l),var(--primary));border-radius:10px;color:#fff;font-weight:700;font-size:16px}
 .bc-org{flex:1;min-width:0}
-.bc-org-name{font-size:14.5px;font-weight:700;line-height:1.2}
-.bc-org-sub{font-size:10.5px;opacity:.82;margin-top:2px}
-.bc-label{font-size:12px;opacity:.86;font-weight:500;margin-top:14px}
-.bc-amount{font-size:33px;font-weight:700;letter-spacing:-1px;margin-top:4px;line-height:1.15}
-.bc-sub{font-size:11px;opacity:.72;margin-top:4px}
-.bc-stats{display:flex;gap:10px;margin-top:16px;position:relative;z-index:2}
-.bc-stat{flex:1;background:rgba(255,255,255,.13);border-radius:14px;padding:10px 11px;border:1px solid rgba(255,255,255,.18)}
-.bc-stat .k{font-size:10px;opacity:.9}.bc-stat .v{font-size:14.5px;font-weight:700;margin-top:3px}
+.bc-org-name{font-size:12.5px;font-weight:700;line-height:1.2}
+.bc-org-sub{font-size:9.5px;opacity:.82;margin-top:1px}
+.bc-label{font-size:10.5px;opacity:.88;font-weight:500;margin-top:10px;position:relative;z-index:2}
+.bc-amount{font-size:26px;font-weight:700;letter-spacing:-.6px;margin-top:2px;line-height:1.15;position:relative;z-index:2}
+.bc-sub{font-size:10px;opacity:.72;margin-top:3px;position:relative;z-index:2}
+.bc-stats{display:flex;gap:8px;margin-top:11px;position:relative;z-index:2}
+.bc-stat{flex:1;background:rgba(255,255,255,.15);border-radius:11px;padding:7px 10px;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(6px)}
+.bc-stat .k{font-size:9.5px;opacity:.92}
+.bc-stat .v{font-size:13px;font-weight:700;margin-top:2px}
+
+/* ==== BKASH COMPACT PILL ==== */
+.bkash-pill{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,rgba(226,19,110,.95),rgba(183,15,85,.97));
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:16px;padding:10px 12px;color:#fff;
+  box-shadow:0 14px 30px -14px rgba(226,19,110,.75),inset 0 1px 0 rgba(255,255,255,.3);
+  cursor:pointer;backdrop-filter:blur(10px);
+  transition:transform .12s;position:relative;overflow:hidden;
+}
+.bkash-pill::before{
+  content:'';position:absolute;top:0;left:10px;right:10px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);
+  pointer-events:none;
+}
+.bkash-pill:active{transform:scale(.98)}
+.bkash-pill .bk-logo{
+  background:rgba(255,255,255,.24);
+  padding:3px 8px;border-radius:7px;
+  font-weight:800;font-size:10.5px;letter-spacing:.3px;
+  flex:none;
+}
+.bkash-pill .bk-num{
+  flex:1;font-weight:700;font-size:14px;letter-spacing:.3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.bkash-pill .bk-copy{
+  width:28px;height:28px;border-radius:9px;
+  background:rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;flex:none;
+}
+.bkash-pill .bk-copy svg{width:14px;height:14px}
+
+/* ==== FEED COMPACT (ONE LINE) ==== */
+.feed-compact{
+  display:flex;align-items:center;gap:8px;
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:16px;
+  padding:6px 8px 6px 6px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  position:relative;overflow:hidden;
+}
+.feed-compact::before{
+  content:'';position:absolute;top:0;left:14px;right:14px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);
+  pointer-events:none;
+}
+.feed-compact .fc-avatar{flex:none}
+.feed-compact .fc-input{
+  flex:1;
+  border:none;outline:none;background:transparent;
+  height:38px;padding:0 6px;
+  font-size:13px;color:var(--text);
+  min-width:0;
+}
+.feed-compact .fc-input::placeholder{color:var(--text-3)}
+.feed-compact .fc-btn{
+  flex:none;
+  padding:8px 13px;
+  border-radius:10px;
+  background:linear-gradient(135deg,var(--primary-l),var(--primary));
+  color:#fff;font-weight:600;font-size:11.5px;
+  box-shadow:0 6px 14px -6px rgba(14,95,48,.75);
+  transition:transform .12s;
+  white-space:nowrap;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.feed-compact .fc-btn:active{transform:scale(.95)}
+.feed-compact .fc-btn svg{width:13px;height:13px}
+
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
-.stat{background:linear-gradient(135deg,var(--card) 0%,var(--card-2) 100%);border:1px solid var(--border-2);border-radius:18px;padding:13px;box-shadow:var(--shadow)}
-.stat .ic{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
-.stat .ic svg{width:16px;height:16px}
+.stat{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:18px;padding:13px;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+}
+.stat::before{
+  content:'';position:absolute;top:0;left:10px;right:10px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);
+  pointer-events:none;
+}
 .stat .k{font-size:10.5px;color:var(--text-2);font-weight:500;line-height:1.3}
 .stat .v{font-size:16px;font-weight:700;margin-top:3px}
-.list{background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+
+.list{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius);box-shadow:var(--shadow);
+  overflow:hidden;position:relative;
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+}
+.list::before{
+  content:'';position:absolute;top:0;left:14px;right:14px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);
+  pointer-events:none;z-index:1;
+}
 .li{display:flex;align-items:center;gap:12px;padding:13px 15px;transition:background .15s;cursor:pointer}
-.li:active{background:var(--card-2)}
+.li:active{background:rgba(255,255,255,.45)}
+[data-theme="dark"] .li:active{background:rgba(255,255,255,.05)}
 .li+.li{border-top:1px solid var(--border-2)}
 .li .ic{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none}
 .li .ic svg{width:17px;height:17px}
@@ -92,52 +285,117 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .li > .chev{width:20px;height:20px;color:var(--text-3);flex:none;display:flex;align-items:center;justify-content:center}
 .li > .chev svg{width:18px;height:18px}
 .amt.pos{color:var(--income)}.amt.neg{color:var(--expense)}
-.prog{height:8px;border-radius:99px;background:var(--border);overflow:hidden}
-.prog>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary-l),var(--primary));transition:width .8s}
+
+.prog{height:8px;border-radius:99px;background:var(--border);overflow:hidden;position:relative}
+.prog>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary-l),var(--primary));transition:width .8s;box-shadow:0 0 12px rgba(27,128,68,.5)}
+
 .chips{display:flex;gap:7px;overflow-x:auto;padding:2px 18px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{padding:7px 14px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--card);border:1px solid var(--border);color:var(--text-2);flex:none;cursor:pointer}
+.chip{padding:7px 14px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--card);border:1px solid var(--card-border);color:var(--text-2);flex:none;cursor:pointer;backdrop-filter:blur(12px)}
 .chip.on{background:linear-gradient(135deg,var(--primary-l),var(--primary));border-color:var(--primary);color:#fff}
-.searchbar{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:0 13px;height:46px;box-shadow:var(--shadow)}
+
+.searchbar{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:0 13px;height:46px;box-shadow:var(--shadow);backdrop-filter:blur(16px)}
 .searchbar svg{width:17px;height:17px;color:var(--text-3);flex:none}
 .searchbar input{flex:1;border:none;outline:none;background:none;font-size:13.5px;height:100%}
-.bottomnav{position:absolute;bottom:0;left:0;right:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--card);border-top:1px solid var(--border-2);display:flex;z-index:40}
+
+/* ==== BOTTOMNAV (SUPER GLOSSY) ==== */
+.bottomnav{
+  position:absolute;bottom:0;left:0;right:0;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.62);
+  border-top:1px solid rgba(255,255,255,.85);
+  display:flex;z-index:40;
+  backdrop-filter:blur(36px) saturate(220%);
+  -webkit-backdrop-filter:blur(36px) saturate(220%);
+  box-shadow:0 -12px 34px -14px rgba(14,95,48,.22),inset 0 1px 0 rgba(255,255,255,.95);
+}
+.bottomnav::before{
+  content:'';position:absolute;top:0;left:10px;right:10px;height:1.2px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,1),transparent);
+  pointer-events:none;
+  filter:blur(.3px);
+}
+[data-theme="dark"] .bottomnav{
+  background:rgba(15,26,21,.62);
+  border-top:1px solid rgba(255,255,255,.12);
+  box-shadow:0 -12px 34px -14px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.1);
+}
+[data-theme="dark"] .bottomnav::before{
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);
+}
 .bottomnav .nv{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-3);position:relative;padding-top:2px;cursor:pointer}
-.bottomnav .nv svg{width:21px;height:21px}
+.bottomnav .nv svg{width:21px;height:21px;transition:transform .15s}
 .bottomnav .nv span{font-size:9.5px;font-weight:600}
 .bottomnav .nv.on{color:var(--primary)}
-.bottomnav .nv.on::before{content:'';position:absolute;top:0;width:28px;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,var(--primary-l),var(--primary))}
-.subpage{position:absolute;inset:0;background:var(--bg);z-index:60;display:flex;flex-direction:column;animation:slideIn .26s ease}
+.bottomnav .nv.on svg{transform:scale(1.08)}
+.bottomnav .nv.on::before{
+  content:'';position:absolute;top:0;width:32px;height:3px;
+  border-radius:0 0 4px 4px;
+  background:linear-gradient(90deg,var(--primary-l),var(--primary));
+  box-shadow:0 2px 8px rgba(27,128,68,.6);
+}
+
+.subpage{position:absolute;inset:0;background:linear-gradient(160deg,#EAF4EE 0%,#D4E7DC 100%);z-index:60;display:flex;flex-direction:column;animation:slideIn .26s ease}
+[data-theme="dark"] .subpage{background:linear-gradient(160deg,#0A1810 0%,#030806 100%)}
 @keyframes slideIn{from{transform:translateX(28px);opacity:.3}to{transform:translateX(0);opacity:1}}
-.subhd{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--card);border-bottom:1px solid var(--border-2);flex:none;position:sticky;top:0;z-index:5}
+.subhd{display:flex;align-items:center;gap:10px;padding:14px 16px;background:rgba(255,255,255,.78);border-bottom:1px solid var(--card-border);flex:none;position:sticky;top:0;z-index:5;backdrop-filter:blur(18px)}
+[data-theme="dark"] .subhd{background:rgba(15,26,21,.78)}
 .subhd h1{font-size:16.5px;font-weight:700;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .subbody{flex:1;overflow-y:auto;padding-bottom:34px}
-.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:120;display:flex;align-items:flex-end;justify-content:center}
-.modal{background:var(--bg);width:100%;max-width:540px;border-radius:26px 26px 0 0;max-height:92vh;display:flex;flex-direction:column;animation:slideUp .3s ease}
+
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:120;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.modal{background:var(--bg);width:100%;max-width:540px;border-radius:26px 26px 0 0;max-height:92vh;display:flex;flex-direction:column;animation:slideUp .3s ease;box-shadow:0 -20px 60px rgba(0,0,0,.3);border-top:1px solid var(--card-border)}
 @keyframes slideUp{from{transform:translateY(30px);opacity:.5}to{transform:translateY(0);opacity:1}}
 .modal-hd{padding:16px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-2);flex:none}
 .modal-hd h2{margin:0;font-size:16px;font-weight:700;flex:1}
 .modal-body{flex:1;overflow-y:auto;padding:18px}
-.modal-foot{padding:14px 18px;border-top:1px solid var(--border-2);flex:none;display:flex;gap:10px;background:var(--card)}
+.modal-foot{padding:14px 18px;border-top:1px solid var(--border-2);flex:none;display:flex;gap:10px;background:var(--card);backdrop-filter:blur(14px)}
+
 .field{margin-bottom:13px}
 .field label{display:block;font-size:11.5px;font-weight:600;color:var(--text-2);margin-bottom:6px}
-.field input,.field select,.field textarea{width:100%;height:46px;border-radius:13px;border:1.5px solid var(--border);background:var(--card);padding:0 13px;outline:none;font-size:14px;color:var(--text)}
+.field input,.field select,.field textarea{width:100%;height:46px;border-radius:13px;border:1.5px solid var(--border);background:var(--card);padding:0 13px;outline:none;font-size:14px;color:var(--text);backdrop-filter:blur(10px)}
 .field textarea{height:auto;min-height:80px;padding:11px 13px;resize:vertical;line-height:1.6}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary)}
+
 .toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:12px 20px;border-radius:16px;font-size:12.5px;font-weight:600;z-index:200;opacity:0;pointer-events:none;transition:all .28s;max-width:88%;text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.success{background:#16A34A;color:#fff}
 .toast.error{background:#DC2626;color:#fff}
-.empty{padding:44px 24px;text-align:center;color:var(--text-3)}
-.empty .eic{width:66px;height:66px;border-radius:22px;background:var(--card);border:1px solid var(--border-2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:32px}
-.empty h3{margin:0 0 5px;font-size:14px;color:var(--text-2);font-weight:600}
+
+.empty{padding:36px 24px;text-align:center;color:var(--text-3)}
+.empty .eic{width:60px;height:60px;border-radius:20px;background:var(--card);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:28px;backdrop-filter:blur(14px)}
+.empty h3{margin:0 0 5px;font-size:13.5px;color:var(--text-2);font-weight:600}
 .empty p{margin:0;font-size:12px}
+
+/* Paid-all badge */
+.all-paid{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,rgba(230,247,238,.9),rgba(205,235,215,.85));
+  border:1px solid rgba(22,163,74,.25);
+  border-radius:16px;padding:12px 14px;
+  color:var(--income);font-weight:600;font-size:13px;
+  backdrop-filter:blur(12px);
+}
+[data-theme="dark"] .all-paid{
+  background:linear-gradient(135deg,rgba(18,48,31,.85),rgba(10,42,24,.85));
+  border-color:rgba(46,204,113,.3);
+}
+.all-paid .ap-ic{
+  width:36px;height:36px;border-radius:12px;
+  background:var(--income);color:#fff;
+  display:flex;align-items:center;justify-content:center;flex:none;
+  box-shadow:0 6px 14px -6px rgba(22,163,74,.6);
+}
+.all-paid .ap-ic svg{width:18px;height:18px}
+
 .login{padding:0 24px;display:flex;flex-direction:column;justify-content:center;min-height:100%;position:relative;overflow:hidden}
 .login-logo{width:90px;height:90px;border-radius:26px;overflow:hidden;background:#fff;padding:5px;margin:0 auto 18px;box-shadow:0 18px 38px -12px rgba(14,95,48,.6)}
 .login-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:21px}
 .login-logo .fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-l),var(--primary));border-radius:21px;color:#fff;font-weight:700;font-size:32px}
 .login h1{font-size:22px;margin:0 0 6px;font-weight:700;text-align:center;color:var(--primary)}
 .login .tag{font-size:13.5px;color:var(--text-2);margin:0 0 30px;line-height:1.6;text-align:center}
+
 .splash{position:absolute;inset:0;background:linear-gradient(160deg,#0E5F30,#083A1C 60%,#041A0C);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:300;color:#fff}
 .splash .logo-big{width:110px;height:110px;border-radius:30px;background:#fff;padding:6px;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .splash .logo-big img{width:100%;height:100%;object-fit:contain;display:block;border-radius:24px}
@@ -146,39 +404,81 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .splash p{margin:0;font-size:12.5px;opacity:.85}
 .spin{width:28px;height:28px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.offline{background:var(--warn-soft);color:var(--warn);font-size:11.5px;font-weight:600;padding:7px 16px;display:flex;align-items:center;justify-content:center;gap:7px;flex:none}
+
+.offline{background:var(--warn-soft);color:var(--warn);font-size:11.5px;font-weight:600;padding:7px 16px;display:flex;align-items:center;justify-content:center;gap:7px;flex:none;backdrop-filter:blur(10px)}
+
 .anim{animation:fadeUp .4s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
 .anim-d1{animation-delay:.05s}.anim-d2{animation-delay:.1s}.anim-d3{animation-delay:.15s}.anim-d4{animation-delay:.2s}.anim-d5{animation-delay:.25s}
+
 .info-box{background:var(--info-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--info);font-weight:500;line-height:1.6}
 .warn-box{background:var(--warn-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--warn);font-weight:500;line-height:1.6}
-.hd-logo{width:46px;height:46px;border-radius:14px;background:#fff;padding:3px;flex:none;border:1px solid var(--border-2);overflow:hidden}
-.hd-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:11px}
-.event-hero{position:relative;overflow:hidden;border-radius:24px;padding:20px;background:linear-gradient(135deg,#B93A0E 0%,#EA580C 45%,#F59E0B 100%);color:#fff;box-shadow:0 20px 44px -16px rgba(234,88,12,.7);cursor:pointer}
-.event-hero .eh-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:rgba(255,255,255,.22);border-radius:99px;font-size:11px;font-weight:700}
-.event-hero .eh-title{font-size:20px;font-weight:700;line-height:1.25;margin:12px 0 8px}
-.event-hero .eh-desc{font-size:12.5px;line-height:1.6;opacity:.94;margin:0 0 14px}
-.event-hero .eh-meta{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.event-hero .eh-cell{background:rgba(255,255,255,.18);border-radius:14px;padding:10px 12px;border:1px solid rgba(255,255,255,.24)}
-.event-hero .eh-cell .k{font-size:10px;opacity:.92;font-weight:500}
+
+.hd-logo{width:42px;height:42px;border-radius:13px;background:#fff;padding:3px;flex:none;border:1px solid var(--card-border);overflow:hidden;box-shadow:0 4px 12px -4px rgba(0,0,0,.15)}
+.hd-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px}
+
+.event-hero{position:relative;overflow:hidden;border-radius:24px;padding:20px;background:linear-gradient(135deg,#B93A0E 0%,#EA580C 45%,#F59E0B 100%);color:#fff;box-shadow:0 20px 44px -16px rgba(234,88,12,.65),inset 0 1px 0 rgba(255,255,255,.3);cursor:pointer;border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(10px)}
+.event-hero::before{content:'';position:absolute;top:-40%;left:-15%;right:-15%;height:90%;background:radial-gradient(ellipse at 30% 0%,rgba(255,255,255,.35),transparent 60%);pointer-events:none}
+.event-hero .eh-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:rgba(255,255,255,.25);border-radius:99px;font-size:11px;font-weight:700;position:relative;z-index:2;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2)}
+.event-hero .eh-title{font-size:20px;font-weight:700;line-height:1.25;margin:12px 0 8px;position:relative;z-index:2}
+.event-hero .eh-desc{font-size:12.5px;line-height:1.6;opacity:.95;margin:0 0 14px;position:relative;z-index:2}
+.event-hero .eh-meta{display:grid;grid-template-columns:1fr 1fr;gap:9px;position:relative;z-index:2}
+.event-hero .eh-cell{background:rgba(255,255,255,.2);border-radius:14px;padding:10px 12px;border:1px solid rgba(255,255,255,.26);backdrop-filter:blur(6px)}
+.event-hero .eh-cell .k{font-size:10px;opacity:.95;font-weight:500}
 .event-hero .eh-cell .v{font-size:14.5px;font-weight:700;margin-top:3px}
-.past-card{background:var(--card);border-radius:16px;padding:12px 14px;border:1px solid var(--border-2);box-shadow:var(--shadow);cursor:pointer;display:flex;align-items:center;gap:12px;border-left:4px solid var(--text-3)}
-.past-card .pc-date{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#6B7280,#4B5563);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1}
+
+.event-hero.compact{padding:13px 15px;border-radius:18px;box-shadow:0 14px 32px -14px rgba(234,88,12,.6),inset 0 1px 0 rgba(255,255,255,.3)}
+.event-hero.compact .eh-tag{font-size:9.5px;padding:3px 9px;gap:4px}
+.event-hero.compact .eh-title{font-size:14.5px;margin:7px 0 3px;line-height:1.3}
+.event-hero.compact .eh-desc{font-size:11px;margin:0 0 9px;line-height:1.5}
+.event-hero.compact .eh-meta{gap:7px}
+.event-hero.compact .eh-cell{padding:6px 10px;border-radius:10px}
+.event-hero.compact .eh-cell .k{font-size:9px}
+.event-hero.compact .eh-cell .v{font-size:12px;margin-top:2px}
+
+.past-card{
+  background:var(--card);border-radius:16px;padding:12px 14px;
+  border:1px solid var(--card-border);box-shadow:var(--shadow);
+  cursor:pointer;display:flex;align-items:center;gap:12px;
+  border-left:4px solid var(--text-3);position:relative;overflow:hidden;
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+}
+.past-card::before{content:'';position:absolute;top:0;left:14px;right:14px;height:1px;background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
+.past-card .pc-date{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#6B7280,#4B5563);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1;box-shadow:0 6px 14px -6px rgba(0,0,0,.3)}
 .past-card .pc-date .d{font-size:16px;font-weight:800}
 .past-card .pc-date .m{font-size:9px;opacity:.9;margin-top:2px;font-weight:600}
 .past-card .pc-body{flex:1;min-width:0}
 .past-card .pc-title{font-size:13.5px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .past-card .pc-sub{font-size:11px;color:var(--text-3);margin-top:3px}
-.post-card{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border:1px solid var(--border-2);margin-bottom:10px}
+
+.post-card{
+  background:var(--card);border-radius:var(--radius);padding:14px;
+  box-shadow:var(--shadow);border:1px solid var(--card-border);
+  margin-bottom:10px;position:relative;overflow:hidden;
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+}
+.post-card::before{content:'';position:absolute;top:0;left:14px;right:14px;height:1px;background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
 .post-head{display:flex;gap:10px;align-items:center;margin-bottom:10px}
 .post-body-text{font-size:13.5px;line-height:1.6;color:var(--text);white-space:pre-wrap;word-break:break-word}
 .post-foot{display:flex;align-items:center;justify-content:space-between;margin-top:11px;padding-top:10px;border-top:1px solid var(--border-2)}
 .post-time{font-size:10.5px;color:var(--text-3)}
-.notif-card{background:var(--card);border-radius:16px;padding:14px;box-shadow:var(--shadow);border:1px solid var(--border-2);margin-bottom:10px;border-left:4px solid var(--info)}
-.notif-card.unread{border-left-color:var(--gold);background:linear-gradient(135deg,var(--card),var(--gold-soft))}
+
+.notif-card{
+  background:var(--card);border-radius:16px;padding:14px;
+  box-shadow:var(--shadow);border:1px solid var(--card-border);
+  margin-bottom:10px;border-left:4px solid var(--info);
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+}
+.notif-card.unread{border-left-color:var(--gold);background:linear-gradient(135deg,var(--card),rgba(251,243,220,.6))}
+[data-theme="dark"] .notif-card.unread{background:linear-gradient(135deg,var(--card),rgba(58,46,16,.5))}
 .notif-head{display:flex;gap:10px;align-items:flex-start}
 .notif-ic{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;font-size:18px}
-.auth-tabs{display:flex;background:var(--card);border-radius:14px;padding:4px;margin-bottom:16px;border:1px solid var(--border-2)}
+
+.auth-tabs{display:flex;background:var(--card);border-radius:14px;padding:4px;margin-bottom:16px;border:1px solid var(--card-border);backdrop-filter:blur(14px)}
 .auth-tab{flex:1;padding:11px;text-align:center;font-size:13px;font-weight:600;color:var(--text-2);border-radius:11px;cursor:pointer;transition:all .18s}
 .auth-tab.on{background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff}
 </style>
@@ -211,8 +511,6 @@ auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e){cons
 
 var BN_MONTHS=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
 var AUTH_DOMAIN = '@dpseba.local';
-
-/* ✅ আন্তর্জাতিক E.164 ফোন সীমা (৭–১৫ ডিজিট) — অ্যাডমিন অ্যাপের সাথে সামঞ্জস্যপূর্ণ */
 var PHONE_MIN_DIGITS = 7;
 var PHONE_MAX_DIGITS = 15;
 
@@ -270,21 +568,6 @@ function toast(msg,type){
 }
 function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||8)}catch(e){}}
 
-/* ============================================================
-   ✅ normalizePhone — সম্পূর্ণ ইউনিভার্সাল (যেকোনো দেশ)
-   ------------------------------------------------------------
-   অ্যাডমিন অ্যাপের ফাংশনের সাথে HUBOHU মিল থাকতে হবে।
-   শুধু ডিজিট রাখে — স্পেস, +, -, (), . সব বাদ দেয়।
-   
-   উদাহরণ:
-     "+880 1712-345678"  → "8801712345678"
-     "+1 (415) 555-1234" → "14155551234"
-     "+971 50 123 4567"  → "971501234567"
-     "+44 7911 123456"   → "447911123456"
-     "01712345678"       → "01712345678"
-   
-   authEmail = phoneNorm + '@dpseba.local'
-   ============================================================ */
 function normalizePhone(raw){
   if(!raw) return '';
   return String(raw).trim().replace(/[^\d]/g,'');
@@ -318,7 +601,13 @@ var DATA={
     return DB.notifications.filter(function(n){return n.userId===state.member.id||n.target==='all'||!n.userId}).sort(function(a,b){return (b.timestamp||b.createdAt||0)-(a.timestamp||a.createdAt||0)});
   },
   unreadCount:function(){return this.myNotifications().filter(function(n){return !n.read}).length},
-  myPendingRequests:function(){if(!state.member) return [];return DB.paymentRequests.filter(function(r){return r.memberId===state.member.id})}
+  myPendingRequests:function(){if(!state.member) return [];return DB.paymentRequests.filter(function(r){return r.memberId===state.member.id})},
+  /* ✅ শুধু বাকি থাকা মাসগুলো ফেরত দেয় */
+  myDueContribs:function(){
+    var cs=this.myContribs();
+    return cs.filter(function(c){ return (c.amount||0) - (c.paidAmount||0) > 0; })
+             .sort(function(a,b){return (b.year||0)-(a.year||0)||(b.month||0)-(a.month||0)});
+  }
 };
 
 function openModal(opts){
@@ -370,17 +659,13 @@ function viewRegisterForm(){
     '<div class="info-box" style="margin-top:14px;line-height:1.7">💡 <b>উদাহরণ:</b> +880 1712-345678 · +1 (415) 555-1234 · +971 50 123 4567 · +44 7911 123456</div>';
 }
 
-/* ========= LOGIN / REGISTER LOGIC ========= */
 async function doLogin(){
   var phone=($('#loginPhone')||{}).value||'';
   var pin=($('#loginPin')||{}).value||'';
   if(!phone||!pin){toast('ফোন ও PIN দিন','error');return}
   if(pin.length<6){toast('PIN কমপক্ষে ৬ ডিজিট','error');return}
   var phoneNorm=normalizePhone(phone);
-  if(!isValidPhone(phoneNorm)){
-    toast('সঠিক ফোন নাম্বার দিন (দেশের কোড সহ, '+PHONE_MIN_DIGITS+'-'+PHONE_MAX_DIGITS+' ডিজিট)','error');
-    return;
-  }
+  if(!isValidPhone(phoneNorm)){toast('সঠিক ফোন নাম্বার দিন','error');return;}
   var email=phoneNorm+AUTH_DOMAIN;
   try{toast('লগইন হচ্ছে...');await auth.signInWithEmailAndPassword(email,pin);}
   catch(err){
@@ -400,32 +685,15 @@ async function doRegister(){
   if(pin.length<6){toast('PIN কমপক্ষে ৬ ডিজিট','error');return}
   if(pin!==pin2){toast('দুইবার PIN একই দিন','error');return}
   var phoneNorm=normalizePhone(phone);
-  if(!isValidPhone(phoneNorm)){
-    toast('সঠিক ফোন নাম্বার দিন (দেশের কোড সহ, '+PHONE_MIN_DIGITS+'-'+PHONE_MAX_DIGITS+' ডিজিট)','error');
-    return;
-  }
+  if(!isValidPhone(phoneNorm)){toast('সঠিক ফোন নাম্বার দিন','error');return;}
   try{
     toast('অ্যাকাউন্ট তৈরি হচ্ছে...');
-    /* ✅ অ্যাডমিন অ্যাপে রাখা phoneNorm-এর সাথে হুবহু ম্যাচ */
     var dupSnap=await db.collection('members').where('phoneNorm','==',phoneNorm).limit(1).get();
-    if(dupSnap.empty){
-      toast('❌ এই নাম্বারে সদস্য নেই — অ্যাডমিনের সাথে যোগাযোগ করুন','error');
-      return;
-    }
-    if(dupSnap.docs[0].data().accountSetup===true){
-      toast('❌ এই নাম্বারে অ্যাকাউন্ট আছে — লগইন করুন','error');
-      return;
-    }
+    if(dupSnap.empty){toast('❌ এই নাম্বারে সদস্য নেই — অ্যাডমিনের সাথে যোগাযোগ করুন','error');return;}
+    if(dupSnap.docs[0].data().accountSetup===true){toast('❌ এই নাম্বারে অ্যাকাউন্ট আছে — লগইন করুন','error');return;}
     var email=phoneNorm+AUTH_DOMAIN;
     var userCred=await auth.createUserWithEmailAndPassword(email,pin);
-    try{
-      await db.collection('members').doc(dupSnap.docs[0].id).update({
-        accountSetup:true,
-        authUid:userCred.user.uid,
-        accountCreatedAt:Date.now(),
-        phoneRaw:phone
-      });
-    }catch(e){console.warn(e)}
+    try{await db.collection('members').doc(dupSnap.docs[0].id).update({accountSetup:true,authUid:userCred.user.uid,accountCreatedAt:Date.now(),phoneRaw:phone});}catch(e){console.warn(e)}
     toast('✅ অ্যাকাউন্ট তৈরি হয়েছে','success');
   }catch(err){
     var msg='অ্যাকাউন্ট তৈরি ব্যর্থ';
@@ -500,14 +768,43 @@ function viewHome(){
   var logoSrc=LOGO_URL?'<img src="'+LOGO_URL+'" alt="DP"/>':'<div class="fallback">DP</div>';
   var unread=DATA.unreadCount();
   var h='';
-  h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">স্বাগতম</div><div class="bb" style="font-size:14px">'+esc(me.name||'সদস্য')+'</div></div></div><button class="icon-btn" data-act="page" data-page="notifications" style="position:relative">'+icon('bell')+(unread>0?'<span style="position:absolute;top:-3px;right:-3px;background:#C41E3A;color:#fff;font-size:9px;font-weight:700;border-radius:99px;padding:2px 5px;min-width:16px;text-align:center">'+(unread>9?'9+':unread)+'</span>':'')+'</button></div>';
 
-  h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · প্রবাসীর পাশে</div></div></div><div class="bc-label">সংগঠনের মোট তহবিল</div><div class="bc-amount">৳ '+fmtN(fund.balance)+'</div><div class="bc-sub">সর্বশেষ হালনাগাদ · '+fmtDate(toISO(new Date()))+'</div><div class="bc-stats"><div class="bc-stat"><div class="k">মোট আয়</div><div class="v">'+shortMoney(fund.income)+'</div></div><div class="bc-stat"><div class="k">মোট ব্যয়</div><div class="v">'+shortMoney(fund.expense)+'</div></div></div></div></div>';
+  /* Header */
+  h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">স্বাগতম</div><div class="bb" style="font-size:14px">'+esc(me.name||'সদস্য')+'</div></div></div><button class="icon-btn" data-act="page" data-page="notifications" style="position:relative;width:36px;height:36px">'+icon('bell')+(unread>0?'<span style="position:absolute;top:-3px;right:-3px;background:#C41E3A;color:#fff;font-size:9px;font-weight:700;border-radius:99px;padding:2px 5px;min-width:16px;text-align:center">'+(unread>9?'9+':unread)+'</span>':'')+'</button></div>';
 
+  /* Balance Card (smaller) */
+  h+='<div class="sec anim anim-d1" style="margin-top:4px"><div class="balance-card">'+
+      '<div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · প্রবাসীর পাশে</div></div></div>'+
+      '<div class="bc-label">সংগঠনের মোট তহবিল</div>'+
+      '<div class="bc-amount">৳ '+fmtN(fund.balance)+'</div>'+
+      '<div class="bc-sub">সর্বশেষ হালনাগাদ · '+fmtDate(toISO(new Date()))+'</div>'+
+      '<div class="bc-stats">'+
+        '<div class="bc-stat"><div class="k">মোট আয়</div><div class="v">'+shortMoney(fund.income)+'</div></div>'+
+        '<div class="bc-stat"><div class="k">মোট ব্যয়</div><div class="v">'+shortMoney(fund.expense)+'</div></div>'+
+      '</div>'+
+    '</div></div>';
+
+  /* bKash Compact Pill */
+  h+='<div class="sec anim anim-d2" style="margin-top:10px"><div class="bkash-pill" data-act="show-bkash">'+
+      '<span class="bk-logo">bKash</span>'+
+      '<span class="bk-num">01771606788 / 01796327299</span>'+
+      '<span class="bk-copy">'+icon('copy')+'</span>'+
+    '</div></div>';
+
+  /* Organization Feed — COMPACT one-line */
+  h+='<div class="sec anim anim-d3" style="margin-top:10px">'+
+      '<div class="feed-compact">'+
+        '<div class="fc-avatar">'+avatarHTML(me,34)+'</div>'+
+        '<input id="quickStatus" class="fc-input" type="text" placeholder="আপনার মনের কথা লিখুন..."/>'+
+        '<button class="fc-btn" data-act="quick-post">'+icon('send')+' পোস্ট করুন</button>'+
+      '</div>'+
+    '</div>';
+
+  /* Upcoming Event (compact) */
   if(nextEv){
     var d=parseISO(nextEv.date);
-    h+='<div class="sec anim anim-d2"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2></div>';
-    h+='<div class="event-hero" data-act="page-event" data-id="'+esc(nextEv.id)+'">'+
+    h+='<div class="sec anim anim-d3"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2></div>';
+    h+='<div class="event-hero compact" data-act="page-event" data-id="'+esc(nextEv.id)+'">'+
       '<div class="eh-tag">🎯 '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div>'+
       '<div class="eh-title">'+esc(nextEv.title)+'</div>'+
       (nextEv.description?'<div class="eh-desc">'+esc(nextEv.description)+'</div>':'')+
@@ -518,13 +815,11 @@ function viewHome(){
     '</div></div>';
   }
 
-  h+='<div class="sec anim anim-d4"><div class="sec-hd"><h2>📝 সংগঠনের ফিড</h2></div><div class="card"><div class="row" style="align-items:flex-start">'+avatarHTML(me,40)+'<div class="grow"><textarea id="quickStatus" placeholder="আপনার মনের কথা লিখুন..." style="width:100%;border:1.5px solid var(--border);border-radius:13px;padding:11px 13px;font-size:14px;min-height:60px;resize:vertical;font-family:inherit;background:var(--card);color:var(--text);outline:none;line-height:1.5"></textarea><div style="text-align:right;margin-top:8px"><button class="btn small" data-act="quick-post">'+icon('send')+' পোস্ট করুন</button></div></div></div></div></div>';
-
+  /* My Contributions */
   var sum=DATA.mySummary();
-  h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>💰 আমার চাঁদা</h2><span class="link" data-act="page" data-page="myPayment">বিস্তারিত →</span></div><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">৳ '+fmtN(sum.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(sum.due>0?'var(--expense)':'var(--text-3)')+'">৳ '+fmtN(Math.max(sum.due,0))+'</div></div><div class="stat"><div class="k">অগ্রগতি</div><div class="v">'+sum.percent+'%</div></div></div></div>';
+  h+='<div class="sec anim anim-d4"><div class="sec-hd"><h2>💰 আমার চাঁদা</h2><span class="link" data-act="page" data-page="myPayment">বিস্তারিত →</span></div><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">৳ '+fmtN(sum.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(sum.due>0?'var(--expense)':'var(--text-3)')+'">৳ '+fmtN(Math.max(sum.due,0))+'</div></div><div class="stat"><div class="k">অগ্রগতি</div><div class="v">'+sum.percent+'%</div></div></div></div>';
 
-  h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>💳 bKash নাম্বার</h2></div><div style="background:linear-gradient(135deg,#E2136E,#B70F55);border-radius:20px;padding:18px;color:#fff"><div class="row"><div style="background:rgba(255,255,255,.22);padding:4px 10px;border-radius:8px;font-weight:700;font-size:13px">bKash</div><div class="sm" style="opacity:.92;font-weight:600">পার্সোনাল</div></div><div class="tiny mt14" style="opacity:.92">চাঁদা পাঠানোর নাম্বার</div><div style="font-size:20px;font-weight:700;margin-top:6px">01771606788 / 01796327299</div><div class="tiny mt10" style="opacity:.88">Reference-এ লিখুন: <b>DP-'+esc(state.member.id||'')+'</b></div><button class="btn small mt14" data-act="copy-number" data-num="01771606788" style="background:rgba(255,255,255,.22);padding:7px 12px;font-size:12px;gap:5px;box-shadow:none">'+icon('copy')+' কপি করুন</button></div></div>';
-
+  /* Past Events */
   if(past.length){
     h+='<div class="sec anim anim-d5" style="margin-bottom:10px"><div class="sec-hd"><h2>📁 পূর্ববর্তী ইভেন্ট</h2></div><div style="display:grid;gap:9px">'+
       past.map(function(e){var d=parseISO(e.date);return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'"><div class="pc-date"><div class="d">'+d.getDate()+'</div><div class="m">'+MN(d.getMonth()+1).substring(0,3)+'</div></div><div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+'</div></div><div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div></div>'}).join('')+
@@ -557,11 +852,10 @@ function pageMember(id){
   var paid=cs.reduce(function(a,b){return a+(b.paidAmount||0)},0);
   var due=expected-paid;
   var pct=expected?Math.round(paid/expected*100):0;
-  var years=[];cs.forEach(function(c){if(years.indexOf(c.year)<0)years.push(c.year)});years.sort(function(a,b){return b-a});
-  var y=years[0]||new Date().getFullYear();
-  var yearCs=cs.filter(function(c){return c.year===y}).sort(function(a,b){return b.month-a.month});
+  /* ✅ শুধু বাকি থাকা মাসগুলো */
+  var dueCs=cs.filter(function(c){return (c.amount||0)-(c.paidAmount||0)>0}).sort(function(a,b){return (b.year||0)-(a.year||0)||(b.month||0)-(a.month||0)});
   var rightBtns = isMe ? '<span class="pill active" style="font-size:10px">আপনি</span>'
-    : '<button class="btn xs" data-act="message-member" data-id="'+esc(id)+'">'+icon('message')+' মেসেজ করুন</button>';
+    : '<button class="btn xs" data-act="message-member" data-id="'+esc(id)+'">'+icon('message')+' মেসেজ</button>';
   var h=subHeader(m.name||'সদস্য',rightBtns);
   h+='<div class="subbody">';
   h+='<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:20px 16px">'+
@@ -575,15 +869,22 @@ function pageMember(id){
       '<div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(due>0?'var(--expense)':'var(--text-3)')+'">৳ '+fmtN(Math.max(due,0))+'</div></div>'+
       '<div class="stat"><div class="k">অগ্রগতি</div><div class="v">'+pct+'%</div></div>'+
     '</div><div class="prog mt14"><i style="width:'+pct+'%"></i></div></div>';
-  h+='<div class="chips" style="margin-top:14px">'+years.map(function(yy){return '<button class="chip'+(yy===y?' on':'')+'" data-act="cyear-member" data-v="'+yy+'">'+yy+'</button>'}).join('')+'</div>';
-  h+='<div class="sec" style="margin-top:14px"><div class="sec-hd"><h2>চাঁদার ইতিহাস</h2></div>';
-  if(!yearCs.length){h+='<div class="empty"><h3>কোনো রেকর্ড নেই</h3></div>';}
-  else{h+=yearCs.map(function(c){var st=c.status||'due';var label=st==='paid'?'পরিশোধিত':(st==='due'?'বাকি':'আংশিক');return '<div style="display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--card);border:1px solid var(--border-2);border-radius:14px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:var(--card-2)">'+(c.month||0)+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+MN(c.month||1)+' '+c.year+'</div><div class="tiny muted">প্রত্যাশিত ৳'+fmtN(c.amount||0)+' · পরিশোধিত ৳'+fmtN(c.paidAmount||0)+'</div></div><span class="pill '+st+'">'+label+'</span></div>'}).join('');}
+  /* ✅ বাকি না থাকলে সুন্দর success message */
+  h+='<div class="sec"><div class="sec-hd"><h2>বাকি থাকা মাস</h2></div>';
+  if(!dueCs.length){
+    h+='<div class="all-paid"><div class="ap-ic">'+icon('check')+'</div><div>সব চাঁদা পরিশোধিত — ধন্যবাদ! ✅</div></div>';
+  } else {
+    h+=dueCs.map(function(c){
+      var d=(c.amount||0)-(c.paidAmount||0);
+      var st='due';var label='বাকি';
+      return '<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 15px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:var(--card-2)">'+(c.month||0)+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+MN(c.month||1)+' '+c.year+'</div><div class="tiny muted">প্রত্যাশিত ৳'+fmtN(c.amount||0)+' · পরিশোধিত ৳'+fmtN(c.paidAmount||0)+' · <b style="color:var(--expense)">বাকি ৳'+fmtN(d)+'</b></div></div><span class="pill '+st+'">'+label+'</span></div>';
+    }).join('');
+  }
   h+='</div></div>';
   return h;
 }
 
-/* ========= ACCOUNTS ========= */
+/* ========= ACCOUNTS (logout removed) ========= */
 function viewAccounts(){
   var me=state.member;
   var sum=DATA.mySummary();
@@ -599,7 +900,8 @@ function viewAccounts(){
   if(!notifs.length){h+='<div class="card" style="text-align:center;padding:16px"><div class="tiny muted">কোনো নোটিফিকেশন নেই</div></div>';}
   else{h+='<div class="list">'+notifs.map(function(n){return '<div class="li" data-act="page" data-page="notifications"><div class="ic" style="background:var(--info-soft);color:var(--info)">'+icon('bell')+'</div><div class="grow"><div class="t ell">'+esc(n.title||'নোটিফিকেশন')+'</div><div class="s ell">'+esc(n.body||'')+'</div></div></div>'}).join('')+'</div>';}
   h+='</div>';
-  h+='<div class="sec anim anim-d5" style="margin-bottom:10px"><button class="btn ghost block" style="color:var(--expense)" data-act="logout">'+icon('logout')+' লগআউট</button></div>';
+  /* ❌ logout removed */
+  h+='<div style="height:10px"></div>';
   return h;
 }
 
@@ -608,7 +910,14 @@ function viewPosts(){
   var posts=DB.userPosts.slice().sort(function(a,b){return (b.timestamp||0)-(a.timestamp||0)});
   var h='';
   h+='<div class="hd anim"><div><h1>সংগঠনের ফিড</h1><div class="sub">'+posts.length+' টি পোস্ট</div></div></div>';
-  h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="card"><div class="row" style="align-items:flex-start">'+avatarHTML(state.member,40)+'<div class="grow"><textarea id="feedStatus" placeholder="কিছু শেয়ার করুন..." style="width:100%;border:1.5px solid var(--border);border-radius:13px;padding:11px 13px;font-size:14px;min-height:60px;resize:vertical;font-family:inherit;background:var(--card);color:var(--text);outline:none;line-height:1.5"></textarea><div style="text-align:right;margin-top:8px"><button class="btn small" data-act="quick-post">'+icon('send')+' পোস্ট</button></div></div></div></div></div>';
+  /* Compact one-line feed */
+  h+='<div class="sec anim anim-d1" style="margin-top:6px">'+
+      '<div class="feed-compact">'+
+        '<div class="fc-avatar">'+avatarHTML(state.member,34)+'</div>'+
+        '<input id="feedStatus" class="fc-input" type="text" placeholder="আপনার মনের কথা লিখুন..."/>'+
+        '<button class="fc-btn" data-act="quick-post">'+icon('send')+' পোস্ট করুন</button>'+
+      '</div>'+
+    '</div>';
   h+='<div class="sec anim anim-d2">';
   if(!posts.length){h+='<div class="empty"><div class="eic">📝</div><h3>এখনো কোনো পোস্ট নেই</h3></div>';}
   else{
@@ -632,7 +941,7 @@ function viewPosts(){
   h+='</div>';return h;
 }
 
-/* ========= PROFILE ========= */
+/* ========= PROFILE (small logout) ========= */
 function viewProfile(){
   var me=state.member;
   var h='';
@@ -649,8 +958,11 @@ function viewProfile(){
     '<div class="li" data-act="theme-toggle"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('shield')+'</div><div class="grow"><div class="t">ডার্ক মোড</div><div class="s">'+(state.theme==='dark'?'চালু':'বন্ধ')+'</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="notifications"><div class="ic" style="background:var(--info-soft);color:var(--info)">'+icon('bell')+'</div><div class="grow"><div class="t">নোটিফিকেশন</div><div class="s">'+DATA.unreadCount()+' টি অপঠিত</div></div>'+chev()+'</div>'+
   '</div></div>';
-  h+='<div class="sec anim anim-d4" style="margin-bottom:10px"><button class="btn ghost block" style="color:var(--expense)" data-act="logout">'+icon('logout')+' লগআউট</button></div>';
-  h+='<div class="sec" style="padding-bottom:26px"><div class="card" style="background:var(--card-2);text-align:center"><div class="tiny muted">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="tiny muted mt6">DP সেবা · v1.0</div></div></div>';
+  /* ✅ Small logout button */
+  h+='<div class="sec anim anim-d4" style="margin-bottom:10px;text-align:right;padding:0 20px">'+
+    '<button class="btn xs" style="color:var(--expense);background:var(--danger-soft);border:1px solid rgba(220,38,38,.18)" data-act="logout">'+icon('logout')+' লগআউট</button>'+
+  '</div>';
+  h+='<div class="sec" style="padding-bottom:26px"><div class="card" style="background:var(--card-2);text-align:center;padding:12px"><div class="tiny muted">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="tiny muted mt6">DP সেবা · v1.0</div></div></div>';
   return h;
 }
 
@@ -682,24 +994,31 @@ function pageNotifications(){
   return h;
 }
 
-/* ========= MY PAYMENT ========= */
+/* ========= MY PAYMENT (only dues shown) ========= */
 function pageMyPayment(){
   var me=state.member;
-  var cs=DB.contributions.filter(function(c){return c.memberId===me.id}).sort(function(a,b){return (b.year||0)-(a.year||0)||(b.month||0)-(a.month||0)});
   var sum=DATA.mySummary();
   var myReqs=DATA.myPendingRequests();
+  var dueCs=DATA.myDueContribs(); /* ✅ শুধু বাকি */
   var h=subHeader('আমার চাঁদা');
   h+='<div class="subbody">';
   h+='<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:20px"><div class="tiny muted">পরিশোধিত</div><div class="bb" style="font-size:28px;color:var(--primary);margin-top:5px">৳ '+fmtN(sum.paid)+'</div><div class="tiny muted mt6">প্রত্যাশিত ৳'+fmtN(sum.expected)+' · বাকি ৳'+fmtN(Math.max(sum.due,0))+'</div><div class="prog mt14"><i style="width:'+sum.percent+'%"></i></div></div></div>';
-  h+='<div class="sec"><div class="card" style="background:linear-gradient(135deg,var(--gold-soft),var(--warn-soft));border:none"><div class="sm" style="line-height:1.8;color:var(--text)">১. bKash নাম্বারে টাকা পাঠান<br>২. Reference-এ লিখুন: <b>'+esc(me.id||'')+'</b><br>৩. নিচের বাটনে ক্লিক করে জানান</div><button class="btn block mt14" data-act="send-payment-request">'+icon('send')+' টাকা পাঠিয়েছি</button></div></div>';
+  h+='<div class="sec"><div class="card" style="background:linear-gradient(135deg,rgba(251,243,220,.85),rgba(254,243,199,.85));border:1px solid rgba(212,160,23,.35)"><div class="sm" style="line-height:1.8;color:var(--text)">১. bKash নাম্বারে টাকা পাঠান<br>২. Reference-এ লিখুন: <b>'+esc(me.id||'')+'</b><br>৩. নিচের বাটনে ক্লিক করে জানান</div><button class="btn block mt14" data-act="send-payment-request">'+icon('send')+' টাকা পাঠিয়েছি</button></div></div>';
   if(myReqs.length){
     h+='<div class="sec"><div class="sec-hd"><h2>আমার রিকোয়েস্ট</h2></div>';
     h+=myReqs.slice(0,5).map(function(r){var st=r.status||'pending';var label=st==='pending'?'অপেক্ষমাণ':(st==='approved'?'অনুমোদিত':'বাতিল');return '<div class="card" style="margin-bottom:9px;padding:13px"><div class="between"><div><div class="b sm">৳ '+fmtN(r.amount)+'</div><div class="tiny muted mt6">'+fmtDate(r.date)+'</div></div><span class="pill '+st+'">'+label+'</span></div></div>'}).join('');
     h+='</div>';
   }
-  h+='<div class="sec"><div class="sec-hd"><h2>মাসিক রেকর্ড</h2></div>';
-  if(!cs.length){h+='<div class="empty"><h3>কোনো রেকর্ড নেই</h3></div>';}
-  else{h+=cs.slice(0,12).map(function(c){var st=c.status||'due';var label=st==='paid'?'পরিশোধিত':(st==='due'?'বাকি':'আংশিক');return '<div style="display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--card);border:1px solid var(--border-2);border-radius:14px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:var(--card-2)">'+(c.month||0)+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+MN(c.month||1)+' '+c.year+'</div><div class="tiny muted">প্রত্যাশিত ৳'+fmtN(c.amount||0)+' · পরিশোধিত ৳'+fmtN(c.paidAmount||0)+'</div></div><span class="pill '+st+'">'+label+'</span></div>'}).join('');}
+  /* ✅ বাকি থাকা মাস দেখাও, নাহলে সুন্দর success message */
+  h+='<div class="sec"><div class="sec-hd"><h2>বাকি থাকা মাস</h2></div>';
+  if(!dueCs.length){
+    h+='<div class="all-paid"><div class="ap-ic">'+icon('check')+'</div><div>আপনার সব চাঁদা পরিশোধিত — ধন্যবাদ! 🎉</div></div>';
+  } else {
+    h+=dueCs.map(function(c){
+      var d=(c.amount||0)-(c.paidAmount||0);
+      return '<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 15px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:var(--danger-soft);color:var(--danger)">'+(c.month||0)+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+MN(c.month||1)+' '+c.year+'</div><div class="tiny muted">প্রত্যাশিত ৳'+fmtN(c.amount||0)+' · পরিশোধিত ৳'+fmtN(c.paidAmount||0)+' · <b style="color:var(--expense)">বাকি ৳'+fmtN(d)+'</b></div></div><span class="pill due">বাকি</span></div>';
+    }).join('');
+  }
   h+='</div></div>';
   return h;
 }
@@ -722,6 +1041,28 @@ function pageEventDetail(id){
     '</div>'+
   '</div></div></div>';
   return h;
+}
+
+/* ========= BKASH MODAL ========= */
+function showBkashModal(){
+  openModal({
+    title:'💳 bKash নাম্বার',
+    body:
+      '<div class="info-box" style="line-height:1.7">নিচের যেকোনো নাম্বারে টাকা পাঠাতে পারবেন। ট্যাপ করে কপি করুন।</div>'+
+      '<div class="list mt14">'+
+        '<div class="li" data-act="copy-number" data-num="01771606788">'+
+          '<div class="ic" style="background:linear-gradient(135deg,#E2136E,#B70F55);color:#fff;font-weight:800;font-size:10px">bKash</div>'+
+          '<div class="grow"><div class="t">01771606788</div><div class="s">পার্সোনাল · ট্যাপ করে কপি</div></div>'+
+          '<div style="color:var(--primary)">'+icon('copy')+'</div>'+
+        '</div>'+
+        '<div class="li" data-act="copy-number" data-num="01796327299">'+
+          '<div class="ic" style="background:linear-gradient(135deg,#E2136E,#B70F55);color:#fff;font-weight:800;font-size:10px">bKash</div>'+
+          '<div class="grow"><div class="t">01796327299</div><div class="s">পার্সোনাল · ট্যাপ করে কপি</div></div>'+
+          '<div style="color:var(--primary)">'+icon('copy')+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="warn-box mt14" style="line-height:1.8">📌 <b>Reference-এ লিখুন:</b> <b>DP-'+(state.member.id||'')+'</b><br>টাকা পাঠানোর পরে <b>হিসাব → পেমেন্ট পাঠান</b> এ গিয়ে জানান।</div>'
+  });
 }
 
 /* ========= ACTIONS ========= */
@@ -831,9 +1172,10 @@ document.addEventListener('click',function(ev){
     case 'quick-post':doQuickPost();break;
     case 'delete-my-post':deleteMyPost(el.dataset.id);break;
     case 'send-payment-request':openPaymentRequestModal();break;
+    case 'show-bkash':showBkashModal();break;
     case 'copy-number':{
       var num=el.dataset.num;
-      try{navigator.clipboard.writeText(num).then(function(){toast('✅ কপি হয়েছে','success')});}
+      try{navigator.clipboard.writeText(num).then(function(){toast('✅ কপি হয়েছে: '+num,'success')});}
       catch(e){toast('নাম্বার: '+num)}
       break;
     }
@@ -862,7 +1204,6 @@ auth.onAuthStateChanged(async function(user){
   if(!user){state.user=null;state.member=null;state.loading=false;render();return;}
   state.user=user;
   try{
-    /* ✅ প্রথমে authUid দিয়ে খুঁজি, তারপর phoneNorm দিয়ে (ইউনিভার্সাল) */
     var member=null;
     var memberSnap=await db.collection('members').doc(user.uid).get();
     if(memberSnap.exists){
