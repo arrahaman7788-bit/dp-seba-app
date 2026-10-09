@@ -35,7 +35,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .center{text-align:center}.gap6{gap:6px}.gap10{gap:10px}
 .mt6{margin-top:6px}.mt10{margin-top:10px}.mt14{margin-top:14px}
-/* ===== AVATAR WITH PHOTO SUPPORT ===== */
 .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,var(--c,#0E5F30),#000);color:#fff;font-weight:700;flex:none;overflow:hidden;position:relative}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:600;line-height:1.6}
@@ -211,6 +210,11 @@ var db = firebase.firestore();
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e){console.warn(e)});
 
 var BN_MONTHS=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+var AUTH_DOMAIN = '@dpseba.local';
+
+/* ✅ আন্তর্জাতিক E.164 ফোন সীমা (৭–১৫ ডিজিট) — অ্যাডমিন অ্যাপের সাথে সামঞ্জস্যপূর্ণ */
+var PHONE_MIN_DIGITS = 7;
+var PHONE_MAX_DIGITS = 15;
 
 var I={
   home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.6V21h14V9.6"/><path d="M9.5 21v-6h5v6"/></svg>',
@@ -247,7 +251,6 @@ function fmtDate(iso){if(!iso)return '—';try{var d=parseISO(iso);return d.getD
 function fmtDateTime(ts){if(!ts)return '—';var d=new Date(ts);var hr=d.getHours();var ampm=hr>=12?'PM':'AM';hr=hr%12||12;return d.getDate()+' '+MN(d.getMonth()+1)+' '+hr+':'+pad2(d.getMinutes())+' '+ampm}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
 
-/* ✅ PHOTO SUPPORT - এটাই মূল পরিবর্তন */
 function avatarHTML(m,size){
   size=size||46;
   var color=(m&&m.color)||'#0E5F30';
@@ -266,6 +269,30 @@ function toast(msg,type){
   clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove('show')},2600);
 }
 function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||8)}catch(e){}}
+
+/* ============================================================
+   ✅ normalizePhone — সম্পূর্ণ ইউনিভার্সাল (যেকোনো দেশ)
+   ------------------------------------------------------------
+   অ্যাডমিন অ্যাপের ফাংশনের সাথে HUBOHU মিল থাকতে হবে।
+   শুধু ডিজিট রাখে — স্পেস, +, -, (), . সব বাদ দেয়।
+   
+   উদাহরণ:
+     "+880 1712-345678"  → "8801712345678"
+     "+1 (415) 555-1234" → "14155551234"
+     "+971 50 123 4567"  → "971501234567"
+     "+44 7911 123456"   → "447911123456"
+     "01712345678"       → "01712345678"
+   
+   authEmail = phoneNorm + '@dpseba.local'
+   ============================================================ */
+function normalizePhone(raw){
+  if(!raw) return '';
+  return String(raw).trim().replace(/[^\d]/g,'');
+}
+function isValidPhone(norm){
+  if(!norm) return false;
+  return norm.length >= PHONE_MIN_DIGITS && norm.length <= PHONE_MAX_DIGITS;
+}
 
 var DATA={
   myContribs:function(){if(!state.member) return [];return DB.contributions.filter(function(c){return c.memberId===state.member.id})},
@@ -321,40 +348,45 @@ function viewLogin(){
   '</div></div>';
 }
 function viewLoginForm(){
-  return '<div class="field"><label>📱 মোবাইল নাম্বার</label><input id="loginPhone" type="tel" inputmode="numeric" placeholder="01XXXXXXXXX"/></div>'+
+  return '<div class="field">'+
+      '<label>📱 ফোন নাম্বার (দেশের কোড সহ)</label>'+
+      '<input id="loginPhone" type="tel" inputmode="tel" placeholder="যেমন: +880 1712 345678"/>'+
+      '<div class="tiny muted" style="margin-top:6px;line-height:1.7">🌍 যেকোনো দেশের নাম্বার দিন — স্পেস, +, -, () সব ঠিক আছে।</div>'+
+    '</div>'+
     '<div class="field"><label>🔒 PIN (৬ ডিজিট)</label><input id="loginPin" type="password" inputmode="numeric" maxlength="6" placeholder="••••••"/></div>'+
     '<button class="btn block mt6" data-act="login">লগইন করুন</button>'+
     '<div class="tiny muted mt14 center">সমস্যা হলে অ্যাডমিনের সাথে যোগাযোগ করুন</div>';
 }
 function viewRegisterForm(){
-  return '<div class="info-box" style="margin-bottom:14px;line-height:1.8"><b>📝 প্রথমবার?</b><br>১. মোবাইল নাম্বার দিন<br>২. <b>৬ ডিজিট</b> PIN সেট করুন<br>৩. একাউন্ট তৈরি করুন</div>'+
-    '<div class="field"><label>📱 মোবাইল নাম্বার</label><input id="regPhone" type="tel" inputmode="numeric" placeholder="01XXXXXXXXX" maxlength="11"/></div>'+
+  return '<div class="info-box" style="margin-bottom:14px;line-height:1.8"><b>📝 প্রথমবার?</b><br>১. অ্যাডমিনের দেওয়া <b>একই</b> ফোন নাম্বার দিন<br>২. <b>৬ ডিজিট</b> PIN সেট করুন<br>৩. একাউন্ট তৈরি করুন</div>'+
+    '<div class="field">'+
+      '<label>📱 ফোন নাম্বার (দেশের কোড সহ) *</label>'+
+      '<input id="regPhone" type="tel" inputmode="tel" placeholder="যেমন: +880 1712 345678"/>'+
+      '<div class="tiny muted" style="margin-top:6px;line-height:1.7">⚠️ অ্যাডমিন অ্যাপে যে নাম্বার দিয়ে আপনাকে সদস্য করা হয়েছে — <b>হুবহু সেই নাম্বার</b> দিতে হবে।</div>'+
+    '</div>'+
     '<div class="field"><label>🔒 নতুন ৬-ডিজিট PIN</label><input id="regPin" type="password" inputmode="numeric" maxlength="6" placeholder="••••••"/></div>'+
     '<div class="field"><label>🔒 PIN আবার লিখুন</label><input id="regPin2" type="password" inputmode="numeric" maxlength="6" placeholder="••••••"/></div>'+
-    '<button class="btn block mt6" data-act="register" style="background:linear-gradient(135deg,#16A34A,#0E7A38)">'+icon('check')+' একাউন্ট তৈরি করুন</button>';
+    '<button class="btn block mt6" data-act="register" style="background:linear-gradient(135deg,#16A34A,#0E7A38)">'+icon('check')+' একাউন্ট তৈরি করুন</button>'+
+    '<div class="info-box" style="margin-top:14px;line-height:1.7">💡 <b>উদাহরণ:</b> +880 1712-345678 · +1 (415) 555-1234 · +971 50 123 4567 · +44 7911 123456</div>';
 }
-function normalizePhone(raw){
-  if(!raw) return '';
-  var s=String(raw).trim();
-  var plus=s.charAt(0)==='+';
-  s=s.replace(/[^\d]/g,'');
-  if(!s) return '';
-  if(!plus && s.charAt(0)==='0' && s.length===11) s='88'+s;
-  return s;
-}
+
+/* ========= LOGIN / REGISTER LOGIC ========= */
 async function doLogin(){
   var phone=($('#loginPhone')||{}).value||'';
   var pin=($('#loginPin')||{}).value||'';
-  if(!phone||!pin){toast('মোবাইল ও PIN দিন','error');return}
+  if(!phone||!pin){toast('ফোন ও PIN দিন','error');return}
   if(pin.length<6){toast('PIN কমপক্ষে ৬ ডিজিট','error');return}
   var phoneNorm=normalizePhone(phone);
-  if(!phoneNorm){toast('সঠিক মোবাইল নাম্বার দিন','error');return}
-  var email=phoneNorm+'@dpseba.local';
+  if(!isValidPhone(phoneNorm)){
+    toast('সঠিক ফোন নাম্বার দিন (দেশের কোড সহ, '+PHONE_MIN_DIGITS+'-'+PHONE_MAX_DIGITS+' ডিজিট)','error');
+    return;
+  }
+  var email=phoneNorm+AUTH_DOMAIN;
   try{toast('লগইন হচ্ছে...');await auth.signInWithEmailAndPassword(email,pin);}
   catch(err){
     var msg='লগইন ব্যর্থ';
     if(err.code==='auth/wrong-password'||err.code==='auth/invalid-credential') msg='PIN ভুল';
-    else if(err.code==='auth/user-not-found') msg='এই নাম্বারে অ্যাকাউন্ট নেই';
+    else if(err.code==='auth/user-not-found') msg='এই নাম্বারে অ্যাকাউন্ট নেই — প্রথমে রেজিস্ট্রেশন করুন';
     else if(err.code==='auth/too-many-requests') msg='একটু পরে চেষ্টা করুন';
     else msg='সমস্যা: '+err.message;
     toast(msg,'error');
@@ -368,15 +400,32 @@ async function doRegister(){
   if(pin.length<6){toast('PIN কমপক্ষে ৬ ডিজিট','error');return}
   if(pin!==pin2){toast('দুইবার PIN একই দিন','error');return}
   var phoneNorm=normalizePhone(phone);
-  if(!phoneNorm||phoneNorm.length<11){toast('সঠিক মোবাইল নাম্বার দিন','error');return}
+  if(!isValidPhone(phoneNorm)){
+    toast('সঠিক ফোন নাম্বার দিন (দেশের কোড সহ, '+PHONE_MIN_DIGITS+'-'+PHONE_MAX_DIGITS+' ডিজিট)','error');
+    return;
+  }
   try{
     toast('অ্যাকাউন্ট তৈরি হচ্ছে...');
+    /* ✅ অ্যাডমিন অ্যাপে রাখা phoneNorm-এর সাথে হুবহু ম্যাচ */
     var dupSnap=await db.collection('members').where('phoneNorm','==',phoneNorm).limit(1).get();
-    if(dupSnap.empty){toast('❌ এই নাম্বারে সদস্য নেই — অ্যাডমিনের সাথে যোগাযোগ করুন','error');return;}
-    if(dupSnap.docs[0].data().accountSetup===true){toast('❌ এই নাম্বারে অ্যাকাউন্ট আছে — লগইন করুন','error');return;}
-    var email=phoneNorm+'@dpseba.local';
+    if(dupSnap.empty){
+      toast('❌ এই নাম্বারে সদস্য নেই — অ্যাডমিনের সাথে যোগাযোগ করুন','error');
+      return;
+    }
+    if(dupSnap.docs[0].data().accountSetup===true){
+      toast('❌ এই নাম্বারে অ্যাকাউন্ট আছে — লগইন করুন','error');
+      return;
+    }
+    var email=phoneNorm+AUTH_DOMAIN;
     var userCred=await auth.createUserWithEmailAndPassword(email,pin);
-    try{await db.collection('members').doc(dupSnap.docs[0].id).update({accountSetup:true,authUid:userCred.user.uid,accountCreatedAt:Date.now()});}catch(e){console.warn(e)}
+    try{
+      await db.collection('members').doc(dupSnap.docs[0].id).update({
+        accountSetup:true,
+        authUid:userCred.user.uid,
+        accountCreatedAt:Date.now(),
+        phoneRaw:phone
+      });
+    }catch(e){console.warn(e)}
     toast('✅ অ্যাকাউন্ট তৈরি হয়েছে','success');
   }catch(err){
     var msg='অ্যাকাউন্ট তৈরি ব্যর্থ';
@@ -594,6 +643,7 @@ function viewProfile(){
     '<div class="li" style="cursor:default"><div class="ic" style="background:var(--info-soft);color:var(--info)">'+icon('receipt')+'</div><div class="grow"><div class="t">সদস্য আইডি</div><div class="s">'+(me.id||'—')+'</div></div></div>'+
     '<div class="li" style="cursor:default"><div class="ic" style="background:var(--income-soft);color:var(--income)">'+icon('wallet')+'</div><div class="grow"><div class="t">মাসিক চাঁদা</div><div class="s">৳ '+fmtN(me.monthly||0)+'</div></div></div>'+
     '<div class="li" style="cursor:default"><div class="ic" style="background:var(--gold-soft);color:var(--gold)">'+icon('calendar')+'</div><div class="grow"><div class="t">যোগদান</div><div class="s">'+fmtDate(me.joinDate)+'</div></div></div>'+
+    '<div class="li" style="cursor:default"><div class="ic" style="background:var(--card-2);color:var(--text-2)">'+icon('user')+'</div><div class="grow"><div class="t">ফোন</div><div class="s">'+esc(me.phoneRaw||me.phone||'—')+'</div></div></div>'+
   '</div></div>';
   h+='<div class="sec anim anim-d3"><div class="sec-hd"><h2>সেটিংস</h2></div><div class="list">'+
     '<div class="li" data-act="theme-toggle"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('shield')+'</div><div class="grow"><div class="t">ডার্ক মোড</div><div class="s">'+(state.theme==='dark'?'চালু':'বন্ধ')+'</div></div>'+chev()+'</div>'+
@@ -812,8 +862,9 @@ auth.onAuthStateChanged(async function(user){
   if(!user){state.user=null;state.member=null;state.loading=false;render();return;}
   state.user=user;
   try{
-    var memberSnap=await db.collection('members').doc(user.uid).get();
+    /* ✅ প্রথমে authUid দিয়ে খুঁজি, তারপর phoneNorm দিয়ে (ইউনিভার্সাল) */
     var member=null;
+    var memberSnap=await db.collection('members').doc(user.uid).get();
     if(memberSnap.exists){
       member=Object.assign({},memberSnap.data(),{_docId:memberSnap.id,id:memberSnap.data().id||memberSnap.id});
     } else {
