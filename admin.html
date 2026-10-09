@@ -7,24 +7,83 @@
 <title>DP সেবা অ্যাডমিন</title>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--primary:#0E5F30;--primary-d:#083A1C;--primary-l:#1B8044;--primary-soft:#E5F2EA;--primary-soft2:#CDE6D9;--accent:#C41E3A;--accent-soft:#FCE7EC;--gold:#D4A017;--gold-soft:#FBF3DC;--income:#16A34A;--income-soft:#E6F7EE;--expense:#DC2626;--expense-soft:#FDE8ED;--donation:#C41E3A;--donation-soft:#FCE7EC;--event:#EA580C;--event-soft:#FEF0E7;--warn:#D97706;--warn-soft:#FEF3C7;--info:#0284C7;--info-soft:#E0F2FE;--danger:#B91C1C;--danger-soft:#FEE2E2;--bg:#F0F5F2;--bg-2:#E1EBE6;--card:#FFFFFF;--card-2:#F6FAF8;--text:#0A1A12;--text-2:#4E5F55;--text-3:#8B9A92;--border:#DCE7E1;--border-2:#E9F2ED;--shadow:0 4px 16px rgba(14,95,48,.07);--radius:20px;--nav-h:70px}
-[data-theme="dark"]{--primary:#22A155;--primary-d:#0E5F30;--primary-l:#3DC76F;--primary-soft:#0A2A18;--primary-soft2:#123A22;--accent:#FF4D6D;--accent-soft:#3A0F1A;--gold:#FBBF24;--gold-soft:#3A2E10;--income:#2ECC71;--income-soft:#12301F;--expense:#FF5C7A;--expense-soft:#3A1520;--donation:#FF4D6D;--donation-soft:#3A0F1A;--event:#FB923C;--event-soft:#3A2110;--warn:#FBBF24;--warn-soft:#3A2E10;--info:#38BDF8;--info-soft:#0C2A3A;--danger:#F87171;--danger-soft:#3A1010;--bg:#06100B;--bg-2:#030806;--card:#0F1A15;--card-2:#15241D;--text:#E8F5EE;--text-2:#95B3A5;--text-3:#627A70;--border:#1C2E24;--border-2:#15241C;--shadow:0 4px 16px rgba(0,0,0,.35)}
+:root{
+  --primary:#0E5F30;--primary-d:#083A1C;--primary-l:#1B8044;
+  --primary-soft:#E5F2EA;--primary-soft2:#CDE6D9;
+  --accent:#C41E3A;--accent-soft:#FCE7EC;
+  --gold:#D4A017;--gold-soft:#FBF3DC;
+  --income:#16A34A;--income-soft:#E6F7EE;
+  --expense:#DC2626;--expense-soft:#FDE8ED;
+  --donation:#C41E3A;--donation-soft:#FCE7EC;
+  --event:#EA580C;--event-soft:#FEF0E7;
+  --warn:#D97706;--warn-soft:#FEF3C7;
+  --info:#0284C7;--info-soft:#E0F2FE;
+  --danger:#B91C1C;--danger-soft:#FEE2E2;
+  --bg:#EAF4EE;--bg-2:#D4E7DC;
+  --text:#0A1A12;--text-2:#4E5F55;--text-3:#8B9A92;
+  --border:#DCE7E1;--border-2:#E9F2ED;
+  --card:rgba(255,255,255,.72);
+  --card-2:rgba(255,255,255,.5);
+  --card-border:rgba(255,255,255,.85);
+  --glass-hi:rgba(255,255,255,.95);
+  --shadow:0 8px 24px -10px rgba(14,95,48,.16),0 2px 6px -2px rgba(14,95,48,.06);
+  --radius:20px;--nav-h:66px;
+}
+[data-theme="dark"]{
+  --primary:#22A155;--primary-d:#0E5F30;--primary-l:#3DC76F;
+  --primary-soft:#0A2A18;--primary-soft2:#123A22;
+  --accent:#FF4D6D;--accent-soft:#3A0F1A;
+  --gold:#FBBF24;--gold-soft:#3A2E10;
+  --income:#2ECC71;--income-soft:#12301F;
+  --expense:#FF5C7A;--expense-soft:#3A1520;
+  --donation:#FF4D6D;--donation-soft:#3A0F1A;
+  --event:#FB923C;--event-soft:#3A2110;
+  --warn:#FBBF24;--warn-soft:#3A2E10;
+  --info:#38BDF8;--info-soft:#0C2A3A;
+  --danger:#F87171;--danger-soft:#3A1010;
+  --bg:#06100B;--bg-2:#030806;
+  --text:#E8F5EE;--text-2:#95B3A5;--text-3:#627A70;
+  --border:#1C2E24;--border-2:#15241C;
+  --card:rgba(15,26,21,.62);
+  --card-2:rgba(21,36,29,.5);
+  --card-border:rgba(255,255,255,.09);
+  --glass-hi:rgba(255,255,255,.09);
+  --shadow:0 8px 24px -10px rgba(0,0,0,.55),0 2px 6px -2px rgba(0,0,0,.35);
+}
 *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;height:100%;overflow:hidden}
 body{font-family:'Hind Siliguri',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg-2);color:var(--text);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.5}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 ::-webkit-scrollbar{width:0;height:0}
-#app{position:relative;max-width:540px;margin:0 auto;height:100dvh;height:100vh;background:var(--bg);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 90px rgba(0,0,0,.12)}
+#app{
+  position:relative;max-width:540px;margin:0 auto;
+  height:100dvh;height:100vh;
+  display:flex;flex-direction:column;overflow:hidden;
+  box-shadow:0 0 90px rgba(0,0,0,.12);
+  background:
+    radial-gradient(circle at 12% 6%,rgba(34,161,85,.24),transparent 42%),
+    radial-gradient(circle at 90% 80%,rgba(196,30,58,.16),transparent 46%),
+    radial-gradient(circle at 45% 102%,rgba(212,160,23,.16),transparent 46%),
+    linear-gradient(160deg,#EAF4EE 0%,#D4E7DC 100%);
+  background-attachment:fixed;
+}
+[data-theme="dark"] #app{
+  background:
+    radial-gradient(circle at 12% 6%,rgba(34,161,85,.24),transparent 42%),
+    radial-gradient(circle at 90% 80%,rgba(255,77,109,.14),transparent 46%),
+    radial-gradient(circle at 45% 102%,rgba(251,191,36,.12),transparent 46%),
+    linear-gradient(160deg,#0A1810 0%,#030806 100%);
+  background-attachment:fixed;
+}
 .content{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav-h) + 26px)}
-.hd{padding:16px 18px 10px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.hd{padding:14px 18px 8px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .hd h1{font-size:20px;font-weight:700;margin:0}
 .hd .sub{font-size:12px;color:var(--text-2);margin-top:2px}
-.sec{padding:0 18px;margin-top:18px}
+.sec{padding:0 18px;margin-top:14px}
 .sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .sec-hd h2{font-size:15px;font-weight:700;margin:0}
 .sec-hd .link{font-size:12px;color:var(--primary);font-weight:600;cursor:pointer}
-.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border-2);padding:16px}
 .row{display:flex;align-items:center;gap:12px}
 .between{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .muted{color:var(--text-2)}.tiny{font-size:11px}.sm{font-size:12px}
@@ -32,6 +91,22 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .center{text-align:center}.gap6{gap:6px}.gap10{gap:10px}
 .mt6{margin-top:6px}.mt10{margin-top:10px}.mt14{margin-top:14px}
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  border:1px solid var(--card-border);
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+}
+.card::before{
+  content:'';position:absolute;top:0;left:14px;right:14px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);
+  pointer-events:none;
+}
 .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,var(--c),#000);color:#fff;font-weight:700;flex:none;overflow:hidden;position:relative}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:600;line-height:1.6}
@@ -46,40 +121,118 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .pill.gold{background:var(--gold-soft);color:var(--gold)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;font-weight:600;font-size:14px;color:#fff;transition:transform .12s;background:linear-gradient(135deg,var(--primary-l),var(--primary));box-shadow:0 8px 20px -8px rgba(14,95,48,.7)}
 .btn:active{transform:scale(.97)}
-.btn.ghost{background:var(--card);color:var(--text);border:1.5px solid var(--border);box-shadow:none}
+.btn.ghost{background:var(--card);color:var(--text);border:1.5px solid var(--border);box-shadow:none;backdrop-filter:blur(12px)}
 .btn.soft{background:var(--primary-soft);color:var(--primary);box-shadow:none}
 .btn.danger{background:linear-gradient(135deg,#E11D48,#B91C1C)}
 .btn.gold{background:linear-gradient(135deg,var(--gold),#B58414)}
+.btn.success{background:linear-gradient(135deg,var(--income),#0E7A38)}
 .btn.small{padding:8px 14px;font-size:12.5px;border-radius:11px}
-.btn.xs{padding:6px 11px;font-size:11.5px;border-radius:10px;gap:5px}
+.btn.xs{padding:5px 10px;font-size:11px;border-radius:9px;gap:4px}
 .btn.block{width:100%}
-.icon-btn{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--border-2);color:var(--text-2);transition:transform .12s;flex:none}
+.icon-btn{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--card);border:1px solid var(--card-border);color:var(--text-2);transition:transform .12s;flex:none;backdrop-filter:blur(12px)}
 .icon-btn:active{transform:scale(.92)}
 .icon-btn svg{width:19px;height:19px}
-.balance-card{position:relative;overflow:hidden;border-radius:26px;padding:18px 20px 20px;background:radial-gradient(circle at 90% 10%,rgba(212,160,23,.35),transparent 40%),radial-gradient(circle at 10% 90%,rgba(196,30,58,.28),transparent 45%),linear-gradient(135deg,#0A4A24 0%,#0E5F30 45%,#1B8044 100%);color:#fff;box-shadow:0 22px 46px -18px rgba(14,95,48,.85);border:1px solid rgba(255,255,255,.18)}
-.bc-header{display:flex;align-items:center;gap:12px;position:relative;z-index:2;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.15)}
-.bc-logo{width:52px;height:52px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;padding:4px;flex:none;overflow:hidden}
-.bc-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:11px}
-.bc-org{flex:1;min-width:0}
-.bc-org-name{font-size:14.5px;font-weight:700;line-height:1.2}
-.bc-org-sub{font-size:10.5px;opacity:.82;margin-top:2px}
-.bc-label{font-size:12px;opacity:.86;font-weight:500;margin-top:14px}
-.bc-amount{font-size:33px;font-weight:700;letter-spacing:-1px;margin-top:4px;line-height:1.15}
-.bc-sub{font-size:11px;opacity:.72;margin-top:4px}
-.bc-stats{display:flex;gap:10px;margin-top:16px;position:relative;z-index:2}
-.bc-stat{flex:1;background:rgba(255,255,255,.13);border-radius:14px;padding:10px 11px;border:1px solid rgba(255,255,255,.18)}
-.bc-stat .k{font-size:10px;opacity:.9}.bc-stat .v{font-size:14.5px;font-weight:700;margin-top:3px}
+.icon-btn.sm{width:34px;height:34px;border-radius:11px}
+.icon-btn.sm svg{width:17px;height:17px}
+.balance-card{
+  position:relative;overflow:hidden;border-radius:22px;
+  padding:14px 16px;
+  background:linear-gradient(135deg,rgba(14,95,48,.95) 0%,rgba(27,128,68,.92) 45%,rgba(10,74,36,.95) 100%);
+  color:#fff;
+  box-shadow:0 18px 38px -16px rgba(14,95,48,.7),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.15);
+  border:1px solid rgba(255,255,255,.22);
+  backdrop-filter:blur(14px);
+}
+.balance-card::before{
+  content:'';position:absolute;top:-45%;left:-20%;right:-20%;height:95%;
+  background:radial-gradient(ellipse at 30% 0%,rgba(255,255,255,.35),transparent 62%);
+  pointer-events:none;
+}
+.balance-card::after{
+  content:'';position:absolute;bottom:-35%;right:-20%;width:75%;height:75%;
+  background:radial-gradient(circle,rgba(212,160,23,.4),transparent 65%);
+  pointer-events:none;
+}
+.bc-edit{
+  position:absolute;top:11px;right:11px;
+  width:32px;height:32px;border-radius:11px;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.3);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;z-index:3;cursor:pointer;
+  backdrop-filter:blur(8px);
+  transition:all .15s;
+}
+.bc-edit:active{transform:scale(.9);background:rgba(255,255,255,.3)}
+.bc-edit svg{width:15px;height:15px}
+.bc-header{display:flex;align-items:center;gap:10px;position:relative;z-index:2;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.18)}
+.bc-logo{width:44px;height:44px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;padding:3px;flex:none;overflow:hidden;box-shadow:0 6px 16px -6px rgba(0,0,0,.3)}
+.bc-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px}
+.bc-logo .fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-l),var(--primary));border-radius:10px;color:#fff;font-weight:700}
+.bc-org{flex:1;min-width:0;padding-right:38px}
+.bc-org-name{font-size:13px;font-weight:700;line-height:1.2}
+.bc-org-sub{font-size:9.5px;opacity:.82;margin-top:1px}
+.bc-label{font-size:10.5px;opacity:.88;font-weight:500;margin-top:10px;position:relative;z-index:2;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.bc-amount{font-size:28px;font-weight:700;letter-spacing:-.8px;margin-top:2px;line-height:1.15;position:relative;z-index:2}
+.bc-sub{font-size:10px;opacity:.72;margin-top:3px;position:relative;z-index:2}
+.bc-stats{display:flex;gap:8px;margin-top:12px;position:relative;z-index:2}
+.bc-stat{flex:1;background:rgba(255,255,255,.15);border-radius:11px;padding:8px 10px;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(6px);cursor:pointer;transition:background .15s;position:relative}
+.bc-stat:active{background:rgba(255,255,255,.25)}
+.bc-stat .k{font-size:9.5px;opacity:.92;display:flex;align-items:center;gap:4px}
+.bc-stat .k svg{width:10px;height:10px;opacity:.8}
+.bc-stat .v{font-size:13.5px;font-weight:700;margin-top:2px}
+.bc-manual-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.3);
+  padding:2px 7px;border-radius:99px;
+  font-size:9px;font-weight:600;
+  backdrop-filter:blur(6px);
+}
+.bc-reset-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(220,38,38,.4);
+  border:1px solid rgba(255,255,255,.4);
+  padding:2px 7px;border-radius:99px;
+  font-size:9px;font-weight:600;
+  backdrop-filter:blur(6px);
+}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
-.stat{background:linear-gradient(135deg,var(--card) 0%,var(--card-2) 100%);border:1px solid var(--border-2);border-radius:18px;padding:13px;box-shadow:var(--shadow)}
+.stat{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:18px;padding:13px;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+}
+.stat::before{
+  content:'';position:absolute;top:0;left:10px;right:10px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);
+  pointer-events:none;
+}
 .stat.clickable{cursor:pointer}
 .stat .ic{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:8px}
 .stat .ic svg{width:16px;height:16px}
 .stat .k{font-size:10.5px;color:var(--text-2);font-weight:500;line-height:1.3}
 .stat .v{font-size:16px;font-weight:700;margin-top:3px}
-.list{background:var(--card);border:1px solid var(--border-2);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.list{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius);box-shadow:var(--shadow);
+  overflow:hidden;position:relative;
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+}
+.list::before{
+  content:'';position:absolute;top:0;left:14px;right:14px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);
+  pointer-events:none;z-index:1;
+}
 .li{display:flex;align-items:center;gap:12px;padding:13px 15px;transition:background .15s;cursor:pointer}
-.li:active{background:var(--card-2)}
+.li:active{background:rgba(255,255,255,.45)}
+[data-theme="dark"] .li:active{background:rgba(255,255,255,.05)}
 .li+.li{border-top:1px solid var(--border-2)}
 .li .ic{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none}
 .li .ic svg{width:17px;height:17px}
@@ -89,25 +242,55 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .li > .chev{width:20px;height:20px;color:var(--text-3);flex:none;display:flex;align-items:center;justify-content:center}
 .li > .chev svg{width:18px;height:18px}
 .amt.pos{color:var(--income)}.amt.neg{color:var(--expense)}
-.prog{height:8px;border-radius:99px;background:var(--border);overflow:hidden}
-.prog>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary-l),var(--primary));transition:width .8s}
+.prog{height:8px;border-radius:99px;background:var(--border);overflow:hidden;position:relative}
+.prog>i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary-l),var(--primary));transition:width .8s;box-shadow:0 0 12px rgba(27,128,68,.5)}
 .chips{display:flex;gap:7px;overflow-x:auto;padding:2px 18px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chips.pad0{padding:0}
-.chip{padding:7px 14px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--card);border:1px solid var(--border);color:var(--text-2);flex:none;cursor:pointer}
+.chip{padding:7px 14px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--card);border:1px solid var(--card-border);color:var(--text-2);flex:none;cursor:pointer;backdrop-filter:blur(12px)}
 .chip.on{background:linear-gradient(135deg,var(--primary-l),var(--primary));border-color:var(--primary);color:#fff}
-.searchbar{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:0 13px;height:46px;box-shadow:var(--shadow)}
+.searchbar{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:0 13px;height:46px;box-shadow:var(--shadow);backdrop-filter:blur(16px)}
 .searchbar svg{width:17px;height:17px;color:var(--text-3);flex:none}
 .searchbar input{flex:1;border:none;outline:none;background:none;font-size:13.5px;height:100%}
-.bottomnav{position:absolute;bottom:0;left:0;right:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--card);border-top:1px solid var(--border-2);display:flex;z-index:40}
+.bottomnav{
+  position:absolute;bottom:0;left:0;right:0;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:rgba(255,255,255,.62);
+  border-top:1px solid rgba(255,255,255,.85);
+  display:flex;z-index:40;
+  backdrop-filter:blur(36px) saturate(220%);
+  -webkit-backdrop-filter:blur(36px) saturate(220%);
+  box-shadow:0 -12px 34px -14px rgba(14,95,48,.22),inset 0 1px 0 rgba(255,255,255,.95);
+}
+.bottomnav::before{
+  content:'';position:absolute;top:0;left:10px;right:10px;height:1.2px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,1),transparent);
+  pointer-events:none;
+  filter:blur(.3px);
+}
+[data-theme="dark"] .bottomnav{
+  background:rgba(15,26,21,.62);
+  border-top:1px solid rgba(255,255,255,.12);
+  box-shadow:0 -12px 34px -14px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.1);
+}
+[data-theme="dark"] .bottomnav::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent)}
 .bottomnav .nv{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-3);position:relative;padding-top:2px;cursor:pointer}
-.bottomnav .nv svg{width:21px;height:21px}
-.bottomnav .nv span{font-size:9.5px;font-weight:600}
+.bottomnav .nv svg{width:20px;height:20px;transition:transform .15s}
+.bottomnav .nv span{font-size:9px;font-weight:600}
 .bottomnav .nv.on{color:var(--primary)}
-.bottomnav .nv.on::before{content:'';position:absolute;top:0;width:28px;height:3px;border-radius:0 0 4px 4px;background:linear-gradient(90deg,var(--primary-l),var(--primary))}
-.subpage{position:absolute;inset:0;background:var(--bg);z-index:60;display:flex;flex-direction:column;animation:slideIn .26s ease}
+.bottomnav .nv.on svg{transform:scale(1.08)}
+.bottomnav .nv.on::before{
+  content:'';position:absolute;top:0;width:30px;height:3px;
+  border-radius:0 0 4px 4px;
+  background:linear-gradient(90deg,var(--primary-l),var(--primary));
+  box-shadow:0 2px 8px rgba(27,128,68,.6);
+}
+.subpage{position:absolute;inset:0;background:linear-gradient(160deg,#EAF4EE 0%,#D4E7DC 100%);z-index:60;display:flex;flex-direction:column;animation:slideIn .26s ease}
+[data-theme="dark"] .subpage{background:linear-gradient(160deg,#0A1810 0%,#030806 100%)}
 @keyframes slideIn{from{transform:translateX(28px);opacity:.3}to{transform:translateX(0);opacity:1}}
-.subhd{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--card);border-bottom:1px solid var(--border-2);flex:none;position:sticky;top:0;z-index:5}
+.subhd{display:flex;align-items:center;gap:10px;padding:14px 16px;background:rgba(255,255,255,.78);border-bottom:1px solid var(--card-border);flex:none;position:sticky;top:0;z-index:5;backdrop-filter:blur(18px)}
+[data-theme="dark"] .subhd{background:rgba(15,26,21,.78)}
 .subhd h1{font-size:16.5px;font-weight:700;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .subbody{flex:1;overflow-y:auto;padding-bottom:34px}
 .modal-back{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:120;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(5px)}
@@ -116,10 +299,10 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .modal-hd{padding:16px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-2);flex:none}
 .modal-hd h2{margin:0;font-size:16px;font-weight:700;flex:1}
 .modal-body{flex:1;overflow-y:auto;padding:18px}
-.modal-foot{padding:14px 18px;border-top:1px solid var(--border-2);flex:none;display:flex;gap:10px;background:var(--card)}
+.modal-foot{padding:14px 18px;border-top:1px solid var(--border-2);flex:none;display:flex;gap:10px;background:var(--card);backdrop-filter:blur(14px)}
 .field{margin-bottom:13px}
 .field label{display:block;font-size:11.5px;font-weight:600;color:var(--text-2);margin-bottom:6px}
-.field input,.field select,.field textarea{width:100%;height:46px;border-radius:13px;border:1.5px solid var(--border);background:var(--card);padding:0 13px;outline:none;transition:border-color .18s;font-size:14px}
+.field input,.field select,.field textarea{width:100%;height:46px;border-radius:13px;border:1.5px solid var(--border);background:var(--card);padding:0 13px;outline:none;transition:border-color .18s;font-size:14px;backdrop-filter:blur(10px)}
 .field textarea{height:auto;min-height:80px;padding:11px 13px;resize:vertical;line-height:1.6}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3.5px var(--primary-soft)}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -127,10 +310,10 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast.success{background:linear-gradient(135deg,var(--income),#0E7A38);color:#fff}
 .toast.error{background:linear-gradient(135deg,#E11D48,var(--danger));color:#fff}
-.empty{padding:44px 24px;text-align:center;color:var(--text-3)}
-.empty .eic{width:66px;height:66px;border-radius:22px;background:var(--card);border:1px solid var(--border-2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:var(--shadow)}
-.empty .eic svg{width:28px;height:28px;color:var(--text-3)}
-.empty h3{margin:0 0 5px;font-size:14px;color:var(--text-2);font-weight:600}
+.empty{padding:36px 24px;text-align:center;color:var(--text-3)}
+.empty .eic{width:60px;height:60px;border-radius:20px;background:var(--card);border:1px solid var(--card-border);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
+.empty .eic svg{width:26px;height:26px;color:var(--text-3)}
+.empty h3{margin:0 0 5px;font-size:13.5px;color:var(--text-2);font-weight:600}
 .empty p{margin:0;font-size:12px}
 .login{padding:0 24px;display:flex;flex-direction:column;justify-content:center;min-height:100%;position:relative;overflow:hidden}
 .login-logo{width:90px;height:90px;border-radius:26px;overflow:hidden;background:#fff;padding:5px;margin:0 auto 18px;box-shadow:0 18px 38px -12px rgba(14,95,48,.6)}
@@ -138,7 +321,7 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .login-logo .fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-l),var(--primary));border-radius:21px;color:#fff;font-weight:800;font-size:28px}
 .login h1{font-size:22px;margin:0 0 6px;font-weight:700;text-align:center;color:var(--primary)}
 .login .tag{font-size:13.5px;color:var(--text-2);margin:0 0 30px;line-height:1.6;text-align:center}
-.gbtn{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;height:52px;border-radius:16px;background:var(--card);border:1.5px solid var(--border);font-weight:600;font-size:14px;box-shadow:var(--shadow)}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:11px;width:100%;height:52px;border-radius:16px;background:var(--card);border:1.5px solid var(--border);font-weight:600;font-size:14px;box-shadow:var(--shadow);backdrop-filter:blur(12px)}
 .gbtn svg{width:19px;height:19px}
 .divider{display:flex;align-items:center;gap:12px;color:var(--text-3);font-size:11px;margin:16px 0}
 .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
@@ -156,28 +339,63 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .anim-d1{animation-delay:.05s}.anim-d2{animation-delay:.1s}.anim-d3{animation-delay:.15s}.anim-d4{animation-delay:.2s}.anim-d5{animation-delay:.25s}
 .info-box{background:var(--info-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--info);font-weight:500;line-height:1.6}
 .warn-box{background:var(--warn-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--warn);font-weight:500;line-height:1.6}
+.danger-box{background:var(--danger-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--danger);font-weight:500;line-height:1.6}
 .month-edit-list{max-height:340px;overflow-y:auto;padding-right:4px;margin-bottom:10px}
 .month-edit-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:10px;margin-bottom:8px}
 .month-edit-row .mlbl{font-weight:600;font-size:13px}
 .month-edit-row input{height:42px;padding:0 12px;border-radius:11px;border:1.5px solid var(--border);background:var(--card);font-size:14px;width:100%}
-.hd-logo{width:46px;height:46px;border-radius:14px;background:#fff;padding:3px;flex:none;border:1px solid var(--border-2);overflow:hidden}
-.hd-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:11px}
-.event-hero{position:relative;overflow:hidden;border-radius:24px;padding:20px;background:linear-gradient(135deg,#B93A0E 0%,#EA580C 45%,#F59E0B 100%);color:#fff;box-shadow:0 20px 44px -16px rgba(234,88,12,.7);cursor:pointer}
-.event-hero .eh-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:rgba(255,255,255,.22);border-radius:99px;font-size:11px;font-weight:700}
-.event-hero .eh-title{font-size:20px;font-weight:700;line-height:1.25;margin:12px 0 8px}
-.event-hero .eh-desc{font-size:12.5px;line-height:1.6;opacity:.94;margin:0 0 14px}
-.event-hero .eh-meta{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.event-hero .eh-cell{background:rgba(255,255,255,.18);border-radius:14px;padding:10px 12px;border:1px solid rgba(255,255,255,.24)}
+.hd-logo{width:42px;height:42px;border-radius:13px;background:#fff;padding:3px;flex:none;border:1px solid var(--card-border);overflow:hidden;box-shadow:0 4px 12px -4px rgba(0,0,0,.15)}
+.hd-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px}
+.event-hero{position:relative;overflow:hidden;border-radius:24px;padding:20px;background:linear-gradient(135deg,#B93A0E 0%,#EA580C 45%,#F59E0B 100%);color:#fff;box-shadow:0 20px 44px -16px rgba(234,88,12,.7);cursor:pointer;border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(10px)}
+.event-hero::before{content:'';position:absolute;top:-40%;left:-15%;right:-15%;height:90%;background:radial-gradient(ellipse at 30% 0%,rgba(255,255,255,.35),transparent 60%);pointer-events:none}
+.event-hero .eh-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;background:rgba(255,255,255,.25);border-radius:99px;font-size:11px;font-weight:700;position:relative;z-index:2;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.2)}
+.event-hero .eh-title{font-size:20px;font-weight:700;line-height:1.25;margin:12px 0 8px;position:relative;z-index:2}
+.event-hero .eh-desc{font-size:12.5px;line-height:1.6;opacity:.94;margin:0 0 14px;position:relative;z-index:2}
+.event-hero .eh-meta{display:grid;grid-template-columns:1fr 1fr;gap:9px;position:relative;z-index:2}
+.event-hero .eh-cell{background:rgba(255,255,255,.2);border-radius:14px;padding:10px 12px;border:1px solid rgba(255,255,255,.26);backdrop-filter:blur(6px)}
 .event-hero .eh-cell .k{font-size:10px;opacity:.92;font-weight:500}
 .event-hero .eh-cell .v{font-size:14.5px;font-weight:700;margin-top:3px}
-.past-card{background:var(--card);border-radius:16px;padding:12px 14px;border:1px solid var(--border-2);box-shadow:var(--shadow);cursor:pointer;display:flex;align-items:center;gap:12px;border-left:4px solid var(--text-3)}
-.past-card .pc-date{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#6B7280,#4B5563);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1}
+.event-hero.compact{padding:12px 14px;border-radius:18px;box-shadow:0 14px 32px -14px rgba(234,88,12,.6),inset 0 1px 0 rgba(255,255,255,.3)}
+.event-hero.compact .eh-tag{font-size:9.5px;padding:3px 9px;gap:4px}
+.event-hero.compact .eh-title{font-size:14px;margin:6px 0 3px;line-height:1.3}
+.event-hero.compact .eh-desc{font-size:11px;margin:0 0 8px;line-height:1.5}
+.event-hero.compact .eh-meta{gap:7px}
+.event-hero.compact .eh-cell{padding:6px 10px;border-radius:10px}
+.event-hero.compact .eh-cell .k{font-size:9px}
+.event-hero.compact .eh-cell .v{font-size:12px;margin-top:2px}
+.past-card{
+  background:var(--card);border-radius:16px;padding:12px 14px;
+  border:1px solid var(--card-border);box-shadow:var(--shadow);
+  cursor:pointer;display:flex;align-items:center;gap:12px;
+  border-left:4px solid var(--text-3);position:relative;overflow:hidden;
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+}
+.past-card::before{content:'';position:absolute;top:0;left:14px;right:14px;height:1px;background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
+.past-card .pc-date{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#6B7280,#4B5563);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1;box-shadow:0 6px 14px -6px rgba(0,0,0,.3)}
 .past-card .pc-date .d{font-size:16px;font-weight:800}
 .past-card .pc-date .m{font-size:9px;opacity:.9;margin-top:2px;font-weight:600}
 .past-card .pc-body{flex:1;min-width:0}
 .past-card .pc-title{font-size:13.5px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .past-card .pc-sub{font-size:11px;color:var(--text-3);margin-top:3px}
-.post-card{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border:1px solid var(--border-2);margin-bottom:10px}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.quick-btn{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:16px;padding:10px 4px 8px;
+  text-align:center;cursor:pointer;
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  box-shadow:var(--shadow);
+  transition:transform .12s;
+}
+.quick-btn:active{transform:scale(.96)}
+.quick-btn::before{content:'';position:absolute;top:0;left:8px;right:8px;height:1px;background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
+.quick-btn .qb-ic{font-size:18px;line-height:1}
+.quick-btn .qb-lbl{font-size:10px;font-weight:600;margin-top:4px;color:var(--text-2)}
+.post-card{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border:1px solid var(--card-border);margin-bottom:10px;position:relative;overflow:hidden;backdrop-filter:blur(20px) saturate(160%)}
+.post-card::before{content:'';position:absolute;top:0;left:14px;right:14px;height:1px;background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
 .post-head{display:flex;gap:10px;align-items:center;margin-bottom:10px}
 .post-body{font-size:13.5px;line-height:1.6;color:var(--text);white-space:pre-wrap}
 .post-foot{display:flex;align-items:center;justify-content:space-between;margin-top:11px;padding-top:10px;border-top:1px solid var(--border-2)}
@@ -188,6 +406,28 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .photo-preview{width:80px;height:80px;border-radius:50%;overflow:hidden;background:var(--card-2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex:none}
 .photo-preview img{width:100%;height:100%;object-fit:cover}
 .photo-preview .ph{font-size:28px;color:var(--text-3)}
+.logout-mini{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:11px;
+  background:var(--danger-soft);
+  color:var(--expense);
+  font-weight:600;font-size:12px;
+  border:1px solid rgba(220,38,38,.18);
+  transition:transform .12s;
+}
+.logout-mini:active{transform:scale(.96)}
+.logout-mini svg{width:14px;height:14px}
+.edit-mini-btn{
+  position:absolute;top:8px;right:8px;
+  width:26px;height:26px;border-radius:9px;
+  background:var(--card-2);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-2);z-index:2;cursor:pointer;
+  transition:all .15s;
+}
+.edit-mini-btn:active{transform:scale(.9)}
+.edit-mini-btn svg{width:13px;height:13px}
 </style>
 </head>
 <body>
@@ -200,9 +440,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <script>
-/* ============================================================
-   FIREBASE CONFIG
-   ============================================================ */
 var LOGO_URL = "https://i.postimg.cc/nhV81p6L/Picsart-25-06-03-16-35-57-097.png";
 
 var firebaseConfig = {
@@ -221,8 +458,6 @@ var db = firebase.firestore();
 var BN_MONTHS=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
 var BN_MONTHS_SHORT=['জানু','ফেব','মার্চ','এপ্রি','মে','জুন','জুলা','আগ','সেপ্ট','অক্টো','নভে','ডিসে'];
 var AUTH_DOMAIN = '@dpseba.local';
-
-/* ✅ ফোন নাম্বার: আন্তর্জাতিক E.164 সীমা (৭–১৫ ডিজিট) */
 var PHONE_MIN_DIGITS = 7;
 var PHONE_MAX_DIGITS = 15;
 
@@ -290,7 +525,8 @@ var I={
   list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>',
   clipboard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1.5"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg>',
   message:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
-  post:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 4 11.5 8.4 8.4 0 0 1 12.5 3a8.4 8.4 0 0 1 8.5 8.5z"/></svg>'
+  post:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.5 8.5 8.5 0 0 1-3.9-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 4 11.5 8.4 8.4 0 0 1 12.5 3a8.4 8.4 0 0 1 8.5 8.5z"/></svg>',
+  undo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/></svg>'
 };
 function icon(n){return I[n]||''}
 
@@ -319,40 +555,51 @@ function fmtDateShort(iso){if(!iso)return '—';try{var d=parseISO(iso);return d
 function fmtDateTime(ts){if(!ts)return '—';var d=new Date(ts);var hr=d.getHours();var ampm=hr>=12?'PM':'AM';hr=hr%12||12;return d.getDate()+' '+MN(d.getMonth()+1)+' '+hr+':'+pad2(d.getMinutes())+' '+ampm}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
 
-/* ============================================================
-   ✅ normalizePhone — সম্পূর্ণ আন্তর্জাতিক (Universal)
-   ------------------------------------------------------------
-   যেকোনো দেশের নাম্বার গ্রহণ করে। শুধু ডিজিট রাখে,
-   স্পেস, +, -, (), . ইত্যাদি বাদ দেয়।
-   
-   উদাহরণ:
-     "+880 1712-345678"  → "8801712345678"
-     "+1 (415) 555-1234" → "14155551234"
-     "+971 50 123 4567"  → "971501234567"
-     "01712345678"       → "01712345678"
-   
-   ⚠️ ইউজার অ্যাপে এই SAME ফাংশন থাকতে হবে। authEmail তৈরি হয়:
-        phoneNorm + AUTH_DOMAIN  →  "8801712345678@dpseba.local"
-   ============================================================ */
+function avatarHTML(m,size){
+  size=size||46;
+  var color=m.color||'#0E5F30';
+  var nm=m.name||m.nameEn||'?';
+  var ini=nm.split(' ').filter(Boolean).map(function(w){return w[0]}).slice(0,2).join('').toUpperCase();
+  if(m.photo && String(m.photo).trim()){
+    return '<div class="avatar" style="width:'+size+'px;height:'+size+'px;background:#fff;border:2px solid '+color+';padding:0">'+
+      '<img src="'+esc(m.photo)+'" alt="'+esc(nm)+'" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%" onerror="this.parentNode.style.background=\'linear-gradient(140deg,'+color+',#000)\';this.parentNode.style.border=\'none\';this.parentNode.innerHTML=\'<span style=&quot;color:#fff;font-weight:700;font-size:'+Math.round(size*0.36)+'px;display:flex;align-items:center;justify-content:center;width:100%;height:100%&quot;>'+ini+'</span>\'"/>'+
+    '</div>';
+  }
+  return '<div class="avatar" style="--c:'+color+';width:'+size+'px;height:'+size+'px;font-size:'+Math.round(size*0.36)+'px">'+ini+'</div>';
+}
+function toast(msg,type){
+  var t=$('#toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove('show')},2400);
+}
+function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||8)}catch(e){}}
+function catBn(k,arr){var c=arr.filter(function(x){return x.k===k})[0];return c?c.bn:k}
+function purposeBn(k){var p=EXTRA_PAYMENT_PURPOSES.filter(function(x){return x.k===k})[0];return p?p.bn:k}
+
 function normalizePhone(raw){
   if(!raw) return '';
-  var s = String(raw).trim();
-  // যেকোনো ক্যারেক্টার থেকে শুধু ০-৯ ডিজিট রাখে — দেশ-নিরপেক্ষ
-  s = s.replace(/[^\d]/g,'');
-  return s;
+  return String(raw).trim().replace(/[^\d]/g,'');
 }
-
-/* ফোন ভ্যালিডিটি চেক (E.164: ৭–১৫ ডিজিট) */
 function isValidPhone(norm){
   if(!norm) return false;
-  var n = norm.length;
-  return n >= PHONE_MIN_DIGITS && n <= PHONE_MAX_DIGITS;
+  return norm.length >= PHONE_MIN_DIGITS && norm.length <= PHONE_MAX_DIGITS;
+}
+function txTimestamp(t){
+  if(t.createdAt) return Number(t.createdAt);
+  if(t.ts) return Number(t.ts);
+  if(t.date){ try{ return parseISO(t.date).getTime(); }catch(e){ return 0; } }
+  return 0;
+}
+function statsResetAt(){
+  return (DB.org && DB.org.statsResetAt) ? Number(DB.org.statsResetAt) : 0;
 }
 
 var DATA={
   stats:function(){
+    var resetAt = statsResetAt();
     var income=0,expense=0,contrib=0,extra=0,donation=0,eventExp=0,otherExp=0,otherInc=0;
     DB.transactions.forEach(function(t){
+      var ts = txTimestamp(t);
+      if(resetAt > 0 && ts < resetAt) return;
       if(t.type==='contribution'){contrib+=t.amount;income+=t.amount}
       else if(t.type==='extra_payment'){extra+=t.amount;income+=t.amount}
       else if(t.type==='donation'){donation+=t.amount;income+=t.amount}
@@ -360,11 +607,39 @@ var DATA={
       else if(t.type==='event_expense'){eventExp+=t.amount;expense+=t.amount}
       else if(t.type==='other_expense'){otherExp+=t.amount;expense+=t.amount}
     });
-    return {income:income,expense:expense,balance:income-expense,contrib:contrib,extra:extra,donation:donation,eventExp:eventExp,otherExp:otherExp,otherInc:otherInc};
+    var computedIncome = income;
+    var computedExpense = expense;
+    var mIncome = DB.org && DB.org.manualIncome;
+    var mExpense = DB.org && DB.org.manualExpense;
+    var isIncomeManual = (mIncome !== undefined && mIncome !== null && mIncome !== '');
+    var isExpenseManual = (mExpense !== undefined && mExpense !== null && mExpense !== '');
+    var finalIncome = isIncomeManual ? Number(mIncome) : computedIncome;
+    var finalExpense = isExpenseManual ? Number(mExpense) : computedExpense;
+    var computedBalance = finalIncome - finalExpense;
+    var manual = DB.org && DB.org.manualBalance;
+    var isManual = (manual!==undefined && manual!==null && manual!=='');
+    return {
+      income:finalIncome,
+      expense:finalExpense,
+      computedIncome:computedIncome,
+      computedExpense:computedExpense,
+      isIncomeManual:isIncomeManual,
+      isExpenseManual:isExpenseManual,
+      balance:isManual?Number(manual):computedBalance,
+      computed:computedBalance,
+      isManual:isManual,
+      resetActive: resetAt>0,
+      resetAt: resetAt,
+      contrib:contrib,extra:extra,donation:donation,
+      eventExp:eventExp,otherExp:otherExp,otherInc:otherInc
+    };
   },
   monthStats:function(y,m){
+    var resetAt = statsResetAt();
     var collected=0,spent=0;
     DB.transactions.forEach(function(t){
+      var ts = txTimestamp(t);
+      if(resetAt > 0 && ts < resetAt) return;
       var d=parseISO(t.date);
       if(d.getFullYear()===y && d.getMonth()+1===m){
         if(INCOME_TYPES.indexOf(t.type)>=0) collected+=t.amount;
@@ -393,7 +668,19 @@ var DATA={
   pastEvents:function(){return DB.events.filter(function(e){return e.isCompleted}).sort(function(a,b){return (b.date||'').localeCompare(a.date||'')})},
   nextEvent:function(){var u=this.upcomingEvents();return u.length?u[0]:null},
   recentPastEvents:function(n){return this.pastEvents().slice(0,n||3)},
-  pendingPayments:function(){return DB.paymentRequests.filter(function(r){return r.status==='pending'})}
+  pendingPayments:function(){return DB.paymentRequests.filter(function(r){return r.status==='pending'})},
+  eventExpenseAmount:function(event){
+    if(!event) return 0;
+    if(event.totalCost && Number(event.totalCost)>0) return Number(event.totalCost);
+    var fee=Number(event.fee||0);
+    var count=DB.members.filter(function(m){return m.status==='active'}).length;
+    return fee * count;
+  },
+  eventAutoExpenses:function(eventId){
+    return DB.transactions.filter(function(t){
+      return t.eventId===eventId && t.type==='event_expense' && t.autoGenerated===true;
+    });
+  }
 };
 
 async function audit(action,target,oldVal,newVal,note){
@@ -522,65 +809,70 @@ function viewDashboard(){
   var st=DATA.stats();var ms=DATA.monthStats(cy,cm);
   var active=DB.members.filter(function(m){return m.status==='active'}).length;
   var totalDue=DATA.totalDue();
-  var expectedMonthly=DB.members.filter(function(m){return m.status==='active'}).reduce(function(a,m){return a+(m.monthly||0)},0);
-  var recentTx=DB.transactions.slice(0,5);
   var role=ROLES[state.role]||ROLES.admin;
   var logoSrc = LOGO_URL ? '<img src="'+LOGO_URL+'" alt="DP"/>' : '<div class="fallback">DP</div>';
   var pendingPay=DATA.pendingPayments().length;
   var nextEv=DATA.nextEvent();
   var pastEvs=DATA.recentPastEvents(3);
-
+  var badges='';
+  if(st.isManual) badges += '<span class="bc-manual-badge">✎ ব্যালেন্স ম্যানুয়াল</span>';
+  if(st.isIncomeManual) badges += '<span class="bc-manual-badge">✎ আয় ম্যানুয়াল</span>';
+  if(st.isExpenseManual) badges += '<span class="bc-manual-badge">✎ ব্যয় ম্যানুয়াল</span>';
+  if(st.resetActive) badges += '<span class="bc-reset-badge">🔄 রিসেট</span>';
   var h='';
-  h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">'+role.bn+'</div><div class="bb" style="font-size:14px">'+esc(state.admin.name)+'</div></div></div><div class="row gap6"><button class="icon-btn" data-act="page" data-page="search">'+icon('search')+'</button><button class="icon-btn" data-act="page" data-page="audit">'+icon('clipboard')+'</button></div></div>';
-
-  h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · স্হাপিত ২০২৪ খ্রি.</div></div></div><div class="bc-label">সংগঠনের মোট ব্যালেন্স</div><div class="bc-amount">'+money2(st.balance)+'</div><div class="bc-sub">সর্বশেষ হালনাগাদ · '+fmtDate(toISO(now))+'</div><div class="bc-stats"><div class="bc-stat"><div class="k">মোট আয়</div><div class="v">'+shortMoney(st.income)+'</div></div><div class="bc-stat"><div class="k">মোট ব্যয়</div><div class="v">'+shortMoney(st.expense)+'</div></div></div></div></div>';
-
+  h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">'+role.bn+'</div><div class="bb" style="font-size:13px">'+esc(state.admin.name)+'</div></div></div><div class="row gap6"><button class="icon-btn sm" data-act="page" data-page="search">'+icon('search')+'</button><button class="icon-btn sm" data-act="page" data-page="audit">'+icon('clipboard')+'</button></div></div>';
+  h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="balance-card">'+
+      '<button class="bc-edit" data-act="edit-balance" title="ব্যালেন্স ম্যানেজ">'+icon('edit')+'</button>'+
+      '<div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · স্হাপিত ২০২৪ খ্রি.</div></div></div>'+
+      '<div class="bc-label">সংগঠনের মোট ব্যালেন্স'+badges+'</div>'+
+      '<div class="bc-amount">'+money2(st.balance)+'</div>'+
+      '<div class="bc-sub">সর্বশেষ হালনাগাদ · '+fmtDate(toISO(now))+'</div>'+
+      '<div class="bc-stats">'+
+        '<div class="bc-stat" data-act="edit-income"><div class="k">মোট আয় '+icon('edit')+'</div><div class="v">'+shortMoney(st.income)+'</div></div>'+
+        '<div class="bc-stat" data-act="edit-expense"><div class="k">মোট ব্যয় '+icon('edit')+'</div><div class="v">'+shortMoney(st.expense)+'</div></div>'+
+      '</div>'+
+    '</div></div>';
+  h+='<div class="sec anim anim-d2"><div class="sec-hd" style="margin-bottom:8px"><h2 style="font-size:14px">দ্রুত কার্যক্রম</h2></div>'+
+    '<div class="quick-grid">'+
+      '<button class="quick-btn" data-act="add-member"><div class="qb-ic">➕</div><div class="qb-lbl">সদস্য</div></button>'+
+      '<button class="quick-btn" data-act="add-contribution"><div class="qb-ic">💰</div><div class="qb-lbl">চাঁদা</div></button>'+
+      '<button class="quick-btn" data-act="add-event"><div class="qb-ic">📅</div><div class="qb-lbl">ইভেন্ট</div></button>'+
+      '<button class="quick-btn" data-act="page" data-page="notifications"><div class="qb-ic">🔔</div><div class="qb-lbl">নোটিফিকেশন</div></button>'+
+      '<button class="quick-btn" data-act="add-expense"><div class="qb-ic">📤</div><div class="qb-lbl">ব্যয়</div></button>'+
+      '<button class="quick-btn" data-act="page" data-page="events"><div class="qb-ic">📋</div><div class="qb-lbl">সব ইভেন্ট</div></button>'+
+    '</div></div>';
   if(nextEv){
     var d=parseISO(nextEv.date);
-    h+='<div class="sec anim anim-d2"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2><span class="link" data-act="page" data-page="events">সব →</span></div>';
-    h+='<div class="event-hero" data-act="page-event-detail" data-id="'+esc(nextEv.id)+'">'+
+    h+='<div class="sec anim anim-d3"><div class="sec-hd" style="margin-bottom:8px"><h2 style="font-size:14px">🎉 আগামী ইভেন্ট</h2><span class="link" data-act="page" data-page="events">সব →</span></div>';
+    h+='<div class="event-hero compact" data-act="page-event-detail" data-id="'+esc(nextEv.id)+'">'+
         '<div class="eh-tag">🎯 '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div>'+
         '<div class="eh-title">'+esc(nextEv.title)+'</div>'+
         (nextEv.description?'<div class="eh-desc">'+esc(nextEv.description)+'</div>':'')+
         '<div class="eh-meta">'+
-          '<div class="eh-cell"><div class="k">💰 চাঁদা (ফি)</div><div class="v">'+money(nextEv.fee||0)+'</div></div>'+
+          '<div class="eh-cell"><div class="k">💰 চাঁদা</div><div class="v">'+money(nextEv.fee||0)+'</div></div>'+
           '<div class="eh-cell"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+(nextEv.deadline?fmtDate(nextEv.deadline):'—')+'</div></div>'+
         '</div>'+
       '</div></div>';
   }
-
+  if(pendingPay>0){
+    h+='<div class="sec anim anim-d3"><div class="card" style="background:linear-gradient(135deg,rgba(251,243,220,.85),rgba(254,243,199,.85));border:1px solid rgba(212,160,23,.3);cursor:pointer;padding:13px" data-act="page" data-page="paymentRequests"><div class="row"><div style="width:40px;height:40px;border-radius:12px;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('receipt')+'</div><div class="grow"><div class="bb" style="font-size:13px">⏳ '+pendingPay+' টি পেমেন্ট রিকোয়েস্ট</div><div class="tiny muted mt6">ইউজাররা টাকা পাঠিয়েছে — যাচাই করুন</div></div>'+icon('chevron')+'</div></div></div>';
+  }
   if(pastEvs.length){
-    h+='<div class="sec anim anim-d3"><div class="sec-hd"><h2>📁 পূর্ববর্তী ইভেন্ট</h2><span class="link" data-act="page" data-page="events">সব →</span></div>';
-    h+='<div style="display:grid;gap:9px">'+pastEvs.map(function(e){
+    h+='<div class="sec anim anim-d4"><div class="sec-hd" style="margin-bottom:8px"><h2 style="font-size:14px">📁 পূর্ববর্তী ইভেন্ট</h2><span class="link" data-act="page" data-page="events">সব →</span></div>';
+    h+='<div style="display:grid;gap:8px">'+pastEvs.map(function(e){
       var d=parseISO(e.date);
-      return '<div class="past-card" data-act="page-event-detail" data-id="'+esc(e.id)+'">'+
-        '<div class="pc-date"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div>'+
+      return '<div class="past-card" data-act="page-event-detail" data-id="'+esc(e.id)+'" style="padding:10px 13px">'+
+        '<div class="pc-date" style="width:42px;height:42px"><div class="d" style="font-size:15px">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div>'+
         '<div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+(e.location?' · '+esc(e.location):'')+'</div></div>'+
         '<div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div>'+
       '</div>';
     }).join('')+'</div></div>';
   }
-
-  if(pendingPay>0){
-    h+='<div class="sec anim anim-d3"><div class="card" style="background:linear-gradient(135deg,var(--gold-soft),var(--warn-soft));border:none;cursor:pointer" data-act="page" data-page="paymentRequests"><div class="row"><div style="width:44px;height:44px;border-radius:14px;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('receipt')+'</div><div class="grow"><div class="bb" style="font-size:14px">⏳ '+pendingPay+' টি পেমেন্ট রিকোয়েস্ট</div><div class="tiny muted mt6">ইউজাররা টাকা পাঠিয়েছে — যাচাই করুন</div></div>'+icon('chevron')+'</div></div></div>';
-  }
-
-  h+='<div class="sec anim anim-d4"><div class="sec-hd"><h2>দ্রুত কার্যক্রম</h2></div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">'+
-      '<button class="card" style="padding:13px 6px 11px;text-align:center;cursor:pointer" data-act="add-member"><div style="font-size:22px">➕</div><div class="tiny mt6" style="font-weight:600">সদস্য যোগ</div></button>'+
-      '<button class="card" style="padding:13px 6px 11px;text-align:center;cursor:pointer" data-act="add-contribution"><div style="font-size:22px">💰</div><div class="tiny mt6" style="font-weight:600">চাঁদা রেকর্ড</div></button>'+
-      '<button class="card" style="padding:13px 6px 11px;text-align:center;cursor:pointer" data-act="add-event"><div style="font-size:22px">📅</div><div class="tiny mt6" style="font-weight:600">নতুন ইভেন্ট</div></button>'+
-      '<button class="card" style="padding:13px 6px 11px;text-align:center;cursor:pointer" data-act="page" data-page="notifications"><div style="font-size:22px">🔔</div><div class="tiny mt6" style="font-weight:600">নোটিফিকেশন</div></button>'+
-      '<button class="card" style="padding:13px 6px 11px;text-align:center;cursor:pointer" data-act="add-expense"><div style="font-size:22px">📤</div><div class="tiny mt6" style="font-weight:600">ব্যয় যোগ</div></button>'+
-      '<button class="card" style="padding:13px 6px 11px;text-align:center;cursor:pointer" data-act="page" data-page="events"><div style="font-size:22px">📋</div><div class="tiny mt6" style="font-weight:600">সব ইভেন্ট</div></button>'+
+  h+='<div class="sec anim anim-d5"><div class="sec-hd" style="margin-bottom:8px"><h2 style="font-size:14px">'+MN(cm)+' '+cy+'</h2></div><div class="stat-grid">'+
+      '<div class="stat" style="padding:11px"><div class="k">মাসিক সংগ্রহ</div><div class="v" style="color:var(--income);font-size:15px">'+money(ms.collected)+'</div></div>'+
+      '<div class="stat" style="padding:11px"><div class="k">মাসিক ব্যয়</div><div class="v" style="color:var(--expense);font-size:15px">'+money(ms.spent)+'</div></div>'+
     '</div></div>';
-
-  h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>'+MN(cm)+' '+cy+'</h2></div><div class="stat-grid">'+
-      '<div class="stat"><div class="k">মাসিক সংগ্রহ</div><div class="v" style="color:var(--income)">'+money(ms.collected)+'</div></div>'+
-      '<div class="stat"><div class="k">মাসিক ব্যয়</div><div class="v" style="color:var(--expense)">'+money(ms.spent)+'</div></div>'+
-    '</div></div>';
-
-  h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>সদস্য পরিসংখ্যান</h2></div><div class="stat-grid cols-3"><div class="stat"><div class="k">মোট</div><div class="v">'+DB.members.length+'</div></div><div class="stat"><div class="k">সক্রিয়</div><div class="v" style="color:var(--income)">'+active+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:var(--expense)">'+shortMoney(totalDue)+'</div></div></div></div>';
-
+  h+='<div class="sec anim anim-d5" style="padding-bottom:20px"><div class="sec-hd" style="margin-bottom:8px"><h2 style="font-size:14px">সদস্য পরিসংখ্যান</h2></div><div class="stat-grid cols-3"><div class="stat" style="padding:11px"><div class="k">মোট</div><div class="v" style="font-size:15px">'+DB.members.length+'</div></div><div class="stat" style="padding:11px"><div class="k">সক্রিয়</div><div class="v" style="color:var(--income);font-size:15px">'+active+'</div></div><div class="stat" style="padding:11px"><div class="k">বাকি</div><div class="v" style="color:var(--expense);font-size:15px">'+shortMoney(totalDue)+'</div></div></div></div>';
   return h;
 }
 
@@ -612,26 +904,6 @@ function viewMembers(){
   h+='</div>';return h;
 }
 
-function avatarHTML(m,size){
-  size=size||46;
-  var color=m.color||'#0E5F30';
-  var nm=m.name||m.nameEn||'?';
-  var ini=nm.split(' ').filter(Boolean).map(function(w){return w[0]}).slice(0,2).join('').toUpperCase();
-  if(m.photo && String(m.photo).trim()){
-    return '<div class="avatar" style="width:'+size+'px;height:'+size+'px;background:#fff;border:2px solid '+color+';padding:0">'+
-      '<img src="'+esc(m.photo)+'" alt="'+esc(nm)+'" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%" onerror="this.parentNode.style.background=\'linear-gradient(140deg,'+color+',#000)\';this.parentNode.style.border=\'none\';this.parentNode.innerHTML=\'<span style=&quot;color:#fff;font-weight:700;font-size:'+Math.round(size*0.36)+'px;display:flex;align-items:center;justify-content:center;width:100%;height:100%&quot;>'+ini+'</span>\'"/>'+
-    '</div>';
-  }
-  return '<div class="avatar" style="--c:'+color+';width:'+size+'px;height:'+size+'px;font-size:'+Math.round(size*0.36)+'px">'+ini+'</div>';
-}
-function toast(msg,type){
-  var t=$('#toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');
-  clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove('show')},2400);
-}
-function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||8)}catch(e){}}
-function catBn(k,arr){var c=arr.filter(function(x){return x.k===k})[0];return c?c.bn:k}
-function purposeBn(k){var p=EXTRA_PAYMENT_PURPOSES.filter(function(x){return x.k===k})[0];return p?p.bn:k}
-
 function pageMember(id){
   var m=DB.members.filter(function(x){return x.id===id})[0];
   if(!m) return subHeader('—')+'<div class="subbody"><div class="empty"><h3>পাওয়া যায়নি</h3></div></div>';
@@ -643,7 +915,7 @@ function pageMember(id){
   var statusPill=(m.status==='active'?'active':(m.status==='inactive'?'inactive':(m.status==='suspended'?'suspended':'pending')));
   var rightBtns='<div class="row gap6">'+
     '<button class="btn xs" data-act="member-message" data-id="'+(m.id||'')+'">'+icon('message')+' মেসেজ</button>'+
-    '<button class="icon-btn" data-act="edit-member" data-id="'+(m.id||'')+'" style="width:34px;height:34px">'+icon('edit')+'</button>'+
+    '<button class="icon-btn sm" data-act="edit-member" data-id="'+(m.id||'')+'">'+icon('edit')+'</button>'+
   '</div>';
   var h=subHeader('সদস্য প্রোফাইল',rightBtns);
   h+='<div class="subbody">';
@@ -657,7 +929,7 @@ function pageMember(id){
   h+='<div class="sec"><div class="sec-hd"><h2>অতিরিক্ত জমা</h2><span class="link" data-act="add-extra-payment" data-id="'+(m.id||'')+'">+ জমা</span></div>';
   var extras=DB.extraPayments.filter(function(x){return x.memberId===m.id});
   if(!extras.length){h+='<div class="card" style="text-align:center;padding:16px"><div class="tiny muted">এখনো কোনো অতিরিক্ত জমা নেই</div></div>';}
-  else{h+='<div class="list">'+extras.map(function(x){return '<div class="li"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div class="t">'+(x.purposeBn||purposeBn(x.purpose))+'</div><div class="s">'+fmtDate(x.date)+'</div></div><div class="amt" style="color:var(--accent)">'+money(x.amount)+'</div></div>'}).join('')+'</div>';}
+  else{h+='<div class="list">'+extras.map(function(x){return '<div class="li" data-act="edit-extra-payment" data-id="'+(x.id||'')+'"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div class="t">'+(x.purposeBn||purposeBn(x.purpose))+'</div><div class="s">'+fmtDate(x.date)+' · ✎ এডিট করতে ট্যাপ করুন</div></div><div class="amt" style="color:var(--accent)">'+money(x.amount)+'</div>'+chev()+'</div>'}).join('')+'</div>';}
   h+='</div>';
   h+='<div class="chips" style="margin-top:14px">'+years.map(function(yy){return '<button class="chip'+(yy===y?' on':'')+'" data-act="cyear" data-v="'+yy+'">'+yy+'</button>'}).join('')+'</div>';
   h+='<div class="sec" style="margin-top:14px"><div class="sec-hd"><h2>চাঁদার ইতিহাস</h2><span class="link" data-act="add-contribution-for" data-id="'+(m.id||'')+'">+ পেমেন্ট</span></div>';
@@ -666,7 +938,7 @@ function pageMember(id){
     h+=yearCs.map(function(c){
       var st=c.status||'due';
       var label=st==='paid'?'পরিশোধিত':(st==='due'?'বাকি':'আংশিক');
-      return '<div data-act="edit-contribution" data-id="'+(c.id||'')+'" style="display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--card);border:1px solid var(--border-2);border-radius:14px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:var(--card-2)">'+(c.month||0)+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+MN(c.month||1)+' '+c.year+'</div><div class="tiny muted">প্রত্যাশিত '+money(c.amount||0)+' · পরিশোধিত '+money(c.paidAmount||0)+'</div></div><span class="pill '+st+'">'+label+'</span></div>';
+      return '<div data-act="edit-contribution" data-id="'+(c.id||'')+'" style="display:flex;align-items:center;gap:12px;padding:12px 15px;background:var(--card);border:1px solid var(--card-border);border-radius:14px;margin-bottom:7px;backdrop-filter:blur(14px)"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:var(--card-2)">'+(c.month||0)+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+MN(c.month||1)+' '+c.year+'</div><div class="tiny muted">প্রত্যাশিত '+money(c.amount||0)+' · পরিশোধিত '+money(c.paidAmount||0)+'</div></div><span class="pill '+st+'">'+label+'</span></div>';
     }).join('');
   }
   h+='</div>';
@@ -743,7 +1015,29 @@ function viewFinance(){
   var h='';
   h+='<div class="hd anim"><div><h1>আর্থিক ব্যবস্থাপনা</h1></div></div>';
   var st=DATA.stats();
-  h+='<div class="sec anim anim-d2" style="margin-top:14px"><div class="card" style="text-align:center;padding:22px"><div class="tiny muted">বর্তমান ব্যালেন্স</div><div class="bb" style="font-size:30px;margin-top:5px;color:var(--primary)">'+money2(st.balance)+'</div><div class="row mt14" style="gap:10px"><div style="flex:1;background:var(--income-soft);border-radius:13px;padding:10px"><div class="tiny" style="color:var(--income);font-weight:600">মোট আয়</div><div class="bb" style="font-size:15px;color:var(--income)">'+money(st.income)+'</div></div><div style="flex:1;background:var(--expense-soft);border-radius:13px;padding:10px"><div class="tiny" style="color:var(--expense);font-weight:600">মোট ব্যয়</div><div class="bb" style="font-size:15px;color:var(--expense)">'+money(st.expense)+'</div></div></div></div></div>';
+  h+='<div class="sec anim anim-d2" style="margin-top:14px"><div class="card" style="text-align:center;padding:22px">'+
+      '<div class="tiny muted">বর্তমান ব্যালেন্স'+(st.isManual?' (ম্যানুয়াল)':(st.resetActive?' (রিসেট থেকে)':''))+'</div>'+
+      '<div class="bb" style="font-size:30px;margin-top:5px;color:var(--primary)">'+money2(st.balance)+'</div>'+
+      (st.isManual?'<div class="tiny muted mt6">অটো হিসাব: '+money2(st.computed)+'</div>':'')+
+      (st.resetActive?'<div class="tiny muted mt6">🔄 শেষ রিসেট: '+fmtDateTime(st.resetAt)+'</div>':'')+
+      '<div class="row mt14" style="gap:10px">'+
+        '<div data-act="edit-income" style="flex:1;background:var(--income-soft);border-radius:13px;padding:10px;cursor:pointer;position:relative">'+
+          '<div class="tiny" style="color:var(--income);font-weight:600;display:flex;align-items:center;gap:4px">মোট আয় '+icon('edit')+'</div>'+
+          '<div class="bb" style="font-size:15px;color:var(--income)">'+money(st.income)+'</div>'+
+          (st.isIncomeManual?'<div class="tiny" style="color:var(--income);margin-top:2px;font-weight:600">✎ ম্যানুয়াল</div>':'')+
+        '</div>'+
+        '<div data-act="edit-expense" style="flex:1;background:var(--expense-soft);border-radius:13px;padding:10px;cursor:pointer;position:relative">'+
+          '<div class="tiny" style="color:var(--expense);font-weight:600;display:flex;align-items:center;gap:4px">মোট ব্যয় '+icon('edit')+'</div>'+
+          '<div class="bb" style="font-size:15px;color:var(--expense)">'+money(st.expense)+'</div>'+
+          (st.isExpenseManual?'<div class="tiny" style="color:var(--expense);margin-top:2px;font-weight:600">✎ ম্যানুয়াল</div>':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="row mt14" style="gap:8px">'+
+        '<button class="btn ghost grow" data-act="edit-income" style="padding:10px">'+icon('edit')+' আয় এডিট</button>'+
+        '<button class="btn ghost grow" data-act="edit-expense" style="padding:10px">'+icon('edit')+' ব্যয় এডিট</button>'+
+      '</div>'+
+      '<button class="btn ghost block mt10" data-act="edit-balance">'+icon('edit')+' ব্যালেন্স ম্যানেজ</button>'+
+    '</div></div>';
   return h;
 }
 
@@ -788,7 +1082,7 @@ function pageEventDetail(id){
   if(!e) return subHeader('ইভেন্ট')+'<div class="subbody"><div class="empty"><h3>পাওয়া যায়নি</h3></div></div>';
   var d=parseISO(e.date);
   var isUp=!e.isCompleted;
-  var h=subHeader(isUp?'আগামী ইভেন্ট':'পূর্ববর্তী ইভেন্ট','<button class="icon-btn" data-act="event-edit" data-id="'+esc(e.id)+'" style="width:34px;height:34px">'+icon('edit')+'</button>');
+  var h=subHeader(isUp?'আগামী ইভেন্ট':'পূর্ববর্তী ইভেন্ট','<button class="icon-btn sm" data-act="event-edit" data-id="'+esc(e.id)+'">'+icon('edit')+'</button>');
   h+='<div class="subbody">';
   h+='<div class="sec" style="margin-top:16px"><div class="event-hero" style="cursor:default">'+
     '<div class="eh-tag">'+(isUp?'🎯 আগামী':'✓ সম্পন্ন')+' · '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div>'+
@@ -799,9 +1093,12 @@ function pageEventDetail(id){
       '<div class="eh-cell"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+(e.deadline?fmtDate(e.deadline):'—')+'</div></div>'+
     '</div>'+
   '</div></div>';
+  if(e.isCompleted && e.autoExpensed){
+    h+='<div class="sec"><div class="card" style="background:linear-gradient(135deg,rgba(230,247,238,.9),rgba(205,235,215,.85));border:1px solid rgba(22,163,74,.3);padding:13px"><div class="row"><div style="width:38px;height:38px;border-radius:12px;background:var(--income);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('check')+'</div><div class="grow"><div class="b sm" style="color:var(--income)">✅ ইভেন্ট ব্যয় স্বয়ংক্রিয়ভাবে কাটা হয়েছে</div><div class="tiny muted mt6">পরিমাণ: '+money(e.autoExpenseAmount||0)+'</div></div></div></div></div>';
+  }
   h+='<div class="sec"><div class="list">'+
     '<div class="li" data-act="event-edit" data-id="'+esc(e.id)+'"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('edit')+'</div><div class="grow"><div class="t">ইভেন্ট এডিট</div></div>'+chev()+'</div>'+
-    '<div class="li" data-act="event-delete" data-id="'+esc(e.id)+'"><div class="ic" style="background:var(--danger-soft);color:var(--danger)">'+icon('trash')+'</div><div class="grow"><div class="t" style="color:var(--danger)">ইভেন্ট মুছুন</div></div>'+chev()+'</div>'+
+    '<div class="li" data-act="event-delete" data-id="'+esc(e.id)+'"><div class="ic" style="background:var(--danger-soft);color:var(--danger)">'+icon('trash')+'</div><div class="grow"><div class="t" style="color:var(--danger)">ইভেন্ট মুছুন</div><div class="s" style="color:var(--expense)">ব্যালেন্স ফিরে আসবে</div></div>'+chev()+'</div>'+
   '</div></div>';
   h+='</div>';return h;
 }
@@ -816,22 +1113,26 @@ function formEventPage(existing){
   var e=existing||{};
   var action = isEdit?'event-save-edit':'event-save-new';
   var idAttr = isEdit ? ' data-id="'+esc(e.id)+'"' : '';
-  var h=subHeader(isEdit?'ইভেন্ট সম্পাদনা':'নতুন ইভেন্ট','<button class="icon-btn" data-act="'+action+'"'+idAttr+' style="width:34px;height:34px;background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;border:none">'+icon('check')+'</button>');
+  var h=subHeader(isEdit?'ইভেন্ট সম্পাদনা':'নতুন ইভেন্ট','<button class="icon-btn sm" data-act="'+action+'"'+idAttr+' style="background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;border:none">'+icon('check')+'</button>');
   h+='<div class="subbody" id="eventForm" data-id="'+esc(e.id||'')+'">';
   h+='<div class="sec" style="margin-top:16px">';
   h+='<div class="field"><label>ইভেন্টের শিরোনাম *</label><input id="evTitle" value="'+esc(e.title||'')+'"/></div>';
   h+='<div class="field"><label>বিস্তারিত বিবরণ</label><textarea id="evDesc">'+esc(e.description||'')+'</textarea></div>';
   h+='<div class="field-row"><div class="field"><label>📅 তারিখ *</label><input id="evDate" type="date" value="'+(e.date||toISO(new Date()))+'"/></div><div class="field"><label>⏰ শেষ তারিখ</label><input id="evDeadline" type="date" value="'+(e.deadline||'')+'"/></div></div>';
   h+='<div class="field-row"><div class="field"><label>💰 প্রতি সদস্যের চাঁদা (৳)</label><input id="evFee" type="number" value="'+(e.fee||0)+'"/></div><div class="field"><label>📍 স্থান</label><input id="evLocation" value="'+esc(e.location||'')+'"/></div></div>';
+  h+='<div class="field"><label>💸 ইভেন্টের মোট খরচ (৳) — ঐচ্ছিক</label><input id="evTotalCost" type="number" value="'+(e.totalCost||0)+'" placeholder="খালি রাখলে fee × সক্রিয় সদস্য"/><div class="tiny muted" style="margin-top:5px;line-height:1.6">ইভেন্ট <b>সম্পন্ন</b> করলে এই পরিমাণ মোট ব্যালেন্স থেকে <b>অটো বিয়োগ</b> হবে। ইভেন্ট মুছলে বা স্ট্যাটাস "আগামী" করলে <b>ফেরত আসবে</b>।</div></div>';
   h+='<div class="field"><label>স্ট্যাটাস</label><select id="evStatus"><option value="upcoming" '+((e.isCompleted)?'':'selected')+'>🎯 আগামী</option><option value="past" '+((e.isCompleted)?'selected':'')+'>✓ সম্পন্ন</option></select></div>';
   h+='</div>';
-  if(isEdit){h+='<div class="sec"><button class="btn danger block" data-act="event-delete" data-id="'+esc(e.id)+'">'+icon('trash')+' ইভেন্ট মুছুন</button></div>';}
+  if(isEdit){h+='<div class="sec"><button class="btn danger block" data-act="event-delete" data-id="'+esc(e.id)+'">'+icon('trash')+' ইভেন্ট মুছুন (ব্যালেন্স ফিরবে)</button></div>';}
   h+='</div>';return h;
 }
+
 async function saveEvent(eventId){
   var isEdit=!!eventId;
   var container=document.getElementById('eventForm');
   var id=eventId || (container && container.getAttribute('data-id'));
+  var oldEvent = isEdit ? DB.events.filter(function(x){return x.id===eventId})[0] : null;
+  var wasCompleted = !!(oldEvent && oldEvent.isCompleted);
   var title=(document.getElementById('evTitle')||{}).value.trim();
   var desc=(document.getElementById('evDesc')||{}).value.trim();
   var date=(document.getElementById('evDate')||{}).value;
@@ -839,21 +1140,126 @@ async function saveEvent(eventId){
   var fee=parseInt((document.getElementById('evFee')||{}).value)||0;
   var location=(document.getElementById('evLocation')||{}).value.trim();
   var status=(document.getElementById('evStatus')||{}).value;
+  var totalCost=parseInt((document.getElementById('evTotalCost')||{}).value)||0;
   if(!title){toast('শিরোনাম দিন','error');return}
   if(!date){toast('তারিখ দিন','error');return}
-  var data={title:title,description:desc,date:date,deadline:deadline||null,fee:fee,location:location,isCompleted:status==='past',updatedAt:Date.now()};
+  var isNowCompleted = (status==='past');
+  var data={title:title,description:desc,date:date,deadline:deadline||null,fee:fee,totalCost:totalCost,location:location,isCompleted:isNowCompleted,updatedAt:Date.now()};
   try{
-    if(isEdit){await db.collection('events').doc(id).update(data);audit('event_edit',id,title,'','');toast('ইভেন্ট হালনাগাদ হয়েছে','success');}
-    else{var newId='EV-'+Date.now();data.createdBy=state.admin.name;data.createdAt=Date.now();await db.collection('events').doc(newId).set(data);audit('event_add',newId,title,'','');toast('নতুন ইভেন্ট তৈরি হয়েছে','success');}
+    var savedId;
+    if(isEdit){
+      await db.collection('events').doc(id).update(data);
+      savedId = id;
+      audit('event_edit',id,title,'','');
+      toast('ইভেন্ট হালনাগাদ হয়েছে','success');
+    } else {
+      savedId='EV-'+Date.now();
+      data.createdBy=state.admin.name;data.createdAt=Date.now();
+      await db.collection('events').doc(savedId).set(data);
+      audit('event_add',savedId,title,'','');
+      toast('নতুন ইভেন্ট তৈরি হয়েছে','success');
+    }
+    if(!wasCompleted && isNowCompleted){
+      await createEventExpense(savedId, data);
+    }
+    else if(wasCompleted && !isNowCompleted){
+      await reverseEventExpense(savedId);
+    }
     popPage();
   }catch(err){console.error(err);toast('Error: '+err.message,'error');}
 }
+
+async function createEventExpense(eventId, eventData){
+  try{
+    var existing = DATA.eventAutoExpenses(eventId);
+    if(existing.length){console.log('Event expense already exists for', eventId);return;}
+    var amount = DATA.eventExpenseAmount(eventData);
+    if(amount <= 0){console.log('Event expense amount is 0 — skipping');return;}
+    await db.collection('transactions').add({
+      date: eventData.date || toISO(new Date()),
+      type: 'event_expense',
+      amount: amount,
+      category: 'ইভেন্ট ব্যয়',
+      desc: (eventData.title || 'ইভেন্ট') + ' — স্বয়ংক্রিয় ব্যয়',
+      eventId: eventId,
+      eventTitle: eventData.title || '',
+      autoGenerated: true,
+      addedBy: 'system',
+      createdAt: Date.now()
+    });
+    await db.collection('events').doc(eventId).update({
+      autoExpensed: true,
+      autoExpenseAmount: amount,
+      autoExpensedAt: Date.now()
+    });
+    await audit('event_auto_expense', eventId, '', amount);
+    toast('✅ ইভেন্ট ব্যয় '+money(amount)+' কাটা হয়েছে','success');
+  }catch(err){
+    console.error('createEventExpense failed:', err);
+    toast('⚠️ ব্যয় তৈরি ব্যর্থ: '+err.message,'error');
+  }
+}
+
+async function reverseEventExpense(eventId){
+  try{
+    var existing = DATA.eventAutoExpenses(eventId);
+    if(!existing.length){
+      console.log('No auto expenses to reverse for', eventId);
+      return 0;
+    }
+    var total = 0;
+    for(var i=0;i<existing.length;i++){
+      total += Number(existing[i].amount||0);
+      try{
+        await db.collection('transactions').doc(existing[i].id).delete();
+      }catch(e){console.warn('Delete failed for', existing[i].id, e);}
+    }
+    try{
+      await db.collection('events').doc(eventId).update({
+        autoExpensed: false,
+        autoExpenseAmount: 0,
+        autoExpensedAt: firebase.firestore.FieldValue.delete(),
+        autoExpenseReversedAt: Date.now()
+      });
+    }catch(e){console.warn(e);}
+    if(total>0){
+      await audit('event_expense_reversed', eventId, total, 0);
+      toast('↩️ '+money(total)+' ব্যালেন্সে ফিরে এসেছে','success');
+    }
+    return total;
+  }catch(err){
+    console.error('reverseEventExpense failed:', err);
+    return 0;
+  }
+}
+
 function confirmDeleteEvent(eventId){
   var e=DB.events.filter(function(x){return x.id===eventId})[0];
   if(!e) return;
-  confirmDialog('ইভেন্ট মুছুন?',e.title,async function(){
-    try{await db.collection('events').doc(eventId).delete();audit('event_delete',eventId,e.title,'','');popPage();toast('মুছে ফেলা হয়েছে','success');}
-    catch(err){toast('Error: '+err.message,'error')}
+  var autoExps = DATA.eventAutoExpenses(eventId);
+  var autoTotal = autoExps.reduce(function(a,b){return a+Number(b.amount||0)},0);
+  var msg = e.title;
+  if(autoTotal > 0){
+    msg += '\n\n⚠️ এই ইভেন্টের স্বয়ংক্রিয় ব্যয় '+money(autoTotal)+'ও মুছে যাবে → মোট ব্যালেন্সে ফিরে আসবে।';
+  }
+  confirmDialog('ইভেন্ট মুছুন?', msg, async function(){
+    try{
+      for(var i=0;i<autoExps.length;i++){
+        try{ await db.collection('transactions').doc(autoExps[i].id).delete(); }
+        catch(err){ console.warn('Delete tx failed', err); }
+      }
+      await db.collection('events').doc(eventId).delete();
+      await audit('event_delete', eventId, e.title, '', autoTotal>0?('reversed '+money(autoTotal)):'');
+      popPage();
+      if(autoTotal > 0){
+        toast('✅ ইভেন্ট মুছে গেছে — '+money(autoTotal)+' ব্যালেন্সে ফিরেছে','success');
+      } else {
+        toast('✅ ইভেন্ট মুছে ফেলা হয়েছে','success');
+      }
+    }catch(err){
+      console.error(err);
+      toast('Error: '+err.message,'error');
+    }
   },'মুছুন');
 }
 
@@ -933,7 +1339,7 @@ function viewMore(){
   var logoSrc = LOGO_URL ? '<img src="'+LOGO_URL+'" alt="DP"/>' : '<div class="fallback">DP</div>';
   var pendingPayCount=DATA.pendingPayments().length;
   var h='<div class="hd anim"><h1>আরও</h1></div>';
-  h+='<div class="sec anim anim-d1" style="margin-top:0"><div class="card" style="text-align:center;padding:22px"><div style="width:70px;height:70px;border-radius:20px;background:#fff;padding:4px;margin:0 auto 12px;overflow:hidden;display:flex;align-items:center;justify-content:center">'+logoSrc+'</div><div class="bb" style="font-size:16px">'+esc(state.admin.name)+'</div><div class="sm muted mt6">'+esc(state.admin.email)+'</div></div></div>';
+  h+='<div class="sec anim anim-d1" style="margin-top:0"><div class="card" style="text-align:center;padding:18px"><div style="width:64px;height:64px;border-radius:18px;background:#fff;padding:4px;margin:0 auto 10px;overflow:hidden;display:flex;align-items:center;justify-content:center">'+logoSrc+'</div><div class="bb" style="font-size:15px">'+esc(state.admin.name)+'</div><div class="tiny muted mt6">'+esc(state.admin.email)+'</div></div></div>';
   h+='<div class="sec anim anim-d2"><div class="list">'+
     '<div class="li" data-act="tab" data-tab="members"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('users')+'</div><div class="grow"><div class="t">সদস্য</div><div class="s">'+DB.members.length+' জন</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="events"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('calendar')+'</div><div class="grow"><div class="t">ইভেন্ট</div><div class="s">'+DB.events.length+' টি</div></div>'+chev()+'</div>'+
@@ -941,12 +1347,14 @@ function viewMore(){
     '<div class="li" data-act="page" data-page="paymentRequests"><div class="ic" style="background:var(--gold-soft);color:var(--gold)">'+icon('receipt')+'</div><div class="grow"><div class="t">পেমেন্ট রিকোয়েস্ট</div></div>'+(pendingPayCount>0?'<span class="pill important">'+pendingPayCount+'</span>':'')+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="extras"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div class="t">অতিরিক্ত জমা</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="audit"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('clipboard')+'</div><div class="grow"><div class="t">অডিট লগ</div></div>'+chev()+'</div>'+
-    '<div class="li" data-act="page" data-page="announcements"><div class="ic" style="background:var(--warn-soft);color:var(--warn)">'+icon('megaphone')+'</div><div class="grow"><div class="t">ঘোষণা</div></div>'+chev()+'</div>'+
+    '<div class="li" data-act="page" data-page="announcements"><div class="ic" style="background:var(--warn-soft);color:var(--warn)">'+icon('megaphone')+'</div><div class="grow"><div class="t">ঘোষণা</div><div class="s">'+DB.announcements.length+' টি</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="dues"><div class="ic" style="background:var(--info-soft);color:var(--info)">'+icon('users')+'</div><div class="grow"><div class="t">ডিউ রিপোর্ট</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="notifications"><div class="ic" style="background:var(--income-soft);color:var(--income)">'+icon('bell')+'</div><div class="grow"><div class="t">নোটিফিকেশন পাঠান</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="settings"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('settings')+'</div><div class="grow"><div class="t">সেটিংস</div></div>'+chev()+'</div>'+
   '</div></div>';
-  h+='<div class="sec anim anim-d3" style="margin-bottom:10px"><button class="btn ghost block" style="color:var(--expense)" data-act="logout">'+icon('logout')+' লগআউট</button></div>';
+  h+='<div class="sec anim anim-d3" style="margin-bottom:14px;padding:0 20px;text-align:right">'+
+      '<button class="logout-mini" data-act="logout">'+icon('logout')+' লগআউট</button>'+
+    '</div>';
   return h;
 }
 function pageExtras(){
@@ -956,7 +1364,7 @@ function pageExtras(){
   h+='<div class="subbody"><div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:20px"><div class="tiny muted">মোট</div><div class="bb" style="font-size:26px;color:var(--accent);margin-top:4px">'+money2(total)+'</div></div></div>';
   h+='<div class="sec"><div class="list">';
   if(!list.length){h+='<div class="empty"><h3>কোনো জমা নেই</h3></div>';}
-  else{h+=list.map(function(x){return '<div class="li"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div class="t">'+esc(x.memberName||'')+'</div><div class="s">'+(x.purposeBn||purposeBn(x.purpose))+' · '+fmtDate(x.date)+'</div></div><div class="amt" style="color:var(--accent)">'+money(x.amount)+'</div></div>'}).join('');}
+  else{h+=list.map(function(x){return '<div class="li" data-act="edit-extra-payment" data-id="'+(x.id||'')+'"><div class="ic" style="background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div class="t">'+esc(x.memberName||'')+'</div><div class="s">'+(x.purposeBn||purposeBn(x.purpose))+' · '+fmtDate(x.date)+'</div></div><div class="amt" style="color:var(--accent)">'+money(x.amount)+'</div>'+chev()+'</div>'}).join('');}
   h+='</div></div></div>';return h;
 }
 function pageAudit(){
@@ -975,13 +1383,70 @@ function pageDues(){
   else{h+=list.map(function(x){return '<div class="li" data-act="member" data-id="'+(x.m.id||'')+'">'+avatarHTML(x.m,40)+'<div class="grow"><div class="t">'+esc(mname(x.m))+'</div><div class="s">'+(x.m.id||'')+'</div></div><div class="amt neg">'+money(x.s.due)+'</div></div>'}).join('');}
   h+='</div></div></div>';return h;
 }
+
+/* ✅ UPDATE: announcements এডিট/ডিলিট সহ */
 function pageAnnouncements(){
-  var h=subHeader('ঘোষণা');
+  var h=subHeader('ঘোষণা','<button class="icon-btn sm" data-act="add-announcement" style="background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;border:none">'+icon('plus')+'</button>');
   h+='<div class="subbody"><div class="sec" style="margin-top:16px">';
-  if(!DB.announcements.length){h+='<div class="empty"><h3>কোনো ঘোষণা নেই</h3></div>';}
-  else{h+=DB.announcements.map(function(a){return '<div class="card" style="margin-bottom:11px"><div class="b">'+esc(a.title||'')+'</div><div class="sm muted mt6">'+esc(a.body||'')+'</div></div>'}).join('');}
+  if(!DB.announcements.length){
+    h+='<div class="empty"><div class="eic">'+icon('megaphone')+'</div><h3>কোনো ঘোষণা নেই</h3><p>উপরের + বাটনে ক্লিক করে নতুন যোগ করুন</p></div>';
+  }else{
+    h+=DB.announcements.map(function(a){
+      return '<div class="card" style="margin-bottom:11px;cursor:pointer;position:relative" data-act="edit-announcement" data-id="'+esc(a.id)+'">'+
+        '<button class="edit-mini-btn">'+icon('edit')+'</button>'+
+        '<div class="b" style="padding-right:30px">'+esc(a.title||'')+'</div>'+
+        '<div class="sm muted mt6">'+esc(a.body||'')+'</div>'+
+        '<div class="tiny muted mt6">'+fmtDate(a.date)+' · ✎ ট্যাপ করে এডিট করুন</div>'+
+      '</div>';
+    }).join('');
+  }
   h+='</div></div>';return h;
 }
+function formEditAnnouncement(id){
+  var isEdit=!!id;
+  var a=isEdit ? (DB.announcements.filter(function(x){return x.id===id})[0]||{}) : {};
+  openModal({
+    title:isEdit?'ঘোষণা সম্পাদনা':'নতুন ঘোষণা',
+    body:
+      '<div class="field"><label>শিরোনাম *</label><input id="anTitle" value="'+esc(a.title||'')+'"/></div>'+
+      '<div class="field"><label>বিস্তারিত *</label><textarea id="anBody" rows="5">'+esc(a.body||'')+'</textarea></div>'+
+      '<div class="field"><label>তারিখ</label><input id="anDate" type="date" value="'+(a.date||toISO(new Date()))+'"/></div>',
+    footer:isEdit?'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn danger small" id="anDel">'+icon('trash')+'</button><button class="btn grow" id="anSave">'+icon('check')+' সংরক্ষণ</button>':'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="anSave">'+icon('check')+' যোগ করুন</button>',
+    onMount:function(mr){
+      if(isEdit){
+        mr.querySelector('#anDel').addEventListener('click',function(){
+          closeModal();
+          confirmDialog('ঘোষণা মুছুন?',a.title,async function(){
+            try{
+              await db.collection('announcements').doc(id).delete();
+              await audit('announcement_delete',id,a.title,'','');
+              toast('✅ মুছে ফেলা হয়েছে','success');
+            }catch(e){toast('❌ '+e.message,'error')}
+          },'মুছুন');
+        });
+      }
+      mr.querySelector('#anSave').addEventListener('click',async function(){
+        var title=mr.querySelector('#anTitle').value.trim();
+        var body=mr.querySelector('#anBody').value.trim();
+        var date=mr.querySelector('#anDate').value;
+        if(!title){toast('শিরোনাম দিন','error');return}
+        if(!body){toast('বিস্তারিত লিখুন','error');return}
+        try{
+          if(isEdit){
+            await db.collection('announcements').doc(id).update({title:title,body:body,date:date,updatedAt:Date.now()});
+            await audit('announcement_edit',id,a.title,title);
+          }else{
+            await db.collection('announcements').add({title:title,body:body,date:date,createdAt:Date.now(),createdBy:state.admin.name});
+            await audit('announcement_add','',title,'','');
+          }
+          toast('✅ সংরক্ষিত','success');
+          closeModal();
+        }catch(e){toast('❌ '+e.message,'error')}
+      });
+    }
+  });
+}
+
 function pageNotifications(){
   var now=new Date();
   var h=subHeader('নোটিফিকেশন পাঠান');
@@ -994,7 +1459,12 @@ function pageNotifications(){
 }
 function pageSettings(){
   var h=subHeader('সেটিংস');
-  h+='<div class="subbody"><div class="sec" style="margin-top:16px"><div class="card"><div class="between"><div class="row gap10"><div>'+icon('star')+'</div><div><div class="b sm">ডার্ক মোড</div></div></div><button class="chip'+(state.theme==='dark'?' on':'')+'" data-act="theme">'+(state.theme==='dark'?'ON':'OFF')+'</button></div></div></div></div>';
+  h+='<div class="subbody"><div class="sec" style="margin-top:16px"><div class="card"><div class="between"><div class="row gap10"><div>'+icon('star')+'</div><div><div class="b sm">ডার্ক মোড</div></div></div><button class="chip'+(state.theme==='dark'?' on':'')+'" data-act="theme">'+(state.theme==='dark'?'ON':'OFF')+'</button></div></div></div>';
+  var st=DATA.stats();
+  if(st.resetActive){
+    h+='<div class="sec"><div class="card" style="background:var(--warn-soft);border:1px solid rgba(217,119,6,.25);padding:13px"><div class="b sm" style="color:var(--warn)">🔄 হিসাব রিসেট চালু আছে</div><div class="tiny mt6" style="color:var(--warn)">'+fmtDateTime(st.resetAt)+' থেকে গণনা শুরু। এর আগের লেনদেন হিসাবে দেখাচ্ছে না।</div><button class="btn danger small mt10" data-act="unreset-stats">↩️ রিসেট বাতিল করুন</button></div></div>';
+  }
+  h+='</div>';
   return h;
 }
 function pageSearch(){
@@ -1007,9 +1477,223 @@ function pageSearch(){
   h+='</div>';return h;
 }
 
-/* ========= FORMS =========
-   ✅ সদস্য ফর্ম: যেকোনো দেশের নাম্বার গ্রহণ করে
-   ============================================ */
+/* ========= ✅ NEW: আয় / ব্যয় আলাদা এডিট ========= */
+function editIncomeTotal(){
+  var st=DATA.stats();
+  var current = st.isIncomeManual ? st.income : st.computedIncome;
+  openModal({
+    title:'💰 মোট আয় এডিট / রিসেট',
+    body:
+      '<div class="info-box" style="line-height:1.8">'+
+        '🔹 <b>ম্যানুয়াল সেট</b> — নিজের ইচ্ছেমতো মোট আয়ের মান বসান<br>'+
+        '🔹 <b>রিসেট (অটো)</b> — ম্যানুয়াল মান মুছে আবার লেনদেন থেকে হিসাব<br>'+
+        '🔹 অটো হিসাব (বর্তমান): <b>'+money(st.computedIncome)+'</b>'+
+      '</div>'+
+      (st.isIncomeManual?'<div class="warn-box mt10">✎ এখন ম্যানুয়াল মান সেট করা আছে: <b>'+money(st.income)+'</b></div>':'')+
+      '<div class="field mt14"><label>মোট আয় (৳)</label><input id="miValue" type="number" value="'+Math.round(current)+'" step="1"/></div>'+
+      '<div class="row" style="gap:8px;margin-bottom:12px">'+
+        '<button class="btn ghost grow" id="miZero" style="padding:10px">০ সেট করুন</button>'+
+        '<button class="btn ghost grow" id="miReset" style="padding:10px;color:var(--expense)">'+icon('undo')+' রিসেট (অটো)</button>'+
+      '</div>',
+    footer:'<button class="btn ghost grow" data-mclose="1">বন্ধ করুন</button><button class="btn grow" id="miSave">'+icon('check')+' সংরক্ষণ</button>',
+    onMount:function(mr){
+      mr.querySelector('#miZero').addEventListener('click',function(){mr.querySelector('#miValue').value='0'});
+      mr.querySelector('#miReset').addEventListener('click',async function(){
+        try{
+          await db.collection('org').doc('settings').set({manualIncome:firebase.firestore.FieldValue.delete()},{merge:true});
+          await audit('income_manual_reset','org/settings','','auto');
+          toast('✅ মোট আয় অটো হিসাবে ফিরেছে','success');
+          closeModal();
+        }catch(e){toast('❌ '+e.message,'error')}
+      });
+      mr.querySelector('#miSave').addEventListener('click',async function(){
+        var v=parseInt(mr.querySelector('#miValue').value);
+        if(isNaN(v)){toast('সঠিক সংখ্যা দিন','error');return}
+        try{
+          await db.collection('org').doc('settings').set({manualIncome:v,manualIncomeUpdatedAt:Date.now(),manualIncomeUpdatedBy:state.admin.uid},{merge:true});
+          await audit('income_edit','org/settings',st.income,v);
+          toast('✅ মোট আয় আপডেট হয়েছে','success');
+          closeModal();
+        }catch(e){toast('❌ '+e.message,'error')}
+      });
+    }
+  });
+}
+
+function editExpenseTotal(){
+  var st=DATA.stats();
+  var current = st.isExpenseManual ? st.expense : st.computedExpense;
+  openModal({
+    title:'💸 মোট ব্যয় এডিট / রিসেট',
+    body:
+      '<div class="info-box" style="line-height:1.8">'+
+        '🔹 <b>ম্যানুয়াল সেট</b> — নিজের ইচ্ছেমতো মোট ব্যয়ের মান বসান<br>'+
+        '🔹 <b>রিসেট (অটো)</b> — ম্যানুয়াল মান মুছে আবার লেনদেন থেকে হিসাব<br>'+
+        '🔹 অটো হিসাব (বর্তমান): <b>'+money(st.computedExpense)+'</b>'+
+      '</div>'+
+      (st.isExpenseManual?'<div class="warn-box mt10">✎ এখন ম্যানুয়াল মান সেট করা আছে: <b>'+money(st.expense)+'</b></div>':'')+
+      '<div class="field mt14"><label>মোট ব্যয় (৳)</label><input id="meValue" type="number" value="'+Math.round(current)+'" step="1"/></div>'+
+      '<div class="row" style="gap:8px;margin-bottom:12px">'+
+        '<button class="btn ghost grow" id="meZero" style="padding:10px">০ সেট করুন</button>'+
+        '<button class="btn ghost grow" id="meReset" style="padding:10px;color:var(--expense)">'+icon('undo')+' রিসেট (অটো)</button>'+
+      '</div>',
+    footer:'<button class="btn ghost grow" data-mclose="1">বন্ধ করুন</button><button class="btn grow" id="meSave">'+icon('check')+' সংরক্ষণ</button>',
+    onMount:function(mr){
+      mr.querySelector('#meZero').addEventListener('click',function(){mr.querySelector('#meValue').value='0'});
+      mr.querySelector('#meReset').addEventListener('click',async function(){
+        try{
+          await db.collection('org').doc('settings').set({manualExpense:firebase.firestore.FieldValue.delete()},{merge:true});
+          await audit('expense_manual_reset','org/settings','','auto');
+          toast('✅ মোট ব্যয় অটো হিসাবে ফিরেছে','success');
+          closeModal();
+        }catch(e){toast('❌ '+e.message,'error')}
+      });
+      mr.querySelector('#meSave').addEventListener('click',async function(){
+        var v=parseInt(mr.querySelector('#meValue').value);
+        if(isNaN(v)){toast('সঠিক সংখ্যা দিন','error');return}
+        try{
+          await db.collection('org').doc('settings').set({manualExpense:v,manualExpenseUpdatedAt:Date.now(),manualExpenseUpdatedBy:state.admin.uid},{merge:true});
+          await audit('expense_edit','org/settings',st.expense,v);
+          toast('✅ মোট ব্যয় আপডেট হয়েছে','success');
+          closeModal();
+        }catch(e){toast('❌ '+e.message,'error')}
+      });
+    }
+  });
+}
+
+/* ========= BALANCE ========= */
+function editBalance(){
+  var st=DATA.stats();
+  var current = st.isManual ? st.balance : st.computed;
+  var resetDate = st.resetActive ? fmtDateTime(st.resetAt) : null;
+  openModal({
+    title:'⚙️ ব্যালেন্স ও হিসাব',
+    body:
+      '<div class="info-box" style="line-height:1.8">'+
+        '🔹 <b>ব্যালেন্স ম্যানুয়াল সেট</b> — নিজের ইচ্ছেমতো মান বসান<br>'+
+        '🔹 <b>রিসেট (অটো)</b> — ম্যানুয়াল মান মুছে লেনদেন থেকে হিসাব<br>'+
+        '🔹 <b>সব হিসাব রিসেট</b> — মোট আয়, মোট ব্যয় ও ব্যালেন্স সব <b>০ থেকে নতুন</b>'+
+      '</div>'+
+      (resetDate?'<div class="warn-box mt10" style="line-height:1.7">🔄 <b>হিসাব রিসেট চালু:</b> '+resetDate+'<br>এর আগের সব লেনদেন হিসাবে দেখাচ্ছে না।</div>':'')+
+      '<div class="field mt14"><label>ব্যালেন্স (৳)</label><input id="mbValue" type="number" value="'+Math.round(current)+'" step="1"/></div>'+
+      '<div class="row" style="gap:8px;margin-bottom:12px">'+
+        '<button class="btn ghost grow" id="mbZero" style="padding:10px">০ সেট করুন</button>'+
+        '<button class="btn ghost grow" id="mbReset" style="padding:10px;color:var(--expense)">রিসেট (অটো)</button>'+
+      '</div>'+
+      '<div style="height:1px;background:var(--border);margin:14px 0"></div>'+
+      (st.resetActive
+        ? '<div class="info-box" style="line-height:1.7">↩️ <b>রিসেট বাতিল</b> করলে আবার পুরনো সব লেনদেন হিসাবে ফিরে আসবে।</div><button class="btn success block mt10" id="mbUnreset">↩️ রিসেট বাতিল (পুরনো হিসাব ফিরবে)</button>'
+        : '<div class="danger-box" style="line-height:1.7">⚠️ <b>সব হিসাব রিসেট</b> করলে মোট আয়, মোট ব্যয় ও ব্যালেন্স সব ০ থেকে নতুন করে গণনা হবে। পুরনো লেনদেন ডেটাবেজে থাকবে কিন্তু হিসাবে দেখাবে না।</div><button class="btn danger block mt10" id="mbFullReset">🔄 সব হিসাব রিসেট করুন (আয়/ব্যয়/ব্যালেন্স)</button>'
+      ),
+    footer:'<button class="btn ghost grow" data-mclose="1">বন্ধ করুন</button><button class="btn grow" id="mbSave">'+icon('check')+' ব্যালেন্স সংরক্ষণ</button>',
+    onMount:function(mr){
+      mr.querySelector('#mbZero').addEventListener('click',function(){
+        mr.querySelector('#mbValue').value='0';
+      });
+      mr.querySelector('#mbReset').addEventListener('click',async function(){
+        try{
+          await db.collection('org').doc('settings').set({manualBalance:firebase.firestore.FieldValue.delete()},{merge:true});
+          await audit('balance_manual_reset','org/settings','','auto');
+          toast('✅ ম্যানুয়াল মান মুছে গেছে — অটো হিসাব ফিরেছে','success');
+          closeModal();
+        }catch(e){toast('❌ '+e.message,'error')}
+      });
+      var fullResetBtn=mr.querySelector('#mbFullReset');
+      if(fullResetBtn){
+        fullResetBtn.addEventListener('click',function(){
+          closeModal();
+          confirmDialog('সব হিসাব রিসেট?','মোট আয়, মোট ব্যয় ও ব্যালেন্স সব ০ হয়ে যাবে।\nপুরনো লেনদেন ডেটাবেজে থাকবে কিন্তু হিসাবে দেখাবে না।\n\nপরে "রিসেট বাতিল" দিয়ে ফিরিয়ে আনা যাবে।',async function(){
+            try{
+              await db.collection('org').doc('settings').set({
+                statsResetAt: Date.now(),
+                statsResetBy: state.admin.uid,
+                manualBalance: firebase.firestore.FieldValue.delete(),
+                manualIncome: firebase.firestore.FieldValue.delete(),
+                manualExpense: firebase.firestore.FieldValue.delete()
+              },{merge:true});
+              await audit('stats_full_reset','org/settings',st.balance,'0');
+              toast('✅ সব হিসাব ০ থেকে শুরু — মোট আয়, মোট ব্যয়, ব্যালেন্স','success');
+            }catch(e){toast('❌ '+e.message,'error')}
+          },'রিসেট করুন');
+        });
+      }
+      var unresetBtn=mr.querySelector('#mbUnreset');
+      if(unresetBtn){
+        unresetBtn.addEventListener('click',async function(){
+          try{
+            await db.collection('org').doc('settings').set({statsResetAt:firebase.firestore.FieldValue.delete()},{merge:true});
+            await audit('stats_unreset','org/settings','reset','off');
+            toast('↩️ রিসেট বাতিল — পুরনো হিসাব ফিরে এসেছে','success');
+            closeModal();
+          }catch(e){toast('❌ '+e.message,'error')}
+        });
+      }
+      mr.querySelector('#mbSave').addEventListener('click',async function(){
+        var v=parseInt(mr.querySelector('#mbValue').value);
+        if(isNaN(v)){toast('সঠিক সংখ্যা দিন','error');return}
+        try{
+          await db.collection('org').doc('settings').set({manualBalance:v,manualBalanceUpdatedAt:Date.now(),manualBalanceUpdatedBy:state.admin.uid},{merge:true});
+          await audit('balance_edit','org/settings',st.balance,v);
+          toast('✅ ব্যালেন্স আপডেট হয়েছে','success');
+          closeModal();
+        }catch(e){toast('❌ '+e.message,'error')}
+      });
+    }
+  });
+}
+
+/* ========= ✅ NEW: অতিরিক্ত জমা এডিট ========= */
+function formEditExtraPayment(id){
+  var x=DB.extraPayments.filter(function(e){return e.id===id})[0];
+  if(!x){toast('পাওয়া যায়নি','error');return}
+  openModal({
+    title:'⭐ অতিরিক্ত জমা সম্পাদনা',
+    body:
+      '<div class="field"><label>সদস্য</label><input value="'+esc(x.memberName||'—')+'" readonly/></div>'+
+      '<div class="field-row"><div class="field"><label>পরিমাণ (৳) *</label><input id="eepAmt" type="number" value="'+(x.amount||0)+'"/></div><div class="field"><label>তারিখ</label><input id="eepDate" type="date" value="'+(x.date||toISO(new Date()))+'"/></div></div>'+
+      '<div class="field"><label>উদ্দেশ্য</label><select id="eepPurpose">'+EXTRA_PAYMENT_PURPOSES.map(function(p){return '<option value="'+p.k+'" '+(x.purpose===p.k?'selected':'')+'>'+p.bn+'</option>'}).join('')+'</select></div>'+
+      '<div class="field"><label>নোট (ঐচ্ছিক)</label><textarea id="eepNote" rows="2">'+esc(x.note||'')+'</textarea></div>'+
+      '<div class="info-box">💡 এডিট করলে সংশ্লিষ্ট লেনদেনও আপডেট হবে। ডিলিট করলে লেনদেনও মুছে যাবে।</div>',
+    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn danger small" id="eepDelete">'+icon('trash')+'</button><button class="btn grow" id="eepSave">'+icon('check')+' সংরক্ষণ</button>',
+    onMount:function(mr){
+      mr.querySelector('#eepSave').addEventListener('click',async function(){
+        var amt=parseInt(mr.querySelector('#eepAmt').value)||0;
+        var date=mr.querySelector('#eepDate').value;
+        var purpose=mr.querySelector('#eepPurpose').value;
+        var note=mr.querySelector('#eepNote').value.trim();
+        if(amt<=0){toast('সঠিক পরিমাণ দিন','error');return}
+        var pBn=purposeBn(purpose);
+        try{
+          await db.collection('extraPayments').doc(id).update({amount:amt,date:date,purpose:purpose,purposeBn:pBn,note:note,updatedAt:Date.now(),updatedBy:state.admin.name});
+          var linkedTx = DB.transactions.filter(function(t){return t.extraPaymentId===id})[0];
+          if(linkedTx){
+            await db.collection('transactions').doc(linkedTx.id).update({amount:amt,date:date,desc:(x.memberName||'')+' — '+pBn,updatedAt:Date.now()});
+          }
+          await audit('extra_payment_edit',id,x.amount,amt);
+          toast('✅ হালনাগাদ হয়েছে','success');
+          closeModal();
+        }catch(e){toast('❌ '+e.message,'error')}
+      });
+      mr.querySelector('#eepDelete').addEventListener('click',function(){
+        closeModal();
+        confirmDialog('জমা মুছুন?',(x.memberName||'')+' — '+money(x.amount)+'\n\nসংশ্লিষ্ট লেনদেনও মুছে যাবে (ব্যালেন্সে প্রভাব পড়বে)।',async function(){
+          try{
+            var linked = DB.transactions.filter(function(t){return t.extraPaymentId===id});
+            for(var i=0;i<linked.length;i++){
+              try{await db.collection('transactions').doc(linked[i].id).delete()}catch(e){}
+            }
+            await db.collection('extraPayments').doc(id).delete();
+            await audit('extra_payment_delete',id,x.amount,'','linkedTx:'+linked.length);
+            toast('✅ মুছে ফেলা হয়েছে','success');
+          }catch(e){toast('❌ '+e.message,'error')}
+        },'মুছুন');
+      });
+    }
+  });
+}
+
+/* ========= FORMS ========= */
 function formMember(existing){
   var isEdit=!!existing;
   var m=existing||{id:DATA.nextMemberId(),name:'',nameEn:'',phone:'',monthly:500,joinDate:toISO(new Date()),status:'active',color:'#0E5F30',photo:''};
@@ -1032,19 +1716,11 @@ function formMember(existing){
       '<div class="field"><label>নাম (বাংলা) *</label><input id="fmName" value="'+esc(m.name||'')+'"/></div>'+
       '<div class="field"><label>Full Name (English)</label><input id="fmNameEn" value="'+esc(m.nameEn||'')+'"/></div>'+
       '<div class="field-row"><div class="field"><label>আইডি</label><input id="fmId" value="'+esc(m.id||'')+'" '+(isEdit?'readonly':'')+'/></div><div class="field"><label>মাসিক (৳)</label><input id="fmMonthly" type="number" value="'+(m.monthly||500)+'"/></div></div>'+
-      /* ✅ ফোন নাম্বার — যেকোনো দেশ */
-      '<div class="field">'+
-        '<label>📱 ফোন নাম্বার (দেশের কোড সহ) *</label>'+
-        '<input id="fmPhone" type="tel" inputmode="tel" value="'+esc(phoneDisplay)+'" placeholder="যেমন: +880 1712 345678"/>'+
-        '<div class="tiny muted" style="margin-top:6px;line-height:1.7">'+
-          '🌍 <b>যেকোনো দেশের নাম্বার</b> দিতে পারবেন — স্পেস, +, -, () সবই ঠিক আছে।<br>'+
-          'ইউজার অ্যাপে <b>একই নাম্বার</b> দিয়ে রেজিস্ট্রেশন করলে অ্যাকাউন্ট স্বয়ংক্রিয়ভাবে যুক্ত হবে।'+
-        '</div>'+
-      '</div>'+
+      '<div class="field"><label>📱 ফোন নাম্বার (দেশের কোড সহ) *</label><input id="fmPhone" type="tel" inputmode="tel" value="'+esc(phoneDisplay)+'" placeholder="যেমন: +880 1712 345678"/>'+
+        '<div class="tiny muted" style="margin-top:6px;line-height:1.7">🌍 যেকোনো দেশের নাম্বার দিন — স্পেস, +, -, () সব ঠিক আছে।</div></div>'+
       '<div class="field-row"><div class="field"><label>স্ট্যাটাস</label><select id="fmStatus">'+['active','inactive','suspended','pending'].map(function(k){return '<option value="'+k+'" '+(m.status===k?'selected':'')+'>'+k+'</option>'}).join('')+'</select></div><div class="field"><label>যোগদান</label><input id="fmJoin" type="date" value="'+(m.joinDate||toISO(new Date()))+'"/></div></div>'+
-      '<div class="info-box">💡 <b>উদাহরণ:</b> +880 1712-345678 · +1 (415) 555-1234 · +971 50 123 4567 · +44 7911 123456</div>'+
-      '<div class="info-box" style="margin-top:8px;background:var(--warn-soft);color:var(--warn)">⚠️ ইউজার অ্যাপেও ঠিক একই নাম্বার দিতে হবে। নাম্বার সংরক্ষণ হয় শুধু ডিজিটে (যেমন <b>8801712345678</b>)।</div>',
-    footer:'<button class="btn ghost close-m" data-mclose="1">বাতিল</button><button class="btn grow" id="fmSave">'+(isEdit?'সংরক্ষণ':'যোগ করুন')+'</button>',
+      '<div class="info-box">💡 <b>উদাহরণ:</b> +880 1712-345678 · +1 (415) 555-1234 · +971 50 123 4567 · +44 7911 123456</div>',
+    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="fmSave">'+(isEdit?'সংরক্ষণ':'যোগ করুন')+'</button>',
     onMount:function(mr){
       var photoInput=mr.querySelector('#fmPhoto');
       var testBtn=mr.querySelector('#fmPhotoTest');
@@ -1061,18 +1737,13 @@ function formMember(existing){
         updatePreview();
         toast('প্রিভিউ আপডেট হয়েছে');
       });
-      
       mr.querySelector('#fmSave').addEventListener('click',async function(){
         var name=mr.querySelector('#fmName').value.trim();
         if(!name){toast('নাম দিন','error');return}
         var rawPhone=mr.querySelector('#fmPhone').value.trim();
         if(!rawPhone){toast('ফোন নাম্বার দিন','error');return}
-        /* ✅ যেকোনো দেশের নাম্বার — শুধু ডিজিটে রাখে */
         var phoneNorm=normalizePhone(rawPhone);
-        if(!isValidPhone(phoneNorm)){
-          toast('সঠিক ফোন নাম্বার দিন (দেশের কোড সহ, '+PHONE_MIN_DIGITS+'-'+PHONE_MAX_DIGITS+' ডিজিট)','error');
-          return;
-        }
+        if(!isValidPhone(phoneNorm)){toast('সঠিক ফোন নাম্বার দিন','error');return;}
         var newMonthly=parseInt(mr.querySelector('#fmMonthly').value)||0;
         var photoUrl=(mr.querySelector('#fmPhoto').value||'').trim();
         var data={
@@ -1092,12 +1763,20 @@ function formMember(existing){
             audit('member_edit',m.id,'',data.name);
           } else {
             data.createdAt=Date.now();data.accountSetup=false;
-            /* ✅ ডুপ্লিকেট চেক — phoneNorm দিয়ে (আন্তর্জাতিক) */
             var dupSnap=await db.collection('members').where('phoneNorm','==',phoneNorm).limit(1).get();
             if(!dupSnap.empty){toast('এই নাম্বারে সদস্য আছে','error');return}
             await db.collection('members').doc(data.id).set(data);
             var now=new Date(),cy=now.getFullYear(),cm=now.getMonth()+1;
-            for(var mo=1;mo<=cm;mo++){var cid='CN-'+data.id+'-'+cy+pad2(mo);await db.collection('contributions').doc(cid).set({memberId:data.id,year:cy,month:mo,amount:data.monthly,paidAmount:0,status:'due',paidDate:null,createdAt:Date.now()});}
+            var joinD=parseISO(data.joinDate);
+            var startY=joinD.getFullYear(), startM=joinD.getMonth()+1;
+            for(var y=startY;y<=cy;y++){
+              var moStart = (y===startY)?startM:1;
+              var moEnd = (y===cy)?cm:12;
+              for(var mo=moStart;mo<=moEnd;mo++){
+                var cid='CN-'+data.id+'-'+y+pad2(mo);
+                await db.collection('contributions').doc(cid).set({memberId:data.id,year:y,month:mo,amount:data.monthly,paidAmount:0,status:'due',paidDate:null,createdAt:Date.now()});
+              }
+            }
             audit('member_add',data.id,'',data.name+' / '+data.phoneNorm);
           }
           closeModal();toast(isEdit?'হালনাগাদ হয়েছে':'সদস্য যোগ হয়েছে','success');
@@ -1182,7 +1861,8 @@ function formExtraPayment(memberId){
         var mem=DB.members.filter(function(v){return v.id===memId})[0];if(!mem){toast('সদস্য নির্বাচন','error');return}
         var pBn=purposeBn(purpose);
         try{
-          await db.collection('extraPayments').add({memberId:memId,memberName:mem.name,amount:amt,date:date,purpose:purpose,purposeBn:pBn,note:'',addedBy:state.admin.name,createdAt:Date.now()});
+          var epRef=await db.collection('extraPayments').add({memberId:memId,memberName:mem.name,amount:amt,date:date,purpose:purpose,purposeBn:pBn,note:'',addedBy:state.admin.name,createdAt:Date.now()});
+          await db.collection('transactions').add({date:date,type:'extra_payment',amount:amt,category:'অতিরিক্ত জমা',desc:mem.name+' — '+pBn,memberId:memId,extraPaymentId:epRef.id,addedBy:state.admin.name,createdAt:Date.now()});
           audit('extra_payment_add',memId,'',amt+'৳');closeModal();toast('রেকর্ড হয়েছে','success');
         }catch(err){toast('Error: '+err.message,'error')}
       });
@@ -1309,6 +1989,22 @@ document.addEventListener('click',function(ev){
       break;
     }
     case 'edit-expected':formEditExpected(el.dataset.id);break;
+    case 'edit-balance':editBalance();break;
+    case 'edit-income':editIncomeTotal();break;
+    case 'edit-expense':editExpenseTotal();break;
+    case 'edit-extra-payment':formEditExtraPayment(el.dataset.id);break;
+    case 'add-announcement':formEditAnnouncement(null);break;
+    case 'edit-announcement':formEditAnnouncement(el.dataset.id);break;
+    case 'unreset-stats':{
+      confirmDialog('রিসেট বাতিল?','পুরনো সব লেনদেন আবার হিসাবে ফিরে আসবে।',async function(){
+        try{
+          await db.collection('org').doc('settings').set({statsResetAt:firebase.firestore.FieldValue.delete()},{merge:true});
+          await audit('stats_unreset','org/settings','reset','off');
+          toast('↩️ রিসেট বাতিল হয়েছে','success');
+        }catch(e){toast('❌ '+e.message,'error')}
+      },'বাতিল করুন');
+      break;
+    }
     case 'toggle-status':{
       var m2=DB.members.filter(function(x){return x.id===el.dataset.id})[0];
       if(m2){var order=['active','inactive','suspended','pending'];var i=order.indexOf(m2.status||'active');var newS=order[(i+1)%order.length];
@@ -1413,7 +2109,7 @@ function setupRealtimeListeners(){
   db.collection('paymentRequests').onSnapshot(function(s){DB.paymentRequests=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()});
   db.collection('events').onSnapshot(function(s){DB.events=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()});
   db.collection('userPosts').onSnapshot(function(s){DB.userPosts=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()});
-  db.collection('org').doc('settings').onSnapshot(function(s){if(s.exists)DB.org=s.data();if(!state.loading)render()});
+  db.collection('org').doc('settings').onSnapshot(function(s){if(s.exists)DB.org=s.data();else DB.org={};if(!state.loading)render()});
   db.collection('auditLogs').orderBy('ts','desc').limit(200).onSnapshot(function(s){DB.auditLogs=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()});
 }
 window.addEventListener('online',function(){if(state.admin){render();toast('অনলাইন','success')}});
