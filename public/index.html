@@ -93,7 +93,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .center{text-align:center}.gap6{gap:6px}.gap10{gap:10px}
 .mt6{margin-top:6px}.mt10{margin-top:10px}.mt14{margin-top:14px}
 
-/* GLASS CARD */
 .card{
   background:var(--card);
   border-radius:var(--radius);
@@ -133,13 +132,13 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .icon-btn:active{transform:scale(.92)}
 .icon-btn svg{width:19px;height:19px}
 
-/* ==== BALANCE CARD (SMALLER) ==== */
+/* ==== BALANCE CARD ==== */
 .balance-card{
-  position:relative;overflow:hidden;border-radius:22px;
-  padding:14px 16px 14px;
+  position:relative;overflow:hidden;border-radius:20px;
+  padding:11px 14px 12px;
   background:linear-gradient(135deg,rgba(14,95,48,.95) 0%,rgba(27,128,68,.92) 45%,rgba(10,74,36,.95) 100%);
   color:#fff;
-  box-shadow:0 18px 38px -16px rgba(14,95,48,.7),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.15);
+  box-shadow:0 14px 30px -14px rgba(14,95,48,.7),inset 0 1px 0 rgba(255,255,255,.3),inset 0 -1px 0 rgba(0,0,0,.15);
   border:1px solid rgba(255,255,255,.22);
   backdrop-filter:blur(14px);
 }
@@ -153,22 +152,22 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
   background:radial-gradient(circle,rgba(212,160,23,.4),transparent 65%);
   pointer-events:none;
 }
-.bc-header{display:flex;align-items:center;gap:10px;position:relative;z-index:2;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.18)}
-.bc-logo{width:42px;height:42px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;padding:3px;flex:none;overflow:hidden;box-shadow:0 6px 16px -6px rgba(0,0,0,.3)}
-.bc-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px}
-.bc-logo .fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-l),var(--primary));border-radius:10px;color:#fff;font-weight:700;font-size:16px}
+.bc-header{display:flex;align-items:center;gap:9px;position:relative;z-index:2;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,.18)}
+.bc-logo{width:34px;height:34px;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;padding:3px;flex:none;overflow:hidden;box-shadow:0 4px 12px -4px rgba(0,0,0,.3)}
+.bc-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:8px}
+.bc-logo .fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary-l),var(--primary));border-radius:8px;color:#fff;font-weight:700;font-size:14px}
 .bc-org{flex:1;min-width:0}
-.bc-org-name{font-size:12.5px;font-weight:700;line-height:1.2}
-.bc-org-sub{font-size:9.5px;opacity:.82;margin-top:1px}
-.bc-label{font-size:10.5px;opacity:.88;font-weight:500;margin-top:10px;position:relative;z-index:2}
-.bc-amount{font-size:26px;font-weight:700;letter-spacing:-.6px;margin-top:2px;line-height:1.15;position:relative;z-index:2}
-.bc-sub{font-size:10px;opacity:.72;margin-top:3px;position:relative;z-index:2}
-.bc-stats{display:flex;gap:8px;margin-top:11px;position:relative;z-index:2}
-.bc-stat{flex:1;background:rgba(255,255,255,.15);border-radius:11px;padding:7px 10px;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(6px)}
-.bc-stat .k{font-size:9.5px;opacity:.92}
-.bc-stat .v{font-size:13px;font-weight:700;margin-top:2px}
+.bc-org-name{font-size:11.5px;font-weight:700;line-height:1.2}
+.bc-org-sub{font-size:8.5px;opacity:.82;margin-top:1px}
+.bc-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;position:relative;z-index:2}
+.bc-label{font-size:9.5px;opacity:.88;font-weight:500;letter-spacing:.2px}
+.bc-amount{font-size:20px;font-weight:700;letter-spacing:-.5px;line-height:1.1;margin-top:1px}
+.bc-stats{display:flex;gap:6px;position:relative;z-index:2}
+.bc-stat{background:rgba(255,255,255,.15);border-radius:9px;padding:5px 9px;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(6px);text-align:center}
+.bc-stat .k{font-size:8px;opacity:.92;white-space:nowrap}
+.bc-stat .v{font-size:11px;font-weight:700;margin-top:1px}
 
-/* ==== BKASH COMPACT PILL ==== */
+/* ==== bKash ==== */
 .bkash-pill{
   display:flex;align-items:center;gap:10px;
   background:linear-gradient(135deg,rgba(226,19,110,.95),rgba(183,15,85,.97));
@@ -191,18 +190,18 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
   flex:none;
 }
 .bkash-pill .bk-num{
-  flex:1;font-weight:700;font-size:14px;letter-spacing:.3px;
+  flex:1;font-weight:700;font-size:13px;letter-spacing:.3px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .bkash-pill .bk-copy{
-  width:28px;height:28px;border-radius:9px;
+  width:26px;height:26px;border-radius:8px;
   background:rgba(255,255,255,.22);
   border:1px solid rgba(255,255,255,.22);
   display:flex;align-items:center;justify-content:center;flex:none;
 }
-.bkash-pill .bk-copy svg{width:14px;height:14px}
+.bkash-pill .bk-copy svg{width:13px;height:13px}
 
-/* ==== FEED COMPACT (ONE LINE) ==== */
+/* ==== FEED COMPACT ==== */
 .feed-compact{
   display:flex;align-items:center;gap:8px;
   background:var(--card);
@@ -223,25 +222,112 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .feed-compact .fc-input{
   flex:1;
   border:none;outline:none;background:transparent;
-  height:38px;padding:0 6px;
-  font-size:13px;color:var(--text);
+  height:36px;padding:0 6px;
+  font-size:12.5px;color:var(--text);
   min-width:0;
 }
 .feed-compact .fc-input::placeholder{color:var(--text-3)}
 .feed-compact .fc-btn{
   flex:none;
-  padding:8px 13px;
+  padding:7px 12px;
   border-radius:10px;
   background:linear-gradient(135deg,var(--primary-l),var(--primary));
-  color:#fff;font-weight:600;font-size:11.5px;
+  color:#fff;font-weight:600;font-size:11px;
   box-shadow:0 6px 14px -6px rgba(14,95,48,.75);
   transition:transform .12s;
   white-space:nowrap;
   display:inline-flex;align-items:center;gap:5px;
 }
 .feed-compact .fc-btn:active{transform:scale(.95)}
-.feed-compact .fc-btn svg{width:13px;height:13px}
+.feed-compact .fc-btn svg{width:12px;height:12px}
 
+/* ==== NOTIFICATION MARQUEE BAR ==== */
+.notif-bar{
+  display:flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,rgba(255,255,255,.85),rgba(254,243,199,.6));
+  border:1px solid rgba(212,160,23,.35);
+  border-radius:14px;
+  padding:6px 10px;
+  box-shadow:0 6px 16px -8px rgba(212,160,23,.4);
+  backdrop-filter:blur(16px);
+  position:relative;overflow:hidden;
+  height:38px;
+  cursor:pointer;
+  transition:transform .12s;
+}
+[data-theme="dark"] .notif-bar{
+  background:linear-gradient(135deg,rgba(58,46,16,.7),rgba(58,46,16,.5));
+  border-color:rgba(251,191,36,.3);
+}
+.notif-bar:active{transform:scale(.99)}
+.notif-bar .nb-ic{
+  width:26px;height:26px;border-radius:9px;
+  background:linear-gradient(135deg,var(--gold),#B58414);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  flex:none;
+  box-shadow:0 4px 10px -4px rgba(212,160,23,.7);
+  position:relative;
+}
+.notif-bar .nb-ic svg{width:14px;height:14px}
+.notif-bar .nb-ic::after{
+  content:'';position:absolute;top:-2px;right:-2px;
+  width:8px;height:8px;border-radius:50%;
+  background:#C41E3A;border:1.5px solid var(--card);
+  animation:pulse 1.6s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.15)}}
+.notif-bar .nb-scroll{
+  flex:1;min-width:0;
+  overflow:hidden;position:relative;height:100%;
+  display:flex;align-items:center;
+}
+.notif-bar .nb-track{
+  display:inline-flex;align-items:center;gap:36px;
+  white-space:nowrap;
+  animation:marquee-scroll 22s linear infinite;
+  font-size:12px;font-weight:600;
+  color:var(--text);
+  padding-left:100%;
+  will-change:transform;
+}
+.notif-bar .nb-track > span{display:inline-flex;align-items:center;gap:6px}
+.notif-bar .nb-track > span::before{content:'🎉';font-size:13px}
+.notif-bar .nb-arrow{
+  flex:none;font-size:10.5px;font-weight:700;
+  color:var(--gold);
+  padding:3px 8px;border-radius:99px;
+  background:rgba(212,160,23,.15);
+  border:1px solid rgba(212,160,23,.3);
+  white-space:nowrap;
+}
+@keyframes marquee-scroll{
+  0%{transform:translate3d(0,0,0)}
+  100%{transform:translate3d(-100%,0,0)}
+}
+
+/* ==== QUICK ACTION GRID ==== */
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.quick-btn{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:16px;padding:11px 4px 9px;
+  text-align:center;cursor:pointer;
+  position:relative;overflow:hidden;
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  box-shadow:var(--shadow);
+  transition:transform .12s;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;
+  min-height:72px;
+}
+.quick-btn:active{transform:scale(.96)}
+.quick-btn::before{content:'';position:absolute;top:0;left:8px;right:8px;height:1px;background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
+.quick-btn .qb-ic{font-size:20px;line-height:1}
+.quick-btn .qb-lbl{font-size:10px;font-weight:600;color:var(--text-2);line-height:1.15;margin-top:2px}
+.quick-btn .qb-val{font-size:11px;font-weight:700;color:var(--primary);margin-top:1px}
+
+/* ==== STATS ==== */
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
 .stat{
@@ -298,7 +384,7 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .searchbar svg{width:17px;height:17px;color:var(--text-3);flex:none}
 .searchbar input{flex:1;border:none;outline:none;background:none;font-size:13.5px;height:100%}
 
-/* ==== BOTTOMNAV (SUPER GLOSSY) ==== */
+/* ==== BOTTOMNAV ==== */
 .bottomnav{
   position:absolute;bottom:0;left:0;right:0;
   height:calc(var(--nav-h) + env(safe-area-inset-bottom));
@@ -314,16 +400,13 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
   content:'';position:absolute;top:0;left:10px;right:10px;height:1.2px;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,1),transparent);
   pointer-events:none;
-  filter:blur(.3px);
 }
 [data-theme="dark"] .bottomnav{
   background:rgba(15,26,21,.62);
   border-top:1px solid rgba(255,255,255,.12);
   box-shadow:0 -12px 34px -14px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.1);
 }
-[data-theme="dark"] .bottomnav::before{
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);
-}
+[data-theme="dark"] .bottomnav::before{background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent)}
 .bottomnav .nv{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text-3);position:relative;padding-top:2px;cursor:pointer}
 .bottomnav .nv svg{width:21px;height:21px;transition:transform .15s}
 .bottomnav .nv span{font-size:9.5px;font-weight:600}
@@ -368,7 +451,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .empty h3{margin:0 0 5px;font-size:13.5px;color:var(--text-2);font-weight:600}
 .empty p{margin:0;font-size:12px}
 
-/* Paid-all badge */
 .all-paid{
   display:flex;align-items:center;gap:10px;
   background:linear-gradient(135deg,rgba(230,247,238,.9),rgba(205,235,215,.85));
@@ -481,6 +563,9 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .auth-tabs{display:flex;background:var(--card);border-radius:14px;padding:4px;margin-bottom:16px;border:1px solid var(--card-border);backdrop-filter:blur(14px)}
 .auth-tab{flex:1;padding:11px;text-align:center;font-size:13px;font-weight:600;color:var(--text-2);border-radius:11px;cursor:pointer;transition:all .18s}
 .auth-tab.on{background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff}
+
+.notif-btn{position:relative;width:36px;height:36px}
+.notif-btn .nbadge{position:absolute;top:-3px;right:-3px;background:#C41E3A;color:#fff;font-size:9px;font-weight:700;border-radius:99px;padding:2px 5px;min-width:16px;text-align:center;line-height:1.2}
 </style>
 </head>
 <body>
@@ -510,6 +595,7 @@ var db = firebase.firestore();
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(function(e){console.warn(e)});
 
 var BN_MONTHS=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+var BN_MONTHS_SHORT=['জানু','ফেব','মার্চ','এপ্রি','মে','জুন','জুলা','আগ','সেপ্ট','অক্টো','নভে','ডিসে'];
 var AUTH_DOMAIN = '@dpseba.local';
 var PHONE_MIN_DIGITS = 7;
 var PHONE_MAX_DIGITS = 15;
@@ -543,6 +629,7 @@ function pad2(n){return String(n).padStart(2,'0')}
 function fmtN(n){return Math.round(n).toLocaleString('en-IN')}
 function shortMoney(n){n=Math.abs(n);if(n>=1e7)return '৳'+(n/1e7).toFixed(2)+'কো';if(n>=1e5)return '৳'+(n/1e5).toFixed(2)+'লা';if(n>=1e3)return '৳'+(n/1e3).toFixed(1)+'হা';return '৳'+Math.round(n)}
 function MN(m){return BN_MONTHS[m-1]}
+function MNS(m){return BN_MONTHS_SHORT[m-1]}
 function toISO(d){return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())}
 function parseISO(s){if(!s)return new Date();var p=String(s).split('-').map(Number);return new Date(p[0],p[1]-1,p[2])}
 function fmtDate(iso){if(!iso)return '—';try{var d=parseISO(iso);return d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()}catch(e){return iso}}
@@ -602,11 +689,21 @@ var DATA={
   },
   unreadCount:function(){return this.myNotifications().filter(function(n){return !n.read}).length},
   myPendingRequests:function(){if(!state.member) return [];return DB.paymentRequests.filter(function(r){return r.memberId===state.member.id})},
-  /* ✅ শুধু বাকি থাকা মাসগুলো ফেরত দেয় */
   myDueContribs:function(){
     var cs=this.myContribs();
     return cs.filter(function(c){ return (c.amount||0) - (c.paidAmount||0) > 0; })
              .sort(function(a,b){return (b.year||0)-(a.year||0)||(b.month||0)-(a.month||0)});
+  },
+  activeCount:function(){return DB.members.filter(function(m){return m.status==='active'}).length},
+  eventTitlesTicker:function(){
+    var list=[];
+    this.upcomingEvents().forEach(function(e){
+      list.push('🎯 '+e.title+(e.date?' · '+fmtDate(e.date):''));
+    });
+    this.pastEvents().slice(0,4).forEach(function(e){
+      list.push('✓ '+e.title+(e.date?' · '+fmtDate(e.date):''));
+    });
+    return list;
   }
 };
 
@@ -752,6 +849,7 @@ function renderStack(){
     case 'eventDetail':body=pageEventDetail(p.id);break;
     case 'notifications':body=pageNotifications();break;
     case 'myPayment':body=pageMyPayment();break;
+    case 'allEvents':body=pageAllEvents();break;
     default:body=subHeader('—')+'<div class="subbody"></div>';
   }
   return '<div class="subpage">'+body+'</div>';
@@ -759,54 +857,94 @@ function renderStack(){
 function subHeader(title,right){return '<div class="subhd"><button class="icon-btn" data-act="back" style="width:34px;height:34px">'+icon('back')+'</button><h1>'+title+'</h1>'+(right||'')+'</div>'}
 function chev(){return '<div class="chev">'+icon('chevron')+'</div>'}
 
+function buildMarqueeTrack(items){
+  if(!items || !items.length){
+    return '<span>🎉 স্বাগতম DP সেবা — প্রবাসীর পাশে সবসময়</span>';
+  }
+  var doubled = items.concat(items);
+  return doubled.map(function(t){return '<span>'+esc(t)+'</span>'}).join('');
+}
+
 /* ========= HOME ========= */
 function viewHome(){
   var me=state.member;
   var fund=DATA.totalFund();
   var nextEv=DATA.nextEvent();
-  var past=DATA.pastEvents().slice(0,3);
+  var past=DATA.pastEvents().slice(0,4);
   var logoSrc=LOGO_URL?'<img src="'+LOGO_URL+'" alt="DP"/>':'<div class="fallback">DP</div>';
   var unread=DATA.unreadCount();
+  var tickers=DATA.eventTitlesTicker();
+  var activeCount=DATA.activeCount();
+  var mySum=DATA.mySummary();
+  var eventCount=DB.events.length;
+  var postCount=DB.userPosts.length;
   var h='';
 
   /* Header */
-  h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">স্বাগতম</div><div class="bb" style="font-size:14px">'+esc(me.name||'সদস্য')+'</div></div></div><button class="icon-btn" data-act="page" data-page="notifications" style="position:relative;width:36px;height:36px">'+icon('bell')+(unread>0?'<span style="position:absolute;top:-3px;right:-3px;background:#C41E3A;color:#fff;font-size:9px;font-weight:700;border-radius:99px;padding:2px 5px;min-width:16px;text-align:center">'+(unread>9?'9+':unread)+'</span>':'')+'</button></div>';
+  h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">স্বাগতম</div><div class="bb" style="font-size:14px">'+esc(me.name||'সদস্য')+'</div></div></div><button class="icon-btn notif-btn" data-act="page" data-page="notifications">'+icon('bell')+(unread>0?'<span class="nbadge">'+(unread>9?'9+':unread)+'</span>':'')+'</button></div>';
 
-  /* Balance Card (smaller) */
-  h+='<div class="sec anim anim-d1" style="margin-top:4px"><div class="balance-card">'+
+  /* Balance Card — small */
+  h+='<div class="sec anim anim-d1" style="margin-top:2px"><div class="balance-card">'+
       '<div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · প্রবাসীর পাশে</div></div></div>'+
-      '<div class="bc-label">সংগঠনের মোট তহবিল</div>'+
-      '<div class="bc-amount">৳ '+fmtN(fund.balance)+'</div>'+
-      '<div class="bc-sub">সর্বশেষ হালনাগাদ · '+fmtDate(toISO(new Date()))+'</div>'+
-      '<div class="bc-stats">'+
-        '<div class="bc-stat"><div class="k">মোট আয়</div><div class="v">'+shortMoney(fund.income)+'</div></div>'+
-        '<div class="bc-stat"><div class="k">মোট ব্যয়</div><div class="v">'+shortMoney(fund.expense)+'</div></div>'+
+      '<div class="bc-row">'+
+        '<div>'+
+          '<div class="bc-label">মোট তহবিল</div>'+
+          '<div class="bc-amount">৳ '+fmtN(fund.balance)+'</div>'+
+        '</div>'+
+        '<div class="bc-stats">'+
+          '<div class="bc-stat"><div class="k">আয়</div><div class="v">'+shortMoney(fund.income)+'</div></div>'+
+          '<div class="bc-stat"><div class="k">ব্যয়</div><div class="v">'+shortMoney(fund.expense)+'</div></div>'+
+        '</div>'+
       '</div>'+
     '</div></div>';
 
-  /* bKash Compact Pill */
+  /* bKash pill */
   h+='<div class="sec anim anim-d2" style="margin-top:10px"><div class="bkash-pill" data-act="show-bkash">'+
       '<span class="bk-logo">bKash</span>'+
       '<span class="bk-num">01771606788 / 01796327299</span>'+
       '<span class="bk-copy">'+icon('copy')+'</span>'+
     '</div></div>';
 
-  /* Organization Feed — COMPACT one-line */
+  /* Post bar */
   h+='<div class="sec anim anim-d3" style="margin-top:10px">'+
       '<div class="feed-compact">'+
         '<div class="fc-avatar">'+avatarHTML(me,34)+'</div>'+
         '<input id="quickStatus" class="fc-input" type="text" placeholder="আপনার মনের কথা লিখুন..."/>'+
-        '<button class="fc-btn" data-act="quick-post">'+icon('send')+' পোস্ট করুন</button>'+
+        '<button class="fc-btn" data-act="quick-post">'+icon('send')+' পোস্ট</button>'+
       '</div>'+
     '</div>';
 
-  /* Upcoming Event (compact) */
+  /* Notification marquee (live scrolling event titles) */
+  h+='<div class="sec anim anim-d3" style="margin-top:10px">'+
+      '<div class="notif-bar" data-act="page" data-page="notifications">'+
+        '<div class="nb-ic">'+icon('bell')+'</div>'+
+        '<div class="nb-scroll">'+
+          '<div class="nb-track">'+buildMarqueeTrack(tickers)+'</div>'+
+        '</div>'+
+        '<div class="nb-arrow">'+(unread>0?unread+' NEW':'আরও')+'</div>'+
+      '</div>'+
+    '</div>';
+
+  /* ✅ NEW: Quick Actions (দ্রুত কার্যক্রম) — replaces old big event position */
+  h+='<div class="sec anim anim-d4" style="margin-top:14px">'+
+      '<div class="sec-hd" style="margin-bottom:8px"><h2 style="font-size:14px">দ্রুত কার্যক্রম</h2></div>'+
+      '<div class="quick-grid">'+
+        '<button class="quick-btn" data-act="quick-members"><div class="qb-ic">👥</div><div class="qb-lbl">সদস্য সংখ্যা</div><div class="qb-val">'+activeCount+' জন</div></button>'+
+        '<button class="quick-btn" data-act="quick-my-contrib"><div class="qb-ic">💰</div><div class="qb-lbl">আমার চাঁদা</div><div class="qb-val">৳'+fmtN(mySum.paid)+'</div></button>'+
+        '<button class="quick-btn" data-act="quick-all-events"><div class="qb-ic">📅</div><div class="qb-lbl">সব ইভেন্ট</div><div class="qb-val">'+eventCount+' টি</div></button>'+
+        '<button class="quick-btn" data-act="quick-all-posts"><div class="qb-ic">📝</div><div class="qb-lbl">সব পোস্ট</div><div class="qb-val">'+postCount+' টি</div></button>'+
+        '<button class="quick-btn" data-act="quick-accounts"><div class="qb-ic">💵</div><div class="qb-lbl">হিসাব</div></button>'+
+        '<button class="quick-btn" data-act="quick-messages"><div class="qb-ic">💬</div><div class="qb-lbl">মেসেজ</div>'+(unread>0?'<div class="qb-val" style="color:var(--accent)">'+unread+' টি</div>':'')+'</button>'+
+      '</div>'+
+    '</div>';
+
+  /* ✅ Upcoming Event — now below quick actions, NO marquee, not too big */
   if(nextEv){
     var d=parseISO(nextEv.date);
-    h+='<div class="sec anim anim-d3"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2></div>';
+    h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2></div>';
     h+='<div class="event-hero compact" data-act="page-event" data-id="'+esc(nextEv.id)+'">'+
       '<div class="eh-tag">🎯 '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div>'+
-      '<div class="eh-title">'+esc(nextEv.title)+'</div>'+
+      '<div class="eh-title" style="position:relative;z-index:2">'+esc(nextEv.title)+'</div>'+
       (nextEv.description?'<div class="eh-desc">'+esc(nextEv.description)+'</div>':'')+
       '<div class="eh-meta">'+
         '<div class="eh-cell"><div class="k">💰 চাঁদা</div><div class="v">৳ '+fmtN(nextEv.fee||0)+'</div></div>'+
@@ -816,15 +954,44 @@ function viewHome(){
   }
 
   /* My Contributions */
-  var sum=DATA.mySummary();
-  h+='<div class="sec anim anim-d4"><div class="sec-hd"><h2>💰 আমার চাঁদা</h2><span class="link" data-act="page" data-page="myPayment">বিস্তারিত →</span></div><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">৳ '+fmtN(sum.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(sum.due>0?'var(--expense)':'var(--text-3)')+'">৳ '+fmtN(Math.max(sum.due,0))+'</div></div><div class="stat"><div class="k">অগ্রগতি</div><div class="v">'+sum.percent+'%</div></div></div></div>';
+  h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>💰 আমার চাঁদা</h2><span class="link" data-act="page" data-page="myPayment">বিস্তারিত →</span></div><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">৳ '+fmtN(mySum.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(mySum.due>0?'var(--expense)':'var(--text-3)')+'">৳ '+fmtN(Math.max(mySum.due,0))+'</div></div><div class="stat"><div class="k">অগ্রগতি</div><div class="v">'+mySum.percent+'%</div></div></div></div>';
 
   /* Past Events */
   if(past.length){
     h+='<div class="sec anim anim-d5" style="margin-bottom:10px"><div class="sec-hd"><h2>📁 পূর্ববর্তী ইভেন্ট</h2></div><div style="display:grid;gap:9px">'+
-      past.map(function(e){var d=parseISO(e.date);return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'"><div class="pc-date"><div class="d">'+d.getDate()+'</div><div class="m">'+MN(d.getMonth()+1).substring(0,3)+'</div></div><div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+'</div></div><div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div></div>'}).join('')+
+      past.map(function(e){var d=parseISO(e.date);return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'"><div class="pc-date"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div><div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+'</div></div><div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div></div>'}).join('')+
     '</div></div>';
   }
+  return h;
+}
+
+/* ========= ALL EVENTS PAGE ========= */
+function pageAllEvents(){
+  var up=DATA.upcomingEvents();
+  var past=DATA.pastEvents();
+  var h=subHeader('সব ইভেন্ট');
+  h+='<div class="subbody">';
+  if(!up.length && !past.length){
+    h+='<div class="empty"><div class="eic">📅</div><h3>এখনো কোনো ইভেন্ট নেই</h3></div>';
+  } else {
+    if(up.length){
+      h+='<div class="sec" style="margin-top:16px"><div class="sec-hd"><h2>🎯 আগামী ইভেন্ট</h2></div>';
+      h+=up.map(function(e){
+        var d=parseISO(e.date);
+        return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'" style="border-left-color:var(--primary);margin-bottom:9px"><div class="pc-date" style="background:linear-gradient(135deg,var(--primary-l),var(--primary))"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div><div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+(e.fee?' · ৳'+fmtN(e.fee):'')+'</div></div><div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div></div>';
+      }).join('');
+      h+='</div>';
+    }
+    if(past.length){
+      h+='<div class="sec"><div class="sec-hd"><h2>✓ সম্পন্ন ইভেন্ট</h2></div>';
+      h+=past.map(function(e){
+        var d=parseISO(e.date);
+        return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'" style="margin-bottom:9px"><div class="pc-date"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div><div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+'</div></div><div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div></div>';
+      }).join('');
+      h+='</div>';
+    }
+  }
+  h+='</div>';
   return h;
 }
 
@@ -852,7 +1019,6 @@ function pageMember(id){
   var paid=cs.reduce(function(a,b){return a+(b.paidAmount||0)},0);
   var due=expected-paid;
   var pct=expected?Math.round(paid/expected*100):0;
-  /* ✅ শুধু বাকি থাকা মাসগুলো */
   var dueCs=cs.filter(function(c){return (c.amount||0)-(c.paidAmount||0)>0}).sort(function(a,b){return (b.year||0)-(a.year||0)||(b.month||0)-(a.month||0)});
   var rightBtns = isMe ? '<span class="pill active" style="font-size:10px">আপনি</span>'
     : '<button class="btn xs" data-act="message-member" data-id="'+esc(id)+'">'+icon('message')+' মেসেজ</button>';
@@ -869,22 +1035,20 @@ function pageMember(id){
       '<div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(due>0?'var(--expense)':'var(--text-3)')+'">৳ '+fmtN(Math.max(due,0))+'</div></div>'+
       '<div class="stat"><div class="k">অগ্রগতি</div><div class="v">'+pct+'%</div></div>'+
     '</div><div class="prog mt14"><i style="width:'+pct+'%"></i></div></div>';
-  /* ✅ বাকি না থাকলে সুন্দর success message */
   h+='<div class="sec"><div class="sec-hd"><h2>বাকি থাকা মাস</h2></div>';
   if(!dueCs.length){
     h+='<div class="all-paid"><div class="ap-ic">'+icon('check')+'</div><div>সব চাঁদা পরিশোধিত — ধন্যবাদ! ✅</div></div>';
   } else {
     h+=dueCs.map(function(c){
       var d=(c.amount||0)-(c.paidAmount||0);
-      var st='due';var label='বাকি';
-      return '<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 15px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:var(--card-2)">'+(c.month||0)+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+MN(c.month||1)+' '+c.year+'</div><div class="tiny muted">প্রত্যাশিত ৳'+fmtN(c.amount||0)+' · পরিশোধিত ৳'+fmtN(c.paidAmount||0)+' · <b style="color:var(--expense)">বাকি ৳'+fmtN(d)+'</b></div></div><span class="pill '+st+'">'+label+'</span></div>';
+      return '<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 15px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:var(--card-2)">'+(c.month||0)+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+MN(c.month||1)+' '+c.year+'</div><div class="tiny muted">প্রত্যাশিত ৳'+fmtN(c.amount||0)+' · পরিশোধিত ৳'+fmtN(c.paidAmount||0)+' · <b style="color:var(--expense)">বাকি ৳'+fmtN(d)+'</b></div></div><span class="pill due">বাকি</span></div>';
     }).join('');
   }
   h+='</div></div>';
   return h;
 }
 
-/* ========= ACCOUNTS (logout removed) ========= */
+/* ========= ACCOUNTS ========= */
 function viewAccounts(){
   var me=state.member;
   var sum=DATA.mySummary();
@@ -900,7 +1064,6 @@ function viewAccounts(){
   if(!notifs.length){h+='<div class="card" style="text-align:center;padding:16px"><div class="tiny muted">কোনো নোটিফিকেশন নেই</div></div>';}
   else{h+='<div class="list">'+notifs.map(function(n){return '<div class="li" data-act="page" data-page="notifications"><div class="ic" style="background:var(--info-soft);color:var(--info)">'+icon('bell')+'</div><div class="grow"><div class="t ell">'+esc(n.title||'নোটিফিকেশন')+'</div><div class="s ell">'+esc(n.body||'')+'</div></div></div>'}).join('')+'</div>';}
   h+='</div>';
-  /* ❌ logout removed */
   h+='<div style="height:10px"></div>';
   return h;
 }
@@ -910,12 +1073,11 @@ function viewPosts(){
   var posts=DB.userPosts.slice().sort(function(a,b){return (b.timestamp||0)-(a.timestamp||0)});
   var h='';
   h+='<div class="hd anim"><div><h1>সংগঠনের ফিড</h1><div class="sub">'+posts.length+' টি পোস্ট</div></div></div>';
-  /* Compact one-line feed */
   h+='<div class="sec anim anim-d1" style="margin-top:6px">'+
       '<div class="feed-compact">'+
         '<div class="fc-avatar">'+avatarHTML(state.member,34)+'</div>'+
         '<input id="feedStatus" class="fc-input" type="text" placeholder="আপনার মনের কথা লিখুন..."/>'+
-        '<button class="fc-btn" data-act="quick-post">'+icon('send')+' পোস্ট করুন</button>'+
+        '<button class="fc-btn" data-act="quick-post">'+icon('send')+' পোস্ট</button>'+
       '</div>'+
     '</div>';
   h+='<div class="sec anim anim-d2">';
@@ -941,7 +1103,7 @@ function viewPosts(){
   h+='</div>';return h;
 }
 
-/* ========= PROFILE (small logout) ========= */
+/* ========= PROFILE ========= */
 function viewProfile(){
   var me=state.member;
   var h='';
@@ -958,7 +1120,6 @@ function viewProfile(){
     '<div class="li" data-act="theme-toggle"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('shield')+'</div><div class="grow"><div class="t">ডার্ক মোড</div><div class="s">'+(state.theme==='dark'?'চালু':'বন্ধ')+'</div></div>'+chev()+'</div>'+
     '<div class="li" data-act="page" data-page="notifications"><div class="ic" style="background:var(--info-soft);color:var(--info)">'+icon('bell')+'</div><div class="grow"><div class="t">নোটিফিকেশন</div><div class="s">'+DATA.unreadCount()+' টি অপঠিত</div></div>'+chev()+'</div>'+
   '</div></div>';
-  /* ✅ Small logout button */
   h+='<div class="sec anim anim-d4" style="margin-bottom:10px;text-align:right;padding:0 20px">'+
     '<button class="btn xs" style="color:var(--expense);background:var(--danger-soft);border:1px solid rgba(220,38,38,.18)" data-act="logout">'+icon('logout')+' লগআউট</button>'+
   '</div>';
@@ -994,12 +1155,12 @@ function pageNotifications(){
   return h;
 }
 
-/* ========= MY PAYMENT (only dues shown) ========= */
+/* ========= MY PAYMENT ========= */
 function pageMyPayment(){
   var me=state.member;
   var sum=DATA.mySummary();
   var myReqs=DATA.myPendingRequests();
-  var dueCs=DATA.myDueContribs(); /* ✅ শুধু বাকি */
+  var dueCs=DATA.myDueContribs();
   var h=subHeader('আমার চাঁদা');
   h+='<div class="subbody">';
   h+='<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:20px"><div class="tiny muted">পরিশোধিত</div><div class="bb" style="font-size:28px;color:var(--primary);margin-top:5px">৳ '+fmtN(sum.paid)+'</div><div class="tiny muted mt6">প্রত্যাশিত ৳'+fmtN(sum.expected)+' · বাকি ৳'+fmtN(Math.max(sum.due,0))+'</div><div class="prog mt14"><i style="width:'+sum.percent+'%"></i></div></div></div>';
@@ -1009,7 +1170,6 @@ function pageMyPayment(){
     h+=myReqs.slice(0,5).map(function(r){var st=r.status||'pending';var label=st==='pending'?'অপেক্ষমাণ':(st==='approved'?'অনুমোদিত':'বাতিল');return '<div class="card" style="margin-bottom:9px;padding:13px"><div class="between"><div><div class="b sm">৳ '+fmtN(r.amount)+'</div><div class="tiny muted mt6">'+fmtDate(r.date)+'</div></div><span class="pill '+st+'">'+label+'</span></div></div>'}).join('');
     h+='</div>';
   }
-  /* ✅ বাকি থাকা মাস দেখাও, নাহলে সুন্দর success message */
   h+='<div class="sec"><div class="sec-hd"><h2>বাকি থাকা মাস</h2></div>';
   if(!dueCs.length){
     h+='<div class="all-paid"><div class="ap-ic">'+icon('check')+'</div><div>আপনার সব চাঁদা পরিশোধিত — ধন্যবাদ! 🎉</div></div>';
@@ -1173,6 +1333,13 @@ document.addEventListener('click',function(ev){
     case 'delete-my-post':deleteMyPost(el.dataset.id);break;
     case 'send-payment-request':openPaymentRequestModal();break;
     case 'show-bkash':showBkashModal();break;
+    /* ✅ NEW: Quick action handlers */
+    case 'quick-members':switchTab('members');break;
+    case 'quick-my-contrib':pushPage('myPayment');break;
+    case 'quick-all-events':pushPage('allEvents');break;
+    case 'quick-all-posts':switchTab('posts');break;
+    case 'quick-accounts':switchTab('accounts');break;
+    case 'quick-messages':pushPage('notifications');break;
     case 'copy-number':{
       var num=el.dataset.num;
       try{navigator.clipboard.writeText(num).then(function(){toast('✅ কপি হয়েছে: '+num,'success')});}
