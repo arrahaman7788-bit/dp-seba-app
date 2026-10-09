@@ -182,7 +182,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .post-body{font-size:13.5px;line-height:1.6;color:var(--text);white-space:pre-wrap}
 .post-foot{display:flex;align-items:center;justify-content:space-between;margin-top:11px;padding-top:10px;border-top:1px solid var(--border-2)}
 .post-time{font-size:10.5px;color:var(--text-3)}
-/* Photo upload */
 .photo-input-row{display:flex;gap:8px;align-items:center;margin-bottom:6px}
 .photo-input-row input{flex:1;height:46px}
 .photo-input-row button{padding:0 14px;height:46px;border-radius:13px;background:var(--primary-soft);color:var(--primary);font-weight:600;font-size:12.5px;border:none;cursor:pointer;flex:none}
@@ -222,6 +221,10 @@ var db = firebase.firestore();
 var BN_MONTHS=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
 var BN_MONTHS_SHORT=['জানু','ফেব','মার্চ','এপ্রি','মে','জুন','জুলা','আগ','সেপ্ট','অক্টো','নভে','ডিসে'];
 var AUTH_DOMAIN = '@dpseba.local';
+
+/* ✅ ফোন নাম্বার: আন্তর্জাতিক E.164 সীমা (৭–১৫ ডিজিট) */
+var PHONE_MIN_DIGITS = 7;
+var PHONE_MAX_DIGITS = 15;
 
 var ROLES={
   superadmin:{bn:'সুপার অ্যাডমিন',color:'#0E5F30',soft:'#E5F2EA'},
@@ -316,35 +319,34 @@ function fmtDateShort(iso){if(!iso)return '—';try{var d=parseISO(iso);return d
 function fmtDateTime(ts){if(!ts)return '—';var d=new Date(ts);var hr=d.getHours();var ampm=hr>=12?'PM':'AM';hr=hr%12||12;return d.getDate()+' '+MN(d.getMonth()+1)+' '+hr+':'+pad2(d.getMinutes())+' '+ampm}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
 
-/* ✅ UPDATED: photo support */
-function avatarHTML(m,size){
-  size=size||46;
-  var color=m.color||'#0E5F30';
-  var nm=m.name||m.nameEn||'?';
-  var ini=nm.split(' ').filter(Boolean).map(function(w){return w[0]}).slice(0,2).join('').toUpperCase();
-  if(m.photo && String(m.photo).trim()){
-    return '<div class="avatar" style="width:'+size+'px;height:'+size+'px;background:#fff;border:2px solid '+color+';padding:0">'+
-      '<img src="'+esc(m.photo)+'" alt="'+esc(nm)+'" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%" onerror="this.parentNode.style.background=\'linear-gradient(140deg,'+color+',#000)\';this.parentNode.style.border=\'none\';this.parentNode.innerHTML=\'<span style=&quot;color:#fff;font-weight:700;font-size:'+Math.round(size*0.36)+'px;display:flex;align-items:center;justify-content:center;width:100%;height:100%&quot;>'+ini+'</span>\'"/>'+
-    '</div>';
-  }
-  return '<div class="avatar" style="--c:'+color+';width:'+size+'px;height:'+size+'px;font-size:'+Math.round(size*0.36)+'px">'+ini+'</div>';
-}
-function toast(msg,type){
-  var t=$('#toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');
-  clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove('show')},2400);
-}
-function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||8)}catch(e){}}
-function catBn(k,arr){var c=arr.filter(function(x){return x.k===k})[0];return c?c.bn:k}
-function purposeBn(k){var p=EXTRA_PAYMENT_PURPOSES.filter(function(x){return x.k===k})[0];return p?p.bn:k}
-
+/* ============================================================
+   ✅ normalizePhone — সম্পূর্ণ আন্তর্জাতিক (Universal)
+   ------------------------------------------------------------
+   যেকোনো দেশের নাম্বার গ্রহণ করে। শুধু ডিজিট রাখে,
+   স্পেস, +, -, (), . ইত্যাদি বাদ দেয়।
+   
+   উদাহরণ:
+     "+880 1712-345678"  → "8801712345678"
+     "+1 (415) 555-1234" → "14155551234"
+     "+971 50 123 4567"  → "971501234567"
+     "01712345678"       → "01712345678"
+   
+   ⚠️ ইউজার অ্যাপে এই SAME ফাংশন থাকতে হবে। authEmail তৈরি হয়:
+        phoneNorm + AUTH_DOMAIN  →  "8801712345678@dpseba.local"
+   ============================================================ */
 function normalizePhone(raw){
   if(!raw) return '';
-  var s=String(raw).trim();
-  var plus=s.charAt(0)==='+';
-  s=s.replace(/[^\d]/g,'');
-  if(!s) return '';
-  if(!plus && s.charAt(0)==='0' && s.length===11) s='88'+s;
+  var s = String(raw).trim();
+  // যেকোনো ক্যারেক্টার থেকে শুধু ০-৯ ডিজিট রাখে — দেশ-নিরপেক্ষ
+  s = s.replace(/[^\d]/g,'');
   return s;
+}
+
+/* ফোন ভ্যালিডিটি চেক (E.164: ৭–১৫ ডিজিট) */
+function isValidPhone(norm){
+  if(!norm) return false;
+  var n = norm.length;
+  return n >= PHONE_MIN_DIGITS && n <= PHONE_MAX_DIGITS;
 }
 
 var DATA={
@@ -521,7 +523,6 @@ function viewDashboard(){
   var active=DB.members.filter(function(m){return m.status==='active'}).length;
   var totalDue=DATA.totalDue();
   var expectedMonthly=DB.members.filter(function(m){return m.status==='active'}).reduce(function(a,m){return a+(m.monthly||0)},0);
-  var progress=expectedMonthly?Math.min(100,ms.collected/expectedMonthly*100):0;
   var recentTx=DB.transactions.slice(0,5);
   var role=ROLES[state.role]||ROLES.admin;
   var logoSrc = LOGO_URL ? '<img src="'+LOGO_URL+'" alt="DP"/>' : '<div class="fallback">DP</div>';
@@ -591,7 +592,7 @@ function viewMembers(){
   else if(state.memberFilter==='inactive') list=list.filter(function(m){return m.status==='inactive'});
   else if(state.memberFilter==='due') list=list.filter(function(m){return DATA.memberSummary(m.id).due>0});
   else if(state.memberFilter==='pending') list=list.filter(function(m){return !m.accountSetup});
-  if(q) list=list.filter(function(m){return ((m.name||'')+' '+(m.nameEn||'')+' '+(m.id||'')+' '+(m.phone||'')).toLowerCase().indexOf(q)>=0});
+  if(q) list=list.filter(function(m){return ((m.name||'')+' '+(m.nameEn||'')+' '+(m.id||'')+' '+(m.phone||'')+' '+(m.phoneNorm||'')).toLowerCase().indexOf(q)>=0});
   var h='';
   h+='<div class="hd anim"><div><h1>সদস্য ব্যবস্থাপনা</h1><div class="sub">'+DB.members.length+' জন সদস্য</div></div><button class="icon-btn" data-act="add-member" style="background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;border:none">'+icon('plus')+'</button></div>';
   h+='<div class="sec anim anim-d1" style="margin-top:0"><div class="searchbar">'+icon('search')+'<input id="memberSearch" type="text" placeholder="নাম, আইডি বা মোবাইল" value="'+(state.memberQ||'')+'"/></div></div>';
@@ -610,6 +611,26 @@ function viewMembers(){
   }
   h+='</div>';return h;
 }
+
+function avatarHTML(m,size){
+  size=size||46;
+  var color=m.color||'#0E5F30';
+  var nm=m.name||m.nameEn||'?';
+  var ini=nm.split(' ').filter(Boolean).map(function(w){return w[0]}).slice(0,2).join('').toUpperCase();
+  if(m.photo && String(m.photo).trim()){
+    return '<div class="avatar" style="width:'+size+'px;height:'+size+'px;background:#fff;border:2px solid '+color+';padding:0">'+
+      '<img src="'+esc(m.photo)+'" alt="'+esc(nm)+'" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%" onerror="this.parentNode.style.background=\'linear-gradient(140deg,'+color+',#000)\';this.parentNode.style.border=\'none\';this.parentNode.innerHTML=\'<span style=&quot;color:#fff;font-weight:700;font-size:'+Math.round(size*0.36)+'px;display:flex;align-items:center;justify-content:center;width:100%;height:100%&quot;>'+ini+'</span>\'"/>'+
+    '</div>';
+  }
+  return '<div class="avatar" style="--c:'+color+';width:'+size+'px;height:'+size+'px;font-size:'+Math.round(size*0.36)+'px">'+ini+'</div>';
+}
+function toast(msg,type){
+  var t=$('#toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');
+  clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove('show')},2400);
+}
+function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||8)}catch(e){}}
+function catBn(k,arr){var c=arr.filter(function(x){return x.k===k})[0];return c?c.bn:k}
+function purposeBn(k){var p=EXTRA_PAYMENT_PURPOSES.filter(function(x){return x.k===k})[0];return p?p.bn:k}
 
 function pageMember(id){
   var m=DB.members.filter(function(x){return x.id===id})[0];
@@ -979,14 +1000,16 @@ function pageSettings(){
 function pageSearch(){
   var q=(state.searchQ||'').trim().toLowerCase();
   var members=[];
-  if(q){members=DB.members.filter(function(m){return ((m.name||'')+' '+(m.id||'')).toLowerCase().indexOf(q)>=0}).slice(0,10);}
+  if(q){members=DB.members.filter(function(m){return ((m.name||'')+' '+(m.id||'')+' '+(m.phone||'')+' '+(m.phoneNorm||'')).toLowerCase().indexOf(q)>=0}).slice(0,10);}
   var h=subHeader('অনুসন্ধান');
-  h+='<div class="subbody"><div class="sec" style="margin-top:16px"><div class="searchbar">'+icon('search')+'<input id="globalSearch" type="text" placeholder="সদস্য খুঁজুন" value="'+(state.searchQ||'')+'"/></div></div>';
-  if(members.length){h+='<div class="sec">'+members.map(function(m){return '<div class="card" style="margin-bottom:9px;padding:12px;cursor:pointer" data-act="member" data-id="'+(m.id||'')+'"><div class="row">'+avatarHTML(m,42)+'<div class="grow"><div class="b">'+esc(mname(m))+'</div></div>'+chev()+'</div></div>'}).join('')+'</div>';}
+  h+='<div class="subbody"><div class="sec" style="margin-top:16px"><div class="searchbar">'+icon('search')+'<input id="globalSearch" type="text" placeholder="সদস্য, নাম বা ফোন দিয়ে খুঁজুন" value="'+(state.searchQ||'')+'"/></div></div>';
+  if(members.length){h+='<div class="sec">'+members.map(function(m){return '<div class="card" style="margin-bottom:9px;padding:12px;cursor:pointer" data-act="member" data-id="'+(m.id||'')+'"><div class="row">'+avatarHTML(m,42)+'<div class="grow"><div class="b">'+esc(mname(m))+'</div><div class="tiny muted mt6">'+(m.phone||'')+'</div></div>'+chev()+'</div></div>'}).join('')+'</div>';}
   h+='</div>';return h;
 }
 
-/* ========= FORMS ========= */
+/* ========= FORMS =========
+   ✅ সদস্য ফর্ম: যেকোনো দেশের নাম্বার গ্রহণ করে
+   ============================================ */
 function formMember(existing){
   var isEdit=!!existing;
   var m=existing||{id:DATA.nextMemberId(),name:'',nameEn:'',phone:'',monthly:500,joinDate:toISO(new Date()),status:'active',color:'#0E5F30',photo:''};
@@ -1009,12 +1032,20 @@ function formMember(existing){
       '<div class="field"><label>নাম (বাংলা) *</label><input id="fmName" value="'+esc(m.name||'')+'"/></div>'+
       '<div class="field"><label>Full Name (English)</label><input id="fmNameEn" value="'+esc(m.nameEn||'')+'"/></div>'+
       '<div class="field-row"><div class="field"><label>আইডি</label><input id="fmId" value="'+esc(m.id||'')+'" '+(isEdit?'readonly':'')+'/></div><div class="field"><label>মাসিক (৳)</label><input id="fmMonthly" type="number" value="'+(m.monthly||500)+'"/></div></div>'+
-      '<div class="field"><label>ফোন নাম্বার (দেশের কোড সহ) *</label><input id="fmPhone" type="tel" value="'+esc(phoneDisplay)+'" placeholder="+880 1712 345678"/></div>'+
+      /* ✅ ফোন নাম্বার — যেকোনো দেশ */
+      '<div class="field">'+
+        '<label>📱 ফোন নাম্বার (দেশের কোড সহ) *</label>'+
+        '<input id="fmPhone" type="tel" inputmode="tel" value="'+esc(phoneDisplay)+'" placeholder="যেমন: +880 1712 345678"/>'+
+        '<div class="tiny muted" style="margin-top:6px;line-height:1.7">'+
+          '🌍 <b>যেকোনো দেশের নাম্বার</b> দিতে পারবেন — স্পেস, +, -, () সবই ঠিক আছে।<br>'+
+          'ইউজার অ্যাপে <b>একই নাম্বার</b> দিয়ে রেজিস্ট্রেশন করলে অ্যাকাউন্ট স্বয়ংক্রিয়ভাবে যুক্ত হবে।'+
+        '</div>'+
+      '</div>'+
       '<div class="field-row"><div class="field"><label>স্ট্যাটাস</label><select id="fmStatus">'+['active','inactive','suspended','pending'].map(function(k){return '<option value="'+k+'" '+(m.status===k?'selected':'')+'>'+k+'</option>'}).join('')+'</select></div><div class="field"><label>যোগদান</label><input id="fmJoin" type="date" value="'+(m.joinDate||toISO(new Date()))+'"/></div></div>'+
-      '<div class="info-box">💡 ছবির লিংক Postimages থেকে নিতে পারেন — <b>postimages.org</b></div>',
-    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="fmSave">'+(isEdit?'সংরক্ষণ':'যোগ করুন')+'</button>',
+      '<div class="info-box">💡 <b>উদাহরণ:</b> +880 1712-345678 · +1 (415) 555-1234 · +971 50 123 4567 · +44 7911 123456</div>'+
+      '<div class="info-box" style="margin-top:8px;background:var(--warn-soft);color:var(--warn)">⚠️ ইউজার অ্যাপেও ঠিক একই নাম্বার দিতে হবে। নাম্বার সংরক্ষণ হয় শুধু ডিজিটে (যেমন <b>8801712345678</b>)।</div>',
+    footer:'<button class="btn ghost close-m" data-mclose="1">বাতিল</button><button class="btn grow" id="fmSave">'+(isEdit?'সংরক্ষণ':'যোগ করুন')+'</button>',
     onMount:function(mr){
-      // Photo test & live preview
       var photoInput=mr.querySelector('#fmPhoto');
       var testBtn=mr.querySelector('#fmPhotoTest');
       var preview=mr.querySelector('#fmPhotoPreview');
@@ -1036,8 +1067,12 @@ function formMember(existing){
         if(!name){toast('নাম দিন','error');return}
         var rawPhone=mr.querySelector('#fmPhone').value.trim();
         if(!rawPhone){toast('ফোন নাম্বার দিন','error');return}
+        /* ✅ যেকোনো দেশের নাম্বার — শুধু ডিজিটে রাখে */
         var phoneNorm=normalizePhone(rawPhone);
-        if(!phoneNorm||phoneNorm.length<7){toast('ফোন নাম্বার সঠিক নয়','error');return}
+        if(!isValidPhone(phoneNorm)){
+          toast('সঠিক ফোন নাম্বার দিন (দেশের কোড সহ, '+PHONE_MIN_DIGITS+'-'+PHONE_MAX_DIGITS+' ডিজিট)','error');
+          return;
+        }
         var newMonthly=parseInt(mr.querySelector('#fmMonthly').value)||0;
         var photoUrl=(mr.querySelector('#fmPhoto').value||'').trim();
         var data={
@@ -1057,12 +1092,13 @@ function formMember(existing){
             audit('member_edit',m.id,'',data.name);
           } else {
             data.createdAt=Date.now();data.accountSetup=false;
+            /* ✅ ডুপ্লিকেট চেক — phoneNorm দিয়ে (আন্তর্জাতিক) */
             var dupSnap=await db.collection('members').where('phoneNorm','==',phoneNorm).limit(1).get();
             if(!dupSnap.empty){toast('এই নাম্বারে সদস্য আছে','error');return}
             await db.collection('members').doc(data.id).set(data);
             var now=new Date(),cy=now.getFullYear(),cm=now.getMonth()+1;
             for(var mo=1;mo<=cm;mo++){var cid='CN-'+data.id+'-'+cy+pad2(mo);await db.collection('contributions').doc(cid).set({memberId:data.id,year:cy,month:mo,amount:data.monthly,paidAmount:0,status:'due',paidDate:null,createdAt:Date.now()});}
-            audit('member_add',data.id,'',data.name);
+            audit('member_add',data.id,'',data.name+' / '+data.phoneNorm);
           }
           closeModal();toast(isEdit?'হালনাগাদ হয়েছে':'সদস্য যোগ হয়েছে','success');
         }catch(err){console.error(err);toast('Error: '+err.message,'error')}
