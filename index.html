@@ -199,6 +199,55 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 }
 .bkash-pill .bk-copy svg{width:13px;height:13px}
 
+/* ✅ NEW: Thin "I sent money" bar */
+.pay-sent-bar{
+  display:flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,rgba(212,160,23,.14),rgba(212,160,23,.08));
+  border:1px solid rgba(212,160,23,.4);
+  border-radius:12px;
+  padding:7px 12px;
+  margin-top:8px;
+  cursor:pointer;
+  transition:transform .12s,background .15s;
+  backdrop-filter:blur(10px);
+  position:relative;
+  overflow:hidden;
+}
+.pay-sent-bar::before{
+  content:'';position:absolute;top:0;left:10px;right:10px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9),transparent);
+  pointer-events:none;
+}
+[data-theme="dark"] .pay-sent-bar{
+  background:linear-gradient(135deg,rgba(251,191,36,.18),rgba(251,191,36,.1));
+  border-color:rgba(251,191,36,.42);
+}
+.pay-sent-bar:active{transform:scale(.98);background:rgba(212,160,23,.22)}
+.pay-sent-bar .psb-ic{
+  width:22px;height:22px;border-radius:7px;
+  background:linear-gradient(135deg,var(--gold),#B58414);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  flex:none;
+  box-shadow:0 3px 8px -3px rgba(212,160,23,.7);
+}
+.pay-sent-bar .psb-ic svg{width:12px;height:12px}
+.pay-sent-bar .psb-txt{
+  flex:1;min-width:0;
+  font-size:12px;font-weight:600;
+  color:var(--gold);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  letter-spacing:.2px;
+}
+.pay-sent-bar .psb-arrow{
+  width:22px;height:22px;border-radius:7px;
+  background:rgba(212,160,23,.18);
+  border:1px solid rgba(212,160,23,.3);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);
+  flex:none;
+}
+.pay-sent-bar .psb-arrow svg{width:12px;height:12px}
+
 .feed-compact{
   display:flex;align-items:center;gap:8px;
   background:var(--card);
@@ -287,7 +336,7 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
   will-change:transform;
 }
 .notif-bar .nb-track > span{display:inline-flex;align-items:center;gap:6px}
-.notif-bar .nb-track > span::before{content:'🎉';font-size:13px}
+.notif-bar .nb-track > span::before{content:'💚';font-size:13px}
 .notif-bar .nb-arrow{
   flex:none;font-size:10.5px;font-weight:700;
   color:var(--gold);
@@ -629,7 +678,6 @@ function fmtDate(iso){if(!iso)return '—';try{var d=parseISO(iso);return d.getD
 function fmtDateTime(ts){if(!ts)return '—';var d=new Date(ts);var hr=d.getHours();var ampm=hr>=12?'PM':'AM';hr=hr%12||12;return d.getDate()+' '+MN(d.getMonth()+1)+' '+hr+':'+pad2(d.getMinutes())+' '+ampm}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
 
-/* ✅ অ্যাডমিন অ্যাপের সাথে মিল রাখার জন্য — transaction সময় বের করা */
 function txTimestamp(t){
   if(!t) return 0;
   if(t.createdAt) return Number(t.createdAt);
@@ -637,7 +685,6 @@ function txTimestamp(t){
   if(t.date){ try{ return parseISO(t.date).getTime(); }catch(e){ return 0; } }
   return 0;
 }
-/* ✅ অ্যাডমিন অ্যাপের statsResetAt এর সাথে মিল */
 function statsResetAt(){
   return (DB.org && DB.org.statsResetAt) ? Number(DB.org.statsResetAt) : 0;
 }
@@ -678,13 +725,11 @@ var DATA={
     var paid=cs.reduce(function(a,b){return a+(b.paidAmount||0)},0);
     return {expected:expected,paid:paid,due:expected-paid,percent:expected?Math.round(paid/expected*100):0};
   },
-  /* ✅✅✅ FIXED: অ্যাডমিন অ্যাপের totalFund() এর সাথে ১০০% মিল */
   totalFund:function(){
     var resetAt = statsResetAt();
     var income=0, expense=0;
     DB.transactions.forEach(function(t){
       var ts = txTimestamp(t);
-      /* রিসেট চালু থাকলে পুরনো লেনদেন বাদ দাও */
       if(resetAt > 0 && ts < resetAt) return;
       if(t.type==='contribution'||t.type==='donation'||t.type==='other_income'||t.type==='extra_payment') income += t.amount||0;
       else expense += t.amount||0;
@@ -754,7 +799,7 @@ function viewLogin(){
   return '<div class="content" style="padding-bottom:0"><div class="login">'+
     '<div class="login-logo">'+(LOGO_URL?'<img src="'+LOGO_URL+'" alt="DP" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<div class=&quot;fallback&quot;>DP</div>\'"/>':'<div class="fallback">DP</div>')+'</div>'+
     '<h1>দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</h1>'+
-    '<p class="tag">DP সেবা — প্রবাসীর পাশে, সবসময়</p>'+
+    '<p class="tag">DP সেবা — আর্ত অসহায়ের পাশে আমরা</p>'+
     '<div class="auth-tabs">'+
       '<div class="auth-tab'+(isLogin?' on':'')+'" data-act="auth-mode" data-mode="login">লগইন</div>'+
       '<div class="auth-tab'+(!isLogin?' on':'')+'" data-act="auth-mode" data-mode="register">একাউন্ট তৈরি</div>'+
@@ -886,11 +931,16 @@ function renderStack(){
 function subHeader(title,right){return '<div class="subhd"><button class="icon-btn" data-act="back" style="width:34px;height:34px">'+icon('back')+'</button><h1>'+title+'</h1>'+(right||'')+'</div>'}
 function chev(){return '<div class="chev">'+icon('chevron')+'</div>'}
 
+/* ✅✅✅ UPDATED: মার্কি ট্র্যাক — "আর্ত অসহায়ের পাশে আমরা" সবসময় প্রথমে থাকবে */
 function buildMarqueeTrack(items){
-  if(!items || !items.length){
-    return '<span>🎉 স্বাগতম DP সেবা — প্রবাসীর পাশে সবসময়</span>';
+  var welcomeText = 'আর্ত অসহায়ের পাশে আমরা';
+  var arr;
+  if(items && items.length){
+    arr = [welcomeText].concat(items);
+  } else {
+    arr = [welcomeText];
   }
-  var doubled = items.concat(items);
+  var doubled = arr.concat(arr);
   return doubled.map(function(t){return '<span>'+esc(t)+'</span>'}).join('');
 }
 
@@ -914,7 +964,7 @@ function viewHome(){
 
   /* Balance Card */
   h+='<div class="sec anim anim-d1" style="margin-top:2px"><div class="balance-card">'+
-      '<div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · প্রবাসীর পাশে</div></div></div>'+
+      '<div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · আর্ত অসহায়ের পাশে আমরা</div></div></div>'+
       '<div class="bc-row">'+
         '<div>'+
           '<div class="bc-label">মোট তহবিল</div>'+
@@ -927,12 +977,21 @@ function viewHome(){
       '</div>'+
     '</div></div>';
 
-  /* bKash */
+  /* bKash pill */
   h+='<div class="sec anim anim-d2" style="margin-top:10px"><div class="bkash-pill" data-act="show-bkash">'+
       '<span class="bk-logo">bKash</span>'+
       '<span class="bk-num">01771606788 / 01796327299</span>'+
       '<span class="bk-copy">'+icon('copy')+'</span>'+
-    '</div></div>';
+    '</div>';
+
+  /* ✅ NEW: Thin "I sent money" bar with arrow */
+  h+='<div class="pay-sent-bar" data-act="send-payment-request">'+
+      '<div class="psb-ic">'+icon('send')+'</div>'+
+      '<div class="psb-txt">আমি টাকা পাঠিয়েছি</div>'+
+      '<div class="psb-arrow">'+icon('chevron')+'</div>'+
+    '</div>';
+
+  h+='</div>';
 
   /* Post bar */
   h+='<div class="sec anim anim-d3" style="margin-top:10px">'+
@@ -1250,7 +1309,7 @@ function showBkashModal(){
           '<div style="color:var(--primary)">'+icon('copy')+'</div>'+
         '</div>'+
       '</div>'+
-      '<div class="warn-box mt14" style="line-height:1.8">📌 <b>Reference-এ লিখুন:</b> <b>DP-'+(state.member.id||'')+'</b><br>টাকা পাঠানোর পরে <b>হিসাব → পেমেন্ট পাঠান</b> এ গিয়ে জানান।</div>'
+      '<div class="warn-box mt14" style="line-height:1.8">📌 <b>Reference-এ লিখুন:</b> <b>DP-'+(state.member.id||'')+'</b><br>টাকা পাঠানোর পরে <b>আমি টাকা পাঠিয়েছি</b> বাটনে ক্লিক করে জানান।</div>'
   });
 }
 
@@ -1304,15 +1363,25 @@ function openMessageModal(memberId){
     }
   });
 }
+
+/* ✅✅✅ UPDATED: পেমেন্ট রিকোয়েস্ট মডাল — আরও বিস্তারিত */
 function openPaymentRequestModal(){
   openModal({
-    title:'পেমেন্ট রিকোয়েস্ট',
-    body:'<div class="info-box">bKash-এ টাকা পাঠানোর পর এই ফর্ম পূরণ করুন।</div>'+
-      '<div class="field mt14"><label>টাকার পরিমাণ (৳) *</label><input id="prAmount" type="number" placeholder="500" min="1"/></div>'+
-      '<div class="field"><label>টাইপ</label><select id="prType"><option value="monthly">মাসিক চাঁদা</option><option value="event">ইভেন্ট পেমেন্ট</option></select></div>'+
-      '<div class="field"><label>মাস</label><select id="prMonth">'+BN_MONTHS.map(function(nm,i){return '<option value="'+(i+1)+'" '+(i+1===(new Date().getMonth()+1)?'selected':'')+'>'+nm+'</option>'}).join('')+'</select></div>'+
-      '<div class="field"><label>ট্রানজেকশন নাম্বার / নোট</label><input id="prNote" placeholder="যেমন: TxID 8A7B..."/></div>',
-    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="prSend">পাঠান</button>',
+    title:'💸 আমি টাকা পাঠিয়েছি',
+    body:
+      '<div class="info-box" style="line-height:1.7">bKash-এ টাকা পাঠানোর পর নিচের তথ্যগুলো দিয়ে জানান। অ্যাডমিন যাচাই করে অনুমোদন করবেন।</div>'+
+      '<div class="field mt14"><label>💰 টাকার পরিমাণ (৳) *</label><input id="prAmount" type="number" placeholder="500" min="1"/></div>'+
+      '<div class="field"><label>📋 কিসের টাকা? *</label><select id="prType">'+
+        '<option value="monthly">মাসিক চাঁদা</option>'+
+        '<option value="event">ইভেন্ট পেমেন্ট</option>'+
+        '<option value="donation">অনুদান</option>'+
+        '<option value="extra">অতিরিক্ত জমা</option>'+
+        '<option value="other">অন্যান্য</option>'+
+      '</select></div>'+
+      '<div class="field"><label>📅 কোন মাসের জন্য?</label><select id="prMonth">'+BN_MONTHS.map(function(nm,i){return '<option value="'+(i+1)+'" '+(i+1===(new Date().getMonth()+1)?'selected':'')+'>'+nm+'</option>'}).join('')+'</select></div>'+
+      '<div class="field"><label>📝 bKash ট্রানজেকশন নাম্বার / নোট</label><input id="prNote" placeholder="যেমন: TxID 8A7B9C1D"/></div>'+
+      '<div class="warn-box" style="line-height:1.7">📌 Reference-এ <b>DP-'+(state.member.id||'')+'</b> লিখেছেন তো? না লিখলেও সমস্যা নেই — নাম্বার দেখে চেনা যাবে।</div>',
+    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="prSend">'+icon('send')+' পাঠান</button>',
     onMount:function(mr){
       mr.querySelector('#prSend').addEventListener('click',async function(){
         var amount=parseInt(mr.querySelector('#prAmount').value)||0;
@@ -1431,7 +1500,6 @@ auth.onAuthStateChanged(async function(user){
 
 async function loadAllData(){
   try{
-    /* ✅ NEW: org/settings ডকুমেন্ট লোড (manual balance, reset ইত্যাদির জন্য) */
     var orgSnap=await db.collection('org').doc('settings').get();
     if(orgSnap.exists) DB.org=orgSnap.data();
     else DB.org={};
@@ -1469,7 +1537,6 @@ function setupListeners(){
   db.collection('paymentRequests').onSnapshot(function(s){DB.paymentRequests=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()});
   db.collection('userPosts').onSnapshot(function(s){DB.userPosts=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()});
   db.collection('extraPayments').onSnapshot(function(s){DB.extraPayments=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()});
-  /* ✅ NEW: org/settings রিয়েল-টাইম — অ্যাডমিন কিছু বদলালে সাথে সাথে আপডেট হবে */
   db.collection('org').doc('settings').onSnapshot(function(s){
     if(s.exists) DB.org=s.data();
     else DB.org={};
