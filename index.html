@@ -132,7 +132,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .icon-btn:active{transform:scale(.92)}
 .icon-btn svg{width:19px;height:19px}
 
-/* ==== BALANCE CARD ==== */
 .balance-card{
   position:relative;overflow:hidden;border-radius:20px;
   padding:11px 14px 12px;
@@ -167,7 +166,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .bc-stat .k{font-size:8px;opacity:.92;white-space:nowrap}
 .bc-stat .v{font-size:11px;font-weight:700;margin-top:1px}
 
-/* ==== bKash ==== */
 .bkash-pill{
   display:flex;align-items:center;gap:10px;
   background:linear-gradient(135deg,rgba(226,19,110,.95),rgba(183,15,85,.97));
@@ -201,7 +199,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 }
 .bkash-pill .bk-copy svg{width:13px;height:13px}
 
-/* ==== FEED COMPACT ==== */
 .feed-compact{
   display:flex;align-items:center;gap:8px;
   background:var(--card);
@@ -241,7 +238,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .feed-compact .fc-btn:active{transform:scale(.95)}
 .feed-compact .fc-btn svg{width:12px;height:12px}
 
-/* ==== NOTIFICATION MARQUEE BAR ==== */
 .notif-bar{
   display:flex;align-items:center;gap:8px;
   background:linear-gradient(135deg,rgba(255,255,255,.85),rgba(254,243,199,.6));
@@ -305,7 +301,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
   100%{transform:translate3d(-100%,0,0)}
 }
 
-/* ==== QUICK ACTION GRID ==== */
 .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .quick-btn{
   background:var(--card);
@@ -327,7 +322,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .quick-btn .qb-lbl{font-size:10px;font-weight:600;color:var(--text-2);line-height:1.15;margin-top:2px}
 .quick-btn .qb-val{font-size:11px;font-weight:700;color:var(--primary);margin-top:1px}
 
-/* ==== STATS ==== */
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
 .stat{
@@ -384,7 +378,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .searchbar svg{width:17px;height:17px;color:var(--text-3);flex:none}
 .searchbar input{flex:1;border:none;outline:none;background:none;font-size:13.5px;height:100%}
 
-/* ==== BOTTOMNAV ==== */
 .bottomnav{
   position:absolute;bottom:0;left:0;right:0;
   height:calc(var(--nav-h) + env(safe-area-inset-bottom));
@@ -622,7 +615,7 @@ var I={
 function icon(n){return I[n]||''}
 
 var state={user:null,member:null,tab:'home',theme:'light',stack:[],loading:true,authMode:'login'};
-var DB={members:[],contributions:[],transactions:[],events:[],announcements:[],notifications:[],paymentRequests:[],userPosts:[],extraPayments:[]};
+var DB={org:{},members:[],contributions:[],transactions:[],events:[],announcements:[],notifications:[],paymentRequests:[],userPosts:[],extraPayments:[]};
 
 function $(s){return document.querySelector(s)}
 function pad2(n){return String(n).padStart(2,'0')}
@@ -635,6 +628,19 @@ function parseISO(s){if(!s)return new Date();var p=String(s).split('-').map(Numb
 function fmtDate(iso){if(!iso)return '—';try{var d=parseISO(iso);return d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()}catch(e){return iso}}
 function fmtDateTime(ts){if(!ts)return '—';var d=new Date(ts);var hr=d.getHours();var ampm=hr>=12?'PM':'AM';hr=hr%12||12;return d.getDate()+' '+MN(d.getMonth()+1)+' '+hr+':'+pad2(d.getMinutes())+' '+ampm}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
+
+/* ✅ অ্যাডমিন অ্যাপের সাথে মিল রাখার জন্য — transaction সময় বের করা */
+function txTimestamp(t){
+  if(!t) return 0;
+  if(t.createdAt) return Number(t.createdAt);
+  if(t.ts) return Number(t.ts);
+  if(t.date){ try{ return parseISO(t.date).getTime(); }catch(e){ return 0; } }
+  return 0;
+}
+/* ✅ অ্যাডমিন অ্যাপের statsResetAt এর সাথে মিল */
+function statsResetAt(){
+  return (DB.org && DB.org.statsResetAt) ? Number(DB.org.statsResetAt) : 0;
+}
 
 function avatarHTML(m,size){
   size=size||46;
@@ -672,13 +678,36 @@ var DATA={
     var paid=cs.reduce(function(a,b){return a+(b.paidAmount||0)},0);
     return {expected:expected,paid:paid,due:expected-paid,percent:expected?Math.round(paid/expected*100):0};
   },
+  /* ✅✅✅ FIXED: অ্যাডমিন অ্যাপের totalFund() এর সাথে ১০০% মিল */
   totalFund:function(){
-    var income=0,expense=0;
+    var resetAt = statsResetAt();
+    var income=0, expense=0;
     DB.transactions.forEach(function(t){
-      if(t.type==='contribution'||t.type==='donation'||t.type==='other_income'||t.type==='extra_payment') income+=t.amount||0;
-      else expense+=t.amount||0;
+      var ts = txTimestamp(t);
+      /* রিসেট চালু থাকলে পুরনো লেনদেন বাদ দাও */
+      if(resetAt > 0 && ts < resetAt) return;
+      if(t.type==='contribution'||t.type==='donation'||t.type==='other_income'||t.type==='extra_payment') income += t.amount||0;
+      else expense += t.amount||0;
     });
-    return {income:income,expense:expense,balance:income-expense};
+    var mIncome = DB.org && DB.org.manualIncome;
+    var mExpense = DB.org && DB.org.manualExpense;
+    var isIncomeManual = (mIncome !== undefined && mIncome !== null && mIncome !== '');
+    var isExpenseManual = (mExpense !== undefined && mExpense !== null && mExpense !== '');
+    var finalIncome = isIncomeManual ? Number(mIncome) : income;
+    var finalExpense = isExpenseManual ? Number(mExpense) : expense;
+    var computedBalance = finalIncome - finalExpense;
+    var manual = DB.org && DB.org.manualBalance;
+    var isManual = (manual !== undefined && manual !== null && manual !== '');
+    var finalBalance = isManual ? Number(manual) : computedBalance;
+    return {
+      income: finalIncome,
+      expense: finalExpense,
+      balance: finalBalance,
+      isManual: isManual,
+      isIncomeManual: isIncomeManual,
+      isExpenseManual: isExpenseManual,
+      resetActive: resetAt > 0
+    };
   },
   upcomingEvents:function(){return DB.events.filter(function(e){return !e.isCompleted}).sort(function(a,b){return (a.date||'').localeCompare(b.date||'')})},
   pastEvents:function(){return DB.events.filter(function(e){return e.isCompleted}).sort(function(a,b){return (b.date||'').localeCompare(a.date||'')})},
@@ -883,7 +912,7 @@ function viewHome(){
   /* Header */
   h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">স্বাগতম</div><div class="bb" style="font-size:14px">'+esc(me.name||'সদস্য')+'</div></div></div><button class="icon-btn notif-btn" data-act="page" data-page="notifications">'+icon('bell')+(unread>0?'<span class="nbadge">'+(unread>9?'9+':unread)+'</span>':'')+'</button></div>';
 
-  /* Balance Card — small */
+  /* Balance Card */
   h+='<div class="sec anim anim-d1" style="margin-top:2px"><div class="balance-card">'+
       '<div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · প্রবাসীর পাশে</div></div></div>'+
       '<div class="bc-row">'+
@@ -898,7 +927,7 @@ function viewHome(){
       '</div>'+
     '</div></div>';
 
-  /* bKash pill */
+  /* bKash */
   h+='<div class="sec anim anim-d2" style="margin-top:10px"><div class="bkash-pill" data-act="show-bkash">'+
       '<span class="bk-logo">bKash</span>'+
       '<span class="bk-num">01771606788 / 01796327299</span>'+
@@ -914,7 +943,7 @@ function viewHome(){
       '</div>'+
     '</div>';
 
-  /* Notification marquee (live scrolling event titles) */
+  /* Notification marquee */
   h+='<div class="sec anim anim-d3" style="margin-top:10px">'+
       '<div class="notif-bar" data-act="page" data-page="notifications">'+
         '<div class="nb-ic">'+icon('bell')+'</div>'+
@@ -925,7 +954,7 @@ function viewHome(){
       '</div>'+
     '</div>';
 
-  /* ✅ NEW: Quick Actions (দ্রুত কার্যক্রম) — replaces old big event position */
+  /* Quick Actions */
   h+='<div class="sec anim anim-d4" style="margin-top:14px">'+
       '<div class="sec-hd" style="margin-bottom:8px"><h2 style="font-size:14px">দ্রুত কার্যক্রম</h2></div>'+
       '<div class="quick-grid">'+
@@ -938,7 +967,7 @@ function viewHome(){
       '</div>'+
     '</div>';
 
-  /* ✅ Upcoming Event — now below quick actions, NO marquee, not too big */
+  /* Upcoming Event */
   if(nextEv){
     var d=parseISO(nextEv.date);
     h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2></div>';
@@ -965,7 +994,7 @@ function viewHome(){
   return h;
 }
 
-/* ========= ALL EVENTS PAGE ========= */
+/* ========= ALL EVENTS ========= */
 function pageAllEvents(){
   var up=DATA.upcomingEvents();
   var past=DATA.pastEvents();
@@ -1333,7 +1362,6 @@ document.addEventListener('click',function(ev){
     case 'delete-my-post':deleteMyPost(el.dataset.id);break;
     case 'send-payment-request':openPaymentRequestModal();break;
     case 'show-bkash':showBkashModal();break;
-    /* ✅ NEW: Quick action handlers */
     case 'quick-members':switchTab('members');break;
     case 'quick-my-contrib':pushPage('myPayment');break;
     case 'quick-all-events':pushPage('allEvents');break;
@@ -1403,6 +1431,11 @@ auth.onAuthStateChanged(async function(user){
 
 async function loadAllData(){
   try{
+    /* ✅ NEW: org/settings ডকুমেন্ট লোড (manual balance, reset ইত্যাদির জন্য) */
+    var orgSnap=await db.collection('org').doc('settings').get();
+    if(orgSnap.exists) DB.org=orgSnap.data();
+    else DB.org={};
+
     var results=await Promise.all([
       db.collection('members').get(),
       db.collection('contributions').get(),
@@ -1436,6 +1469,12 @@ function setupListeners(){
   db.collection('paymentRequests').onSnapshot(function(s){DB.paymentRequests=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()});
   db.collection('userPosts').onSnapshot(function(s){DB.userPosts=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()});
   db.collection('extraPayments').onSnapshot(function(s){DB.extraPayments=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()});
+  /* ✅ NEW: org/settings রিয়েল-টাইম — অ্যাডমিন কিছু বদলালে সাথে সাথে আপডেট হবে */
+  db.collection('org').doc('settings').onSnapshot(function(s){
+    if(s.exists) DB.org=s.data();
+    else DB.org={};
+    if(!state.loading) render();
+  });
 }
 window.addEventListener('online',function(){if(state.member){render();toast('অনলাইন','success')}});
 window.addEventListener('offline',function(){if(state.member){toast('অফলাইন মোড')}});
