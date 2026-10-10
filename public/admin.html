@@ -71,7 +71,8 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .bc-label{font-size:10.5px;opacity:.88;font-weight:500;margin-top:10px;position:relative;z-index:2;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .bc-amount{font-size:28px;font-weight:700;letter-spacing:-.8px;margin-top:2px;line-height:1.15;position:relative;z-index:2}
 .bc-sub{font-size:10px;opacity:.72;margin-top:3px;position:relative;z-index:2}
-.bc-stats{display:flex;gap:8px;margin-top:12px;position:relative;z-index:2}
+.bc-breakdown{font-size:9.5px;opacity:.82;margin-top:5px;position:relative;z-index:2;display:flex;gap:10px;flex-wrap:wrap}
+.bc-stats{display:flex;gap:8px;margin-top:10px;position:relative;z-index:2}
 .bc-stat{flex:1;background:rgba(255,255,255,.15);border-radius:11px;padding:8px 10px;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(6px);cursor:pointer;transition:background .15s}
 .bc-stat:active{background:rgba(255,255,255,.25)}
 .bc-stat .k{font-size:9.5px;opacity:.92;display:flex;align-items:center;gap:4px}
@@ -170,6 +171,7 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .info-box{background:var(--info-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--info);font-weight:500;line-height:1.6}
 .warn-box{background:var(--warn-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--warn);font-weight:500;line-height:1.6}
 .danger-box{background:var(--danger-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--danger);font-weight:500;line-height:1.6}
+.success-box{background:var(--income-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--income);font-weight:500;line-height:1.6}
 .month-edit-list{max-height:340px;overflow-y:auto;padding-right:4px;margin-bottom:10px}
 .month-edit-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:10px;margin-bottom:8px}
 .month-edit-row .mlbl{font-weight:600;font-size:13px}
@@ -338,6 +340,7 @@ function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||8)}catch(e){}}
 function catBn(k,arr){var c=arr.filter(function(x){return x.k===k})[0];return c?c.bn:k}
 function purposeBn(k){var p=EXTRA_PAYMENT_PURPOSES.filter(function(x){return x.k===k})[0];return p?p.bn:k}
 
+/* ✅✅✅ মূল পরিবর্তন: এখন ওপেনিং ব্যালেন্স + অটো আয় - অটো ব্যয় = মোট ব্যালেন্স */
 var DATA={
   stats:function(){
     var resetAt=statsResetAt();
@@ -345,18 +348,27 @@ var DATA={
     DB.transactions.forEach(function(t){
       var ts=txTimestamp(t);
       if(resetAt>0&&ts<resetAt) return;
-      if(t.type==='contribution'||t.type==='donation'||t.type==='other_income'||t.type==='extra_payment') income+=t.amount||0;
-      else expense+=t.amount||0;
+      if(t.type==='contribution'||t.type==='donation'||t.type==='other_income'||t.type==='extra_payment') income+=Number(t.amount||0);
+      else expense+=Number(t.amount||0);
     });
-    var mInc=DB.org&&DB.org.manualIncome, mExp=DB.org&&DB.org.manualExpense;
-    var isIncM=(mInc!==undefined&&mInc!==null&&mInc!=='');
-    var isExpM=(mExp!==undefined&&mExp!==null&&mExp!=='');
-    var finalInc=isIncM?Number(mInc):income;
-    var finalExp=isExpM?Number(mExp):expense;
-    var compBal=finalInc-finalExp;
-    var manual=DB.org&&DB.org.manualBalance;
-    var isMan=(manual!==undefined&&manual!==null&&manual!=='');
-    return {income:finalInc,expense:finalExp,computedIncome:income,computedExpense:expense,isIncomeManual:isIncM,isExpenseManual:isExpM,balance:isMan?Number(manual):compBal,computed:compBal,isManual:isMan,resetActive:resetAt>0,resetAt:resetAt};
+    /* ওপেনিং ব্যালেন্স (আগে ম্যানুয়াল নামে ছিল) — এটা এখন শুরুর টাকা */
+    var opening = DB.org && DB.org.manualBalance;
+    var hasOpening = (opening!==undefined && opening!==null && opening!=='');
+    var openingNum = hasOpening ? Number(opening) : 0;
+    /* অটো হিসাব = আয় - ব্যয় */
+    var autoBal = income - expense;
+    /* ✅ চূড়ান্ত ব্যালেন্স = ওপেনিং + আয় - ব্যয় */
+    var finalBalance = openingNum + autoBal;
+    return {
+      income: income,
+      expense: expense,
+      opening: openingNum,
+      hasOpening: hasOpening,
+      autoBal: autoBal,
+      balance: finalBalance,
+      resetActive: resetAt>0,
+      resetAt: resetAt
+    };
   },
   memberContribs:function(id){return DB.contributions.filter(function(c){return c.memberId===id})},
   memberExtras:function(id){return DB.extraPayments.filter(function(x){return x.memberId===id})},
@@ -383,7 +395,7 @@ async function audit(action,target,oldVal,newVal,note){
   try{await db.collection('auditLogs').add({adminUid:state.admin.uid,adminName:state.admin.name||state.admin.email,role:state.role,action:action,target:target||'—',oldVal:oldVal==null?'':String(oldVal),newVal:newVal==null?'':String(newVal),ts:Date.now(),note:note||''});}catch(e){}
 }
 
-/* ✅ চাঁদা transaction sync */
+/* ✅ চাঁদার সাথে transaction sync */
 async function syncContributionTransaction(cid, memId, memName, yy, mm, paidAmount, paidDate){
   try{
     var existing = DB.transactions.filter(function(t){return t.contributionId === cid;});
@@ -414,11 +426,11 @@ async function syncContributionTransaction(cid, memId, memName, yy, mm, paidAmou
   }catch(e){console.warn('syncContributionTransaction failed:',e);}
 }
 
-/* ✅✅✅ নতুন: পুরনো সব চাঁদা ও অতিরিক্ত জমা একবার sync */
+/* ✅ পুরনো সব ডেটা একবার sync */
 async function autoSyncAllOldData(){
   try{
     var added = 0;
-    /* চাঁদা sync */
+    /* চাঁদা */
     for(var i=0;i<DB.contributions.length;i++){
       var c = DB.contributions[i];
       var paid = Number(c.paidAmount||0);
@@ -443,7 +455,7 @@ async function autoSyncAllOldData(){
       });
       added++;
     }
-    /* অতিরিক্ত জমা sync */
+    /* অতিরিক্ত জমা */
     for(var i=0;i<DB.extraPayments.length;i++){
       var x = DB.extraPayments[i];
       var amt = Number(x.amount||0);
@@ -464,7 +476,7 @@ async function autoSyncAllOldData(){
       });
       added++;
     }
-    /* পেমেন্ট রিকোয়েস্ট approved sync */
+    /* অনুমোদিত পেমেন্ট রিকোয়েস্ট */
     for(var i=0;i<DB.paymentRequests.length;i++){
       var r = DB.paymentRequests[i];
       if(r.status !== 'approved') continue;
@@ -598,13 +610,12 @@ function viewDashboard(){
   var pendingPay=DATA.pendingPayments().length;
   var nextEv=DATA.nextEvent();
   var pastEvs=DATA.recentPastEvents(3);
-  /* ✅ শুধু ১টা ব্যাজ — যদি কোনো ম্যানুয়াল সেট থাকে */
   var badges='';
-  if(st.isManual||st.isIncomeManual||st.isExpenseManual)badges+='<span class="bc-manual-badge">✎ ম্যানুয়াল</span>';
+  if(st.hasOpening)badges+='<span class="bc-manual-badge">📌 ওপেনিং '+money(st.opening)+'</span>';
   if(st.resetActive)badges+='<span class="bc-reset-badge">🔄 রিসেট</span>';
   var h='';
   h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">'+role.bn+'</div><div class="bb" style="font-size:13px">'+esc(state.admin.name)+'</div></div></div><div class="row gap6"><button class="icon-btn sm" data-act="page" data-page="search">'+icon('search')+'</button><button class="icon-btn sm" data-act="page" data-page="sentNotifications">'+icon('bell')+'</button></div></div>';
-  h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="balance-card"><button class="bc-edit" data-act="edit-balance" title="ব্যালেন্স">'+icon('edit')+'</button><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · আর্ত অসহায়ের পাশে আমরা</div></div></div><div class="bc-label">মোট ব্যালেন্স'+badges+'</div><div class="bc-amount">'+money2(st.balance)+'</div><div class="bc-sub">'+fmtDate(toISO(now))+'</div><div class="bc-stats"><div class="bc-stat" data-act="edit-income"><div class="k">মোট আয় '+icon('edit')+'</div><div class="v">'+shortMoney(st.income)+'</div></div><div class="bc-stat" data-act="edit-expense"><div class="k">মোট ব্যয় '+icon('edit')+'</div><div class="v">'+shortMoney(st.expense)+'</div></div></div></div></div>';
+  h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="balance-card"><button class="bc-edit" data-act="edit-balance" title="ব্যালেন্স">'+icon('edit')+'</button><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · আর্ত অসহায়ের পাশে আমরা</div></div></div><div class="bc-label">মোট ব্যালেন্স'+badges+'</div><div class="bc-amount">'+money2(st.balance)+'</div><div class="bc-breakdown">'+(st.hasOpening?'📌 '+money(st.opening)+' ওপেনিং · ':'')+'📈 আয় '+money(st.income)+' · 📉 ব্যয় '+money(st.expense)+'</div><div class="bc-stats"><div class="bc-stat" data-act="edit-income"><div class="k">মোট আয় '+icon('edit')+'</div><div class="v">'+shortMoney(st.income)+'</div></div><div class="bc-stat" data-act="edit-expense"><div class="k">মোট ব্যয় '+icon('edit')+'</div><div class="v">'+shortMoney(st.expense)+'</div></div></div></div></div>';
   h+='<div class="sec anim anim-d2"><div class="quick-grid">'+
     '<button class="quick-btn" data-act="add-member"><div class="qb-ic">➕</div><div class="qb-lbl">সদস্য</div></button>'+
     '<button class="quick-btn" data-act="add-contribution"><div class="qb-ic">💰</div><div class="qb-lbl">চাঁদা</div></button>'+
@@ -919,7 +930,6 @@ function pagePaymentRequests(){
   h+='</div>';
   h+='</div>';return h;
 }
-
 async function approvePayment(rid){
   var r=DB.paymentRequests.filter(function(x){return x.id===rid})[0];
   if(!r){toast('নেই','error');return}
@@ -1018,7 +1028,7 @@ function pageAllTransactions(){
   });
   var h=subHeader('সব লেনদেন','<span class="pill info">'+list.length+'</span>');
   h+='<div class="subbody">';
-  h+='<div class="sec" style="margin-top:16px"><div class="stat-grid cols-3"><div class="stat"><div class="k">মোট আয়</div><div class="v" style="color:var(--income);font-size:14px">'+shortMoney(income)+'</div></div><div class="stat"><div class="k">মোট ব্যয়</div><div class="v" style="color:var(--expense);font-size:14px">'+shortMoney(expense)+'</div></div><div class="stat"><div class="k">ব্যালেন্স</div><div class="v" style="color:var(--primary);font-size:14px">'+shortMoney(income-expense)+'</div></div></div></div>';
+  h+='<div class="sec" style="margin-top:16px"><div class="stat-grid cols-3"><div class="stat"><div class="k">মোট আয়</div><div class="v" style="color:var(--income);font-size:14px">'+shortMoney(income)+'</div></div><div class="stat"><div class="k">মোট ব্যয়</div><div class="v" style="color:var(--expense);font-size:14px">'+shortMoney(expense)+'</div></div><div class="stat"><div class="k">অটো ব্যালেন্স</div><div class="v" style="color:var(--primary);font-size:14px">'+shortMoney(income-expense)+'</div></div></div></div>';
   h+='<div class="sec"><div class="sec-hd"><h2>সব লেনদেন</h2></div>';
   if(!list.length){h+='<div class="empty"><div class="eic">'+icon('list')+'</div><h3>নেই</h3></div>';}
   else{
@@ -1057,55 +1067,92 @@ function openEditTxModal(id){
   });
 }
 
-/* ===== BALANCE/INCOME/EXPENSE EDIT ===== */
+/* ===== ✅ নতুন ব্যালেন্স এডিটর — ওপেনিং ব্যালেন্স ব্যাখ্যা সহ ===== */
 function editBalance(){
   var st=DATA.stats();
-  var current=st.isManual?st.balance:st.computed;
   openModal({
     title:'⚙️ ব্যালেন্স ম্যানেজ',
-    body:'<div class="info-box" style="line-height:1.8">🔹 <b>ম্যানুয়াল</b> — নিজের মান বসান<br>🔹 <b>রিসেট</b> — অটো হিসাবে ফিরুন<br>🔹 <b>সব হিসাব রিসেট</b> — সব ০ থেকে শুরু<br><br>📊 বর্তমান অটো হিসাব: <b>'+money(st.computed)+'</b></div>'+
-      (st.resetActive?'<div class="warn-box mt10">🔄 রিসেট চালু</div>':'')+
-      '<div class="field mt14"><label>ব্যালেন্স (৳)</label><input id="mbValue" type="number" value="'+Math.round(current)+'"/></div>'+
-      '<div class="row" style="gap:8px;margin-bottom:12px"><button class="btn ghost grow" id="mbZero" style="padding:10px">০</button><button class="btn ghost grow" id="mbReset" style="padding:10px;color:var(--expense)">রিসেট (অটো)</button></div>'+
-      (st.resetActive?'<button class="btn success block" id="mbUnreset">↩️ রিসেট বাতিল</button>':'<div class="danger-box">⚠️ সব হিসাব ০ হবে</div><button class="btn danger block mt10" id="mbFullReset">🔄 সব হিসাব রিসেট</button>'),
-    footer:'<button class="btn ghost grow" data-mclose="1">বন্ধ</button><button class="btn grow" id="mbSave">'+icon('check')+' ম্যানুয়াল সংরক্ষণ</button>',
+    body:
+      '<div class="success-box" style="line-height:1.9">'+
+        '📊 <b>মোট ব্যালেন্স = ওপেনিং + মোট আয় − মোট ব্যয়</b><br>'+
+        '💰 বর্তমান মোট ব্যালেন্স: <b>'+money2(st.balance)+'</b><br>'+
+        '📌 ওপেনিং: '+money(st.opening)+'<br>'+
+        '📈 অটো আয়: '+money(st.income)+'<br>'+
+        '📉 অটো ব্যয়: '+money(st.expense)+'<br>'+
+        '🔢 অটো ব্যালেন্স: '+money(st.autoBal)+
+      '</div>'+
+      '<div class="info-box mt14" style="line-height:1.8">'+
+        '💡 <b>ওপেনিং ব্যালেন্স</b> = অ্যাপ চালু করার আগে যে টাকা ছিল।<br>'+
+        'এই সংখ্যাটি সেট করলে নতুন চাঁদা/জমা এর উপর যোগ হবে।'+
+      '</div>'+
+      (st.resetActive?'<div class="warn-box mt10">🔄 রিসেট চালু: '+fmtDateTime(st.resetAt)+' থেকে গণনা হচ্ছে</div>':'')+
+      '<div class="field mt14"><label>📌 ওপেনিং ব্যালেন্স (৳)</label><input id="mbValue" type="number" value="'+Math.round(st.opening)+'"/></div>'+
+      '<div class="row" style="gap:8px;margin-bottom:12px"><button class="btn ghost grow" id="mbZero" style="padding:10px">০</button><button class="btn ghost grow" id="mbReset" style="padding:10px;color:var(--expense)">মুছুন</button></div>'+
+      '<div style="height:1px;background:var(--border);margin:14px 0"></div>'+
+      '<div class="danger-box" style="line-height:1.7">⚠️ <b>সব হিসাব রিসেট</b> — সব লেনদেন হিসাবে দেখাবে না (নতুন করে শুরু)।</div>'+
+      (st.resetActive
+        ? '<button class="btn success block mt10" id="mbUnreset">↩️ রিসেট বাতিল (পুরনো হিসাব ফিরবে)</button>'
+        : '<button class="btn danger block mt10" id="mbFullReset">🔄 সব হিসাব রিসেট</button>'),
+    footer:'<button class="btn ghost grow" data-mclose="1">বন্ধ</button><button class="btn grow" id="mbSave">'+icon('check')+' ওপেনিং সংরক্ষণ</button>',
     onMount:function(mr){
       mr.querySelector('#mbZero').addEventListener('click',function(){mr.querySelector('#mbValue').value='0'});
       mr.querySelector('#mbReset').addEventListener('click',async function(){
-        try{await db.collection('org').doc('settings').set({manualBalance:firebase.firestore.FieldValue.delete()},{merge:true});await audit('balance_reset','','','');toast('✅ অটো হিসাবে ফিরেছে','success');closeModal();}catch(e){toast('❌ '+e.message,'error')}
+        try{await db.collection('org').doc('settings').set({manualBalance:firebase.firestore.FieldValue.delete()},{merge:true});await audit('opening_reset','','','');toast('✅ ওপেনিং মুছে ফেলা হয়েছে','success');closeModal();}catch(e){toast('❌ '+e.message,'error')}
       });
-      var fr=mr.querySelector('#mbFullReset');if(fr)fr.addEventListener('click',function(){closeModal();confirmDialog('সব হিসাব রিসেট?','সব আয়/ব্যয়/ব্যালেন্স ০ হবে',async function(){try{await db.collection('org').doc('settings').set({statsResetAt:Date.now(),statsResetBy:state.admin.uid,manualBalance:firebase.firestore.FieldValue.delete(),manualIncome:firebase.firestore.FieldValue.delete(),manualExpense:firebase.firestore.FieldValue.delete()},{merge:true});await audit('stats_reset','','','0');toast('✅','success')}catch(e){toast('❌ '+e.message,'error')}},'রিসেট')});
-      var ur=mr.querySelector('#mbUnreset');if(ur)ur.addEventListener('click',async function(){try{await db.collection('org').doc('settings').set({statsResetAt:firebase.firestore.FieldValue.delete()},{merge:true});await audit('stats_unreset','','','');toast('↩️ ফিরেছে','success');closeModal()}catch(e){toast('❌ '+e.message,'error')}});
+      var fr=mr.querySelector('#mbFullReset');
+      if(fr)fr.addEventListener('click',function(){
+        closeModal();
+        confirmDialog('সব হিসাব রিসেট?','সব আয়/ব্যয়/ব্যালেন্স ০ হবে।\nপুরনো লেনদেন ডেটাবেজে থাকবে কিন্তু হিসাবে দেখাবে না।',async function(){
+          try{
+            await db.collection('org').doc('settings').set({statsResetAt:Date.now(),statsResetBy:state.admin.uid,manualBalance:firebase.firestore.FieldValue.delete()},{merge:true});
+            await audit('stats_reset','','','0');toast('✅ সব হিসাব ০ থেকে শুরু','success');
+          }catch(e){toast('❌ '+e.message,'error')}
+        },'রিসেট');
+      });
+      var ur=mr.querySelector('#mbUnreset');
+      if(ur)ur.addEventListener('click',async function(){
+        try{await db.collection('org').doc('settings').set({statsResetAt:firebase.firestore.FieldValue.delete()},{merge:true});await audit('stats_unreset','','','');toast('↩️ পুরনো হিসাব ফিরেছে','success');closeModal()}catch(e){toast('❌ '+e.message,'error')}
+      });
       mr.querySelector('#mbSave').addEventListener('click',async function(){
-        var v=parseInt(mr.querySelector('#mbValue').value);if(isNaN(v)){toast('সঠিক সংখ্যা','error');return}
-        try{await db.collection('org').doc('settings').set({manualBalance:v,manualBalanceUpdatedAt:Date.now(),manualBalanceUpdatedBy:state.admin.uid},{merge:true});await audit('balance_edit','',st.balance,v);toast('✅ ম্যানুয়াল সেট','success');closeModal()}catch(e){toast('❌ '+e.message,'error')}
+        var v=parseInt(mr.querySelector('#mbValue').value);
+        if(isNaN(v)){toast('সঠিক সংখ্যা','error');return}
+        try{
+          await db.collection('org').doc('settings').set({manualBalance:v,manualBalanceUpdatedAt:Date.now(),manualBalanceUpdatedBy:state.admin.uid},{merge:true});
+          await audit('opening_edit','',st.opening,v);
+          toast('✅ ওপেনিং ব্যালেন্স সেট হয়েছে','success');
+          closeModal();
+        }catch(e){toast('❌ '+e.message,'error')}
       });
     }
   });
 }
 function editIncomeTotal(){
-  var st=DATA.stats();var current=st.isIncomeManual?st.income:st.computedIncome;
+  var st=DATA.stats();
   openModal({
     title:'💰 মোট আয় এডিট',
-    body:'<div class="info-box">অটো হিসাব: <b>'+money(st.computedIncome)+'</b></div>'+(st.isIncomeManual?'<div class="warn-box mt10">✎ ম্যানুয়াল: '+money(st.income)+'</div>':'')+'<div class="field mt14"><label>মোট আয় (৳)</label><input id="miValue" type="number" value="'+Math.round(current)+'"/></div><div class="row" style="gap:8px"><button class="btn ghost grow" id="miZero" style="padding:10px">০</button><button class="btn ghost grow" id="miReset" style="padding:10px;color:var(--expense)">রিসেট (অটো)</button></div>',
-    footer:'<button class="btn ghost grow" data-mclose="1">বন্ধ</button><button class="btn grow" id="miSave">'+icon('check')+' ম্যানুয়াল সংরক্ষণ</button>',
+    body:'<div class="info-box">📈 বর্তমান অটো আয়: <b>'+money(st.income)+'</b><br>🔹 আয় চাঁদা, অনুদান ও পেমেন্ট থেকে অটো আসে।<br>🔹 চাইলে অতিরিক্ত ম্যানুয়াল আয় যোগ করা যাবে।</div>'+
+      '<div class="field mt14"><label>অতিরিক্ত আয় (৳)</label><input id="miValue" type="number" value="'+(DB.org.manualIncome||0)+'"/></div>',
+    footer:'<button class="btn ghost grow" data-mclose="1">বন্ধ</button><button class="btn grow" id="miSave">'+icon('check')+' সংরক্ষণ</button>',
     onMount:function(mr){
-      mr.querySelector('#miZero').addEventListener('click',function(){mr.querySelector('#miValue').value='0'});
-      mr.querySelector('#miReset').addEventListener('click',async function(){try{await db.collection('org').doc('settings').set({manualIncome:firebase.firestore.FieldValue.delete()},{merge:true});await audit('income_reset','','','');toast('✅','success');closeModal()}catch(e){toast('❌ '+e.message,'error')}});
-      mr.querySelector('#miSave').addEventListener('click',async function(){var v=parseInt(mr.querySelector('#miValue').value);if(isNaN(v)){toast('সঠিক','error');return}try{await db.collection('org').doc('settings').set({manualIncome:v,manualIncomeUpdatedAt:Date.now(),manualIncomeUpdatedBy:state.admin.uid},{merge:true});await audit('income_edit','',st.income,v);toast('✅','success');closeModal()}catch(e){toast('❌ '+e.message,'error')}});
+      mr.querySelector('#miSave').addEventListener('click',async function(){
+        var v=parseInt(mr.querySelector('#miValue').value)||0;
+        try{await db.collection('org').doc('settings').set({manualIncome:v,manualIncomeUpdatedAt:Date.now(),manualIncomeUpdatedBy:state.admin.uid},{merge:true});await audit('income_edit','',st.income,v);toast('✅','success');closeModal()}catch(e){toast('❌ '+e.message,'error')}
+      });
     }
   });
 }
 function editExpenseTotal(){
-  var st=DATA.stats();var current=st.isExpenseManual?st.expense:st.computedExpense;
+  var st=DATA.stats();
   openModal({
     title:'💸 মোট ব্যয় এডিট',
-    body:'<div class="info-box">অটো হিসাব: <b>'+money(st.computedExpense)+'</b></div>'+(st.isExpenseManual?'<div class="warn-box mt10">✎ ম্যানুয়াল: '+money(st.expense)+'</div>':'')+'<div class="field mt14"><label>মোট ব্যয় (৳)</label><input id="meValue" type="number" value="'+Math.round(current)+'"/></div><div class="row" style="gap:8px"><button class="btn ghost grow" id="meZero" style="padding:10px">০</button><button class="btn ghost grow" id="meReset" style="padding:10px;color:var(--expense)">রিসেট (অটো)</button></div>',
-    footer:'<button class="btn ghost grow" data-mclose="1">বন্ধ</button><button class="btn grow" id="meSave">'+icon('check')+' ম্যানুয়াল সংরক্ষণ</button>',
+    body:'<div class="info-box">📉 বর্তমান অটো ব্যয়: <b>'+money(st.expense)+'</b><br>🔹 ব্যয় ইভেন্ট ও অন্যান্য থেকে অটো আসে।<br>🔹 চাইলে অতিরিক্ত ম্যানুয়াল ব্যয় যোগ করা যাবে।</div>'+
+      '<div class="field mt14"><label>অতিরিক্ত ব্যয় (৳)</label><input id="meValue" type="number" value="'+(DB.org.manualExpense||0)+'"/></div>',
+    footer:'<button class="btn ghost grow" data-mclose="1">বন্ধ</button><button class="btn grow" id="meSave">'+icon('check')+' সংরক্ষণ</button>',
     onMount:function(mr){
-      mr.querySelector('#meZero').addEventListener('click',function(){mr.querySelector('#meValue').value='0'});
-      mr.querySelector('#meReset').addEventListener('click',async function(){try{await db.collection('org').doc('settings').set({manualExpense:firebase.firestore.FieldValue.delete()},{merge:true});await audit('expense_reset','','','');toast('✅','success');closeModal()}catch(e){toast('❌ '+e.message,'error')}});
-      mr.querySelector('#meSave').addEventListener('click',async function(){var v=parseInt(mr.querySelector('#meValue').value);if(isNaN(v)){toast('সঠিক','error');return}try{await db.collection('org').doc('settings').set({manualExpense:v,manualExpenseUpdatedAt:Date.now(),manualExpenseUpdatedBy:state.admin.uid},{merge:true});await audit('expense_edit','',st.expense,v);toast('✅','success');closeModal()}catch(e){toast('❌ '+e.message,'error')}});
+      mr.querySelector('#meSave').addEventListener('click',async function(){
+        var v=parseInt(mr.querySelector('#meValue').value)||0;
+        try{await db.collection('org').doc('settings').set({manualExpense:v,manualExpenseUpdatedAt:Date.now(),manualExpenseUpdatedBy:state.admin.uid},{merge:true});await audit('expense_edit','',st.expense,v);toast('✅','success');closeModal()}catch(e){toast('❌ '+e.message,'error')}
+      });
     }
   });
 }
@@ -1199,7 +1246,8 @@ function formAddContribution(mid){
   if(!DB.members.length){toast('আগে সদস্য যোগ','error');return}
   openModal({
     title:'চাঁদা রেকর্ড',
-    body:'<div class="field"><label>সদস্য</label><select id="fcMember">'+DB.members.map(function(x){return '<option value="'+x.id+'" '+(pm&&pm.id===x.id?'selected':'')+'>'+esc(x.name)+' ('+esc(x.id)+')</option>'}).join('')+'</select></div><div class="field-row"><div class="field"><label>বছর</label><input id="fcYear" type="number" value="'+y+'"/></div><div class="field"><label>মাস</label><select id="fcMonth">'+BN_MONTHS.map(function(nm,i){return '<option value="'+(i+1)+'" '+(i+1===m?'selected':'')+'>'+nm+'</option>'}).join('')+'</select></div></div><div class="field-row"><div class="field"><label>প্রত্যাশিত</label><input id="fcAmt" type="number" value="'+(pm?pm.monthly:500)+'"/></div><div class="field"><label>পরিশোধিত</label><input id="fcPaid" type="number" value="0"/></div></div><div class="field"><label>তারিখ</label><input id="fcDate" type="date" value="'+toISO(now)+'"/></div>',
+    body:'<div class="info-box">💡 চাঁদা যোগ করলে <b>মোট ব্যালেন্সে অটো যোগ হবে</b></div>'+
+      '<div class="field mt14"><label>সদস্য</label><select id="fcMember">'+DB.members.map(function(x){return '<option value="'+x.id+'" '+(pm&&pm.id===x.id?'selected':'')+'>'+esc(x.name)+' ('+esc(x.id)+')</option>'}).join('')+'</select></div><div class="field-row"><div class="field"><label>বছর</label><input id="fcYear" type="number" value="'+y+'"/></div><div class="field"><label>মাস</label><select id="fcMonth">'+BN_MONTHS.map(function(nm,i){return '<option value="'+(i+1)+'" '+(i+1===m?'selected':'')+'>'+nm+'</option>'}).join('')+'</select></div></div><div class="field-row"><div class="field"><label>প্রত্যাশিত</label><input id="fcAmt" type="number" value="'+(pm?pm.monthly:500)+'"/></div><div class="field"><label>পরিশোধিত</label><input id="fcPaid" type="number" value="0"/></div></div><div class="field"><label>তারিখ</label><input id="fcDate" type="date" value="'+toISO(now)+'"/></div>',
     footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="fcSave">যোগ</button>',
     onMount:function(mr){
       mr.querySelector('#fcSave').addEventListener('click',async function(){
@@ -1209,6 +1257,7 @@ function formAddContribution(mid){
         var amt=parseInt(mr.querySelector('#fcAmt').value)||0;
         var paid=parseInt(mr.querySelector('#fcPaid').value)||0;
         if(paid>amt){toast('বেশি না','error');return}
+        if(paid<=0){toast('পরিশোধিত ০ এর বেশি দিন','error');return}
         var mem=DB.members.filter(function(v){return v.id===memId})[0];
         if(!mem){toast('সদস্য পাওয়া যায়নি','error');return}
         var st=paid>=amt?'paid':(paid>0?'partial':'due');
@@ -1218,7 +1267,7 @@ function formAddContribution(mid){
           await db.collection('contributions').doc(cid).set({memberId:memId,year:yy,month:mm,amount:amt,paidAmount:paid,status:st,paidDate:pd,createdAt:Date.now()});
           await syncContributionTransaction(cid, memId, mem.name||mem.nameEn||'', yy, mm, paid, pd);
           audit('contrib_add',memId+' '+yy+'-'+mm,'',paid);
-          toast('✅ চাঁদা যোগ — ব্যালেন্সে যোগ হয়েছে','success');
+          toast('✅ চাঁদা যোগ — ব্যালেন্সে '+money(paid)+' যোগ হয়েছে','success');
           closeModal();
         }catch(e){toast('Error: '+e.message,'error')}
       });
@@ -1267,7 +1316,8 @@ function formExtraPayment(mid){
   var pm=mid?DB.members.filter(function(x){return x.id===mid})[0]:null;
   openModal({
     title:'অতিরিক্ত জমা',
-    body:'<div class="field"><label>সদস্য</label><select id="fepMember">'+DB.members.map(function(x){return '<option value="'+x.id+'" '+(pm&&pm.id===x.id?'selected':'')+'>'+esc(x.name)+'</option>'}).join('')+'</select></div><div class="field-row"><div class="field"><label>পরিমাণ</label><input id="fepAmt" type="number"/></div><div class="field"><label>তারিখ</label><input id="fepDate" type="date" value="'+toISO(new Date())+'"/></div></div><div class="field"><label>উদ্দেশ্য</label><select id="fepPurpose">'+EXTRA_PAYMENT_PURPOSES.map(function(p){return '<option value="'+p.k+'">'+p.bn+'</option>'}).join('')+'</select></div>',
+    body:'<div class="info-box">💡 জমা করলে মোট ব্যালেন্সে অটো যোগ হবে</div>'+
+      '<div class="field mt14"><label>সদস্য</label><select id="fepMember">'+DB.members.map(function(x){return '<option value="'+x.id+'" '+(pm&&pm.id===x.id?'selected':'')+'>'+esc(x.name)+'</option>'}).join('')+'</select></div><div class="field-row"><div class="field"><label>পরিমাণ</label><input id="fepAmt" type="number"/></div><div class="field"><label>তারিখ</label><input id="fepDate" type="date" value="'+toISO(new Date())+'"/></div></div><div class="field"><label>উদ্দেশ্য</label><select id="fepPurpose">'+EXTRA_PAYMENT_PURPOSES.map(function(p){return '<option value="'+p.k+'">'+p.bn+'</option>'}).join('')+'</select></div>',
     footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="fepSave">জমা</button>',
     onMount:function(mr){
       mr.querySelector('#fepSave').addEventListener('click',async function(){
@@ -1278,7 +1328,7 @@ function formExtraPayment(mid){
         try{
           var ref=await db.collection('extraPayments').add({memberId:memId,memberName:mem.name,amount:amt,date:dt,purpose:pp,purposeBn:pB,note:'',addedBy:state.admin.name,createdAt:Date.now()});
           await db.collection('transactions').add({date:dt,type:'extra_payment',amount:amt,category:'অতিরিক্ত জমা',desc:mem.name+' — '+pB,memberId:memId,extraPaymentId:ref.id,addedBy:state.admin.name,createdAt:Date.now()});
-          audit('extra_add',memId,'',amt);toast('✅ যোগ — ব্যালেন্সে যোগ','success');closeModal();
+          audit('extra_add',memId,'',amt);toast('✅ যোগ — ব্যালেন্সে '+money(amt)+' যোগ','success');closeModal();
         }catch(e){toast('Error: '+e.message,'error')}
       });
     }
@@ -1524,7 +1574,6 @@ auth.onAuthStateChanged(async function(user){
     await loadAllData();
     setupRealtimeListeners();
     state.loading=false;render();
-    /* ✅ Auto-sync after initial load */
     setTimeout(function(){autoSyncAllOldData().catch(function(){})},1500);
     toast('স্বাগতম, '+state.admin.name,'success');
   }catch(err){console.error(err);toast('ত্রুটি: '+err.message,'error');state.loading=false;render()}
