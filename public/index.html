@@ -161,7 +161,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 [data-theme="dark"] .all-paid{background:linear-gradient(135deg,rgba(18,48,31,.85),rgba(10,42,24,.85));border-color:rgba(46,204,113,.3)}
 .all-paid .ap-ic{width:36px;height:36px;border-radius:12px;background:var(--income);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
 .all-paid .ap-ic svg{width:18px;height:18px}
-/* ✅ ছোট করা হয়েছে সর্বমোট টাকা প্রদান কার্ড */
 .total-paid-card{background:linear-gradient(135deg,rgba(230,247,238,.95) 0%,rgba(205,235,215,.9) 50%,rgba(180,225,200,.85) 100%);border:1.5px solid rgba(22,163,74,.35);border-radius:16px;padding:11px 12px;position:relative;overflow:hidden;box-shadow:0 8px 20px -12px rgba(22,163,74,.5)}
 .total-paid-card::before{content:'';position:absolute;top:-40%;right:-15%;width:150px;height:150px;background:radial-gradient(circle,rgba(22,163,74,.18),transparent 70%);pointer-events:none}
 [data-theme="dark"] .total-paid-card{background:linear-gradient(135deg,rgba(18,48,31,.92) 0%,rgba(10,42,24,.9) 60%,rgba(15,58,34,.88) 100%);border-color:rgba(46,204,113,.4)}
@@ -212,7 +211,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .event-hero.compact .eh-cell{padding:6px 10px;border-radius:10px}
 .event-hero.compact .eh-cell .k{font-size:9px}
 .event-hero.compact .eh-cell .v{font-size:12px;margin-top:2px}
-/* ✅ past-card এ ব্যয় দেখানোর স্টাইল */
 .past-card{background:var(--card);border-radius:16px;padding:12px 14px;border:1px solid var(--card-border);box-shadow:var(--shadow);cursor:pointer;display:flex;align-items:center;gap:12px;border-left:4px solid var(--text-3)}
 .past-card .pc-date{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,#6B7280,#4B5563);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1}
 .past-card .pc-date .d{font-size:16px;font-weight:800}
@@ -236,7 +234,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .auth-tab.on{background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff}
 .notif-btn{position:relative;width:36px;height:36px}
 .notif-btn .nbadge{position:absolute;top:-3px;right:-3px;background:#C41E3A;color:#fff;font-size:9px;font-weight:700;border-radius:99px;padding:2px 5px;min-width:16px;text-align:center;line-height:1.2}
-/* ✅ ইভেন্ট বিস্তারিত পেজে ব্যয় সেল */
 .eh-cell.cost{background:rgba(220,38,38,.22);border-color:rgba(255,255,255,.3)}
 </style>
 </head>
@@ -289,7 +286,8 @@ var I={
   send:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>',
   copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
   coins:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></svg>',
-  money:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>'
+  money:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>',
+  star:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2.5 3 6.1 6.7 1-4.8 4.7 1.1 6.7-6-3.2-6 3.2 1.1-6.7L2.3 9.6l6.7-1z"/></svg>'
 };
 function icon(n){return I[n]||''}
 
@@ -338,37 +336,60 @@ var DATA={
     var paid=cs.reduce(function(a,b){return a+(b.paidAmount||0)},0);
     return {expected:expected,paid:paid,due:expected-paid,percent:expected?Math.round(paid/expected*100):0};
   },
-  totalFund:function(){
-    var cachedIncome = DB.org && DB.org.cachedIncome;
-    var cachedExpense = DB.org && DB.org.cachedExpense;
-    var cachedOpening = DB.org && DB.org.cachedOpening;
-    var cachedBalance = DB.org && DB.org.cachedBalance;
-    var hasCache = (cachedBalance !== undefined && cachedBalance !== null && cachedBalance !== '');
-    if(hasCache){
-      return {income:Number(cachedIncome||0),expense:Number(cachedExpense||0),opening:Number(cachedOpening||0),hasOpening:Number(cachedOpening||0)>0,autoBal:Number(cachedIncome||0)-Number(cachedExpense||0),balance:Number(cachedBalance||0),fromCache:true};
-    }
-    var income=0, expense=0;
-    DB.transactions.forEach(function(t){
-      if(t.type==='contribution'||t.type==='donation'||t.type==='other_income'||t.type==='extra_payment') income += Number(t.amount||0);
-      else expense += Number(t.amount||0);
-    });
-    var opening = DB.org && DB.org.manualBalance;
-    var hasOpening = (opening!==undefined && opening!==null && opening!=='');
-    var openingNum = hasOpening ? Number(opening) : 0;
-    return {income:income,expense:expense,opening:openingNum,hasOpening:hasOpening,autoBal:income-expense,balance:openingNum+income-expense,fromCache:false};
-  },
-  /* ✅✅✅ ইভেন্টের ব্যয় হিসাব */
+
+  /* ✅ ইভেন্টের ব্যয় হিসাব — শুধু কার্ডে দেখানোর জন্য, balance-এ ব্যবহার হবে না */
   eventCost:function(event){
     if(!event) return 0;
-    /* অটো ব্যয় থাকলে সেটাই দেখাবে */
     if(event.autoExpenseAmount && Number(event.autoExpenseAmount) > 0) return Number(event.autoExpenseAmount);
-    /* মোট খরচ থাকলে সেটা */
     if(event.totalCost && Number(event.totalCost) > 0) return Number(event.totalCost);
-    /* fallback: fee × সক্রিয় সদস্য */
     var fee = Number(event.fee||0);
+    if(fee <= 0) return 0;
     var count = DB.members.filter(function(m){return m.status==='active'}).length;
     return fee * count;
   },
+
+  /* ✅✅✅ FIXED: অ্যাডমিন এপের সাথে হুবহু মিল — শুধু transactions থেকে হিসাব
+     manualIncome / manualExpense যোগ, statsResetAt রেসপেক্ট */
+  totalFund:function(){
+    var resetAt = (DB.org && DB.org.statsResetAt) ? Number(DB.org.statsResetAt) : 0;
+    var income = 0, expense = 0;
+
+    DB.transactions.forEach(function(t){
+      var ts = 0;
+      if(t.createdAt) ts = Number(t.createdAt);
+      else if(t.ts) ts = Number(t.ts);
+      else if(t.date){ try{ ts = parseISO(t.date).getTime(); }catch(e){ ts = 0; } }
+      if(resetAt > 0 && ts > 0 && ts < resetAt) return;
+
+      var amt = Number(t.amount||0);
+      if(t.type==='contribution'||t.type==='donation'||t.type==='other_income'||t.type==='extra_payment'){
+        income += amt;
+      } else {
+        expense += amt;
+      }
+    });
+
+    /* ✅ ম্যানুয়াল আয়/ব্যয় যোগ (অ্যাডমিনের সাথে মিল) */
+    income  += Number((DB.org && DB.org.manualIncome)  || 0);
+    expense += Number((DB.org && DB.org.manualExpense) || 0);
+
+    var opening = DB.org && DB.org.manualBalance;
+    var hasOpening = (opening!==undefined && opening!==null && opening!=='');
+    var openingNum = hasOpening ? Number(opening) : 0;
+
+    return {
+      income: income,
+      expense: expense,
+      opening: openingNum,
+      hasOpening: hasOpening,
+      autoBal: income - expense,
+      balance: openingNum + income - expense,
+      fromCache: false,
+      resetActive: resetAt > 0,
+      resetAt: resetAt
+    };
+  },
+
   upcomingEvents:function(){return DB.events.filter(function(e){return !e.isCompleted}).sort(function(a,b){return (a.date||'').localeCompare(b.date||'')})},
   pastEvents:function(){return DB.events.filter(function(e){return e.isCompleted}).sort(function(a,b){return (b.date||'').localeCompare(a.date||'')})},
   nextEvent:function(){var u=this.upcomingEvents();return u.length?u[0]:null},
@@ -543,7 +564,6 @@ function viewHome(){
 
   h+='<div class="sec anim anim-d1" style="margin-top:2px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · আর্ত অসহায়ের পাশে আমরা</div></div></div><div class="bc-row"><div><div class="bc-label">মোট তহবিল</div><div class="bc-amount">৳ '+fmtN(fund.balance)+'</div></div><div class="bc-stats"><div class="bc-stat"><div class="k">আয়</div><div class="v">'+shortMoney(fund.income)+'</div></div><div class="bc-stat"><div class="k">ব্যয়</div><div class="v">'+shortMoney(fund.expense)+'</div></div></div></div></div></div>';
 
-  /* ✅ ছোট "সর্বমোট টাকা প্রদান" কার্ড */
   if(myTotal.totalPaid > 0){
     h+='<div class="sec anim anim-d2" style="margin-top:10px"><div class="total-paid-card">'+
         '<div class="tp-header"><div class="tp-icon">'+icon('coins')+'</div><div><div class="tp-title">আপনার সর্বমোট টাকা প্রদান</div><div class="tp-sub">চাঁদা + অতিরিক্ত জমা</div></div></div>'+
@@ -578,7 +598,6 @@ function viewHome(){
 
   h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>💰 আমার চাঁদা</h2><span class="link" data-act="page" data-page="myPayment">বিস্তারিত →</span></div><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">৳ '+fmtN(mySum.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(mySum.due>0?'var(--expense)':'var(--text-3)')+'">৳ '+fmtN(Math.max(mySum.due,0))+'</div></div><div class="stat"><div class="k">অগ্রগতি</div><div class="v">'+mySum.percent+'%</div></div></div></div>';
 
-  /* ✅✅✅ পূর্ববর্তী ইভেন্ট — এখন ব্যয় সহ */
   if(past.length){
     h+='<div class="sec anim anim-d5" style="margin-bottom:10px"><div class="sec-hd"><h2>📁 পূর্ববর্তী ইভেন্ট</h2><span class="link" data-act="page" data-page="allEvents">সব →</span></div><div style="display:grid;gap:9px">'+
       past.map(function(e){
@@ -660,7 +679,6 @@ function pageMember(id){
 
   h+='<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:20px 16px"><div style="display:flex;justify-content:center">'+avatarHTML(m,110)+'</div><div class="bb" style="font-size:18px;margin-top:12px">'+esc(m.name||'')+'</div><div class="sm muted" style="margin-top:3px">'+(m.id||'')+'</div></div></div>';
 
-  /* ✅ ছোট করা কার্ড */
   h+='<div class="sec"><div class="total-paid-card">'+
       '<div class="tp-header"><div class="tp-icon">'+icon('coins')+'</div><div><div class="tp-title">সর্বমোট টাকা প্রদান</div><div class="tp-sub">চাঁদা + অতিরিক্ত</div></div></div>'+
       '<div class="tp-amount">৳ '+fmtN(totalPaid)+'</div>'+
@@ -771,13 +789,12 @@ function pageMyPayment(){
   h+='</div></div>';return h;
 }
 
-/* ✅✅✅ ইভেন্ট ডিটেইলে ব্যয় সেল */
 function pageEventDetail(id){
   var e=DB.events.filter(function(x){return x.id===id})[0];
   if(!e)return subHeader('ইভেন্ট')+'<div class="subbody"><div class="empty"><h3>পাওয়া যায়নি</h3></div></div>';
   var d=parseISO(e.date);var isUp=!e.isCompleted;
   var cost=DATA.eventCost(e);
-  var showCost = !isUp && cost > 0; /* শুধু সম্পন্ন ইভেন্টে ব্যয় দেখাব */
+  var showCost = !isUp && cost > 0;
   var h=subHeader(isUp?'আগামী ইভেন্ট':'পূর্ববর্তী ইভেন্ট');
   h+='<div class="subbody">';
   h+='<div class="sec" style="margin-top:16px"><div class="event-hero" style="cursor:default">'+
@@ -790,7 +807,6 @@ function pageEventDetail(id){
     '</div>'+
     (showCost?'<div class="eh-cell cost" style="margin-top:9px"><div class="k">💸 মোট ব্যয়</div><div class="v">৳ '+fmtN(cost)+'</div></div>':'')+
   '</div></div>';
-  /* অতিরিক্ত তথ্য কার্ড — যদি ব্যয় থাকে */
   if(showCost){
     h+='<div class="sec"><div class="card" style="background:linear-gradient(135deg,rgba(253,232,237,.9),rgba(254,240,231,.85));border:1px solid rgba(220,38,38,.25);padding:13px">'+
         '<div class="row"><div style="width:38px;height:38px;border-radius:12px;background:var(--expense);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('money')+'</div><div class="grow"><div class="b sm" style="color:var(--expense)">এই ইভেন্টে মোট খরচ হয়েছে</div><div class="bb mt6" style="font-size:18px;color:var(--expense)">৳ '+fmtN(cost)+'</div></div></div>'+
