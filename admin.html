@@ -174,8 +174,9 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .success-box{background:var(--income-soft);border-radius:12px;padding:11px 13px;font-size:12px;color:var(--income);font-weight:500;line-height:1.6}
 .month-edit-list{max-height:340px;overflow-y:auto;padding-right:4px;margin-bottom:10px}
 .month-edit-row{display:grid;grid-template-columns:90px 1fr;align-items:center;gap:10px;margin-bottom:8px}
-.month-edit-row .mlbl{font-weight:600;font-size:13px}
+.month-edit-row .mlbl{font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px}
 .month-edit-row input{height:42px;padding:0 12px;border-radius:11px;border:1.5px solid var(--border);background:var(--card);font-size:14px;width:100%}
+.month-edit-row input:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft)}
 .hd-logo{width:42px;height:42px;border-radius:13px;background:#fff;padding:3px;flex:none;border:1px solid var(--card-border);overflow:hidden;box-shadow:0 4px 12px -4px rgba(0,0,0,.15)}
 .hd-logo img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px}
 .event-hero{position:relative;overflow:hidden;border-radius:24px;padding:20px;background:linear-gradient(135deg,#B93A0E 0%,#EA580C 45%,#F59E0B 100%);color:#fff;box-shadow:0 20px 44px -16px rgba(234,88,12,.7);cursor:pointer;border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(10px)}
@@ -340,7 +341,6 @@ function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||8)}catch(e){}}
 function catBn(k,arr){var c=arr.filter(function(x){return x.k===k})[0];return c?c.bn:k}
 function purposeBn(k){var p=EXTRA_PAYMENT_PURPOSES.filter(function(x){return x.k===k})[0];return p?p.bn:k}
 
-/* ✅✅✅ মূল পরিবর্তন: এখন ওপেনিং ব্যালেন্স + অটো আয় - অটো ব্যয় = মোট ব্যালেন্স */
 var DATA={
   stats:function(){
     var resetAt=statsResetAt();
@@ -351,13 +351,10 @@ var DATA={
       if(t.type==='contribution'||t.type==='donation'||t.type==='other_income'||t.type==='extra_payment') income+=Number(t.amount||0);
       else expense+=Number(t.amount||0);
     });
-    /* ওপেনিং ব্যালেন্স (আগে ম্যানুয়াল নামে ছিল) — এটা এখন শুরুর টাকা */
     var opening = DB.org && DB.org.manualBalance;
     var hasOpening = (opening!==undefined && opening!==null && opening!=='');
     var openingNum = hasOpening ? Number(opening) : 0;
-    /* অটো হিসাব = আয় - ব্যয় */
     var autoBal = income - expense;
-    /* ✅ চূড়ান্ত ব্যালেন্স = ওপেনিং + আয় - ব্যয় */
     var finalBalance = openingNum + autoBal;
     return {
       income: income,
@@ -395,7 +392,6 @@ async function audit(action,target,oldVal,newVal,note){
   try{await db.collection('auditLogs').add({adminUid:state.admin.uid,adminName:state.admin.name||state.admin.email,role:state.role,action:action,target:target||'—',oldVal:oldVal==null?'':String(oldVal),newVal:newVal==null?'':String(newVal),ts:Date.now(),note:note||''});}catch(e){}
 }
 
-/* ✅ চাঁদার সাথে transaction sync */
 async function syncContributionTransaction(cid, memId, memName, yy, mm, paidAmount, paidDate){
   try{
     var existing = DB.transactions.filter(function(t){return t.contributionId === cid;});
@@ -426,11 +422,9 @@ async function syncContributionTransaction(cid, memId, memName, yy, mm, paidAmou
   }catch(e){console.warn('syncContributionTransaction failed:',e);}
 }
 
-/* ✅ পুরনো সব ডেটা একবার sync */
 async function autoSyncAllOldData(){
   try{
     var added = 0;
-    /* চাঁদা */
     for(var i=0;i<DB.contributions.length;i++){
       var c = DB.contributions[i];
       var paid = Number(c.paidAmount||0);
@@ -455,7 +449,6 @@ async function autoSyncAllOldData(){
       });
       added++;
     }
-    /* অতিরিক্ত জমা */
     for(var i=0;i<DB.extraPayments.length;i++){
       var x = DB.extraPayments[i];
       var amt = Number(x.amount||0);
@@ -476,7 +469,6 @@ async function autoSyncAllOldData(){
       });
       added++;
     }
-    /* অনুমোদিত পেমেন্ট রিকোয়েস্ট */
     for(var i=0;i<DB.paymentRequests.length;i++){
       var r = DB.paymentRequests[i];
       if(r.status !== 'approved') continue;
@@ -660,7 +652,9 @@ function pageMember(id){
   if(!m) return subHeader('—')+'<div class="subbody"><div class="empty"><h3>পাওয়া যায়নি</h3></div></div>';
   var cs=DATA.memberContribs(id).slice().sort(function(a,b){return (b.year||0)-(a.year||0)||(b.month||0)-(a.month||0)});
   var sum=DATA.memberSummary(id);
-  var years=[];cs.forEach(function(c){if(years.indexOf(c.year)<0)years.push(c.year)});years.sort(function(a,b){return b-a});
+  var years=[];cs.forEach(function(c){if(years.indexOf(c.year)<0)years.push(c.year)});
+  if(years.indexOf(new Date().getFullYear())<0) years.push(new Date().getFullYear());
+  years.sort(function(a,b){return b-a});
   var y=state.contribYear&&years.indexOf(state.contribYear)>=0?state.contribYear:(years[0]||new Date().getFullYear());
   var ycs=cs.filter(function(c){return c.year===y}).sort(function(a,b){return b.month-a.month});
   var sp=(m.status==='active'?'active':(m.status==='inactive'?'inactive':(m.status==='suspended'?'suspended':'pending')));
@@ -1067,7 +1061,7 @@ function openEditTxModal(id){
   });
 }
 
-/* ===== ✅ নতুন ব্যালেন্স এডিটর — ওপেনিং ব্যালেন্স ব্যাখ্যা সহ ===== */
+/* ===== BALANCE EDIT ===== */
 function editBalance(){
   var st=DATA.stats();
   openModal({
@@ -1362,43 +1356,87 @@ function formExpense(){
     }
   });
 }
+
+/* ✅✅✅ FIXED: formEditExpected — এখন সব মাস এডিট করা যাবে, নতুন রেকর্ডও তৈরি হবে */
 function formEditExpected(memberId){
   var m=DB.members.filter(function(x){return x.id===memberId})[0];
   if(!m){toast('পাওয়া যায়নি','error');return}
   var now=new Date();
   var cs=DATA.memberContribs(memberId);
-  var years=[];cs.forEach(function(c){if(years.indexOf(c.year)<0)years.push(c.year)});years.sort(function(a,b){return b-a});
-  if(!years.length) years.push(now.getFullYear());
+  var years=[];cs.forEach(function(c){if(years.indexOf(c.year)<0)years.push(c.year)});
+  if(years.indexOf(now.getFullYear())<0) years.push(now.getFullYear());
+  years.sort(function(a,b){return b-a});
   var defaultYear=years[0];
   function build(year){
-    var yc=cs.filter(function(c){return c.year===year}).sort(function(a,b){return a.month-b.month});
+    var yc=cs.filter(function(c){return c.year===year});
     var html='';
     BN_MONTHS.forEach(function(mn,idx){
-      var mo=idx+1;var c=yc.filter(function(x){return x.month===mo})[0];
-      if(c){html+='<div class="month-edit-row"><div class="mlbl">'+mn+'</div><input type="number" data-month="'+mo+'" value="'+(c.amount||0)+'" min="0"/></div>';}
-      else{html+='<div class="month-edit-row"><div class="mlbl">'+mn+'</div><input type="number" disabled placeholder="নেই"/></div>';}
+      var mo=idx+1;
+      var c=yc.filter(function(x){return x.month===mo})[0];
+      var val = c ? (c.amount||0) : 0;
+      var exists = c ? '1' : '0';
+      var cidAttr = c ? (c.id||'') : '';
+      var badge = c ? '' : '<span class="pill important" style="margin-left:6px;font-size:9px">নতুন</span>';
+      html+='<div class="month-edit-row"><div class="mlbl">'+mn+badge+'</div><input type="number" data-month="'+mo+'" data-exists="'+exists+'" data-cid="'+cidAttr+'" value="'+val+'" min="0" placeholder="0"/></div>';
     });
     return html;
   }
   openModal({
     title:'প্রত্যাশিত চাঁদা এডিট',
-    body:'<div class="field"><label>বছর</label><select id="feYear">'+years.map(function(y){return '<option value="'+y+'" '+(y===defaultYear?'selected':'')+'>'+y+'</option>'}).join('')+'</select></div><div class="month-edit-list" id="feMonthsList">'+build(defaultYear)+'</div>',
-    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="feSave">সংরক্ষণ</button>',
+    body:
+      '<div class="info-box" style="line-height:1.8">'+
+        '💡 <b>সব মাসে পরিমাণ বসাতে পারবেন।</b><br>'+
+        '🔹 যেসব মাসে চাঁদা নেই সেগুলোতে পরিমাণ দিলে <b>নতুন রেকর্ড তৈরি হবে</b><br>'+
+        '🔹 বিদ্যমান মাসের মান পরিবর্তন করলে <b>আপডেট হবে</b><br>'+
+        '🔹 <b>০</b> দিলে চাঁদা হবে না'+
+      '</div>'+
+      '<div class="field mt14"><label>বছর</label><select id="feYear">'+years.map(function(y){return '<option value="'+y+'" '+(y===defaultYear?'selected':'')+'>'+y+'</option>'}).join('')+'</select></div>'+
+      '<div class="month-edit-list" id="feMonthsList">'+build(defaultYear)+'</div>',
+    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="feSave">'+icon('check')+' সংরক্ষণ</button>',
     onMount:function(mr){
-      var yearSel=mr.querySelector('#feYear');var list=mr.querySelector('#feMonthsList');
+      var yearSel=mr.querySelector('#feYear');
+      var list=mr.querySelector('#feMonthsList');
       yearSel.addEventListener('change',function(){list.innerHTML=build(parseInt(yearSel.value))});
       mr.querySelector('#feSave').addEventListener('click',async function(){
-        var y=parseInt(yearSel.value);var yc=cs.filter(function(c){return c.year===y});var inputs=list.querySelectorAll('input[data-month]');
-        var updated=0;
+        var y=parseInt(yearSel.value);
+        var inputs=list.querySelectorAll('input[data-month]');
+        var updated=0, created=0;
         for(var i=0;i<inputs.length;i++){
           var inp=inputs[i];
-          if(inp.disabled) continue;
-          var mo=parseInt(inp.dataset.month);var newAmt=Math.max(0,parseInt(inp.value)||0);var c=yc.filter(function(x){return x.month===mo})[0];
-          if(!c||(c.amount||0)===newAmt) continue;
-          try{await db.collection('contributions').doc(c.id).update({amount:newAmt,updatedAt:Date.now()});updated++}catch(e){}
+          var mo=parseInt(inp.dataset.month);
+          var newAmt=Math.max(0,parseInt(inp.value)||0);
+          var exists=inp.dataset.exists==='1';
+          var oldCid=inp.dataset.cid;
+          if(exists){
+            var oldC=cs.filter(function(x){return x.year===y&&x.month===mo})[0];
+            if(!oldC) continue;
+            if((oldC.amount||0)===newAmt) continue;
+            try{
+              await db.collection('contributions').doc(oldCid).update({amount:newAmt,updatedAt:Date.now()});
+              updated++;
+            }catch(e){console.warn(e)}
+          }else{
+            if(newAmt<=0) continue;
+            var cid='CN-'+memberId+'-'+y+pad2(mo);
+            try{
+              await db.collection('contributions').doc(cid).set({
+                memberId:memberId,year:y,month:mo,amount:newAmt,
+                paidAmount:0,status:'due',paidDate:null,createdAt:Date.now()
+              });
+              created++;
+            }catch(e){console.warn(e)}
+          }
         }
-        audit('expected_edit',m.id,'','',updated);closeModal();
-        if(updated>0) toast(updated+' মাস আপডেট','success');else toast('পরিবর্তন নেই');
+        audit('expected_edit',m.id,'','','updated:'+updated+' created:'+created);
+        closeModal();
+        if(updated+created>0){
+          var msg=[];
+          if(updated>0) msg.push(updated+' আপডেট');
+          if(created>0) msg.push(created+' নতুন');
+          toast('✅ '+msg.join(' · '),'success');
+        } else {
+          toast('কোনো পরিবর্তন নেই');
+        }
       });
     }
   });
