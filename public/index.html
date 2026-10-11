@@ -673,7 +673,10 @@ function pageMember(id){
   var due=expected-paid;
   var pct=expected?Math.round(paid/expected*100):0;
   var dueCs=cs.filter(function(c){return (c.amount||0)-(c.paidAmount||0)>0}).sort(function(a,b){return (b.year||0)-(a.year||0)||(b.month||0)-(a.month||0)});
-  var rb=isMe?'<span class="pill active" style="font-size:10px">আপনি</span>':'<button class="btn xs" data-act="message-member" data-id="'+esc(id)+'">'+icon('message')+'</button>';
+  
+  // ✅ এখানে পরিবর্তন করা হয়েছে: বাটনটি মাঝারি সাইজের এবং সবুজ ব্যাকগ্রাউন্ডের
+  var rb=isMe?'<span class="pill active" style="font-size:10px">আপনি</span>':'<button class="btn small" data-act="message-member" data-id="'+esc(id)+'">'+icon('message')+' মেসেজ করুন</button>';
+  
   var h=subHeader(m.name||'সদস্য',rb);
   h+='<div class="subbody">';
 
