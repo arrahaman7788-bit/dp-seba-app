@@ -760,7 +760,6 @@ async function sendChatMessage(receiverId){
       createdAt: Date.now()
     });
     input.value = '';
-    // Also create a notification for the receiver
     var receiver = DB.members.filter(function(x){return x.id===receiverId})[0];
     if(receiver){
       await db.collection('notifications').add({
@@ -781,7 +780,6 @@ async function sendChatMessage(receiverId){
       });
     }
     toast('✅ মেসেজ পাঠানো হয়েছে','success');
-    // Scroll to bottom
     var chatBox = document.getElementById('chatMessages');
     if(chatBox) chatBox.scrollTop = chatBox.scrollHeight;
   } catch(err) {
@@ -913,19 +911,36 @@ function openPaymentRequestModal(){
     body:'<div class="info-box">bKash-এ টাকা পাঠানোর পর এই তথ্য দিন। আপনি একাধিক মাসের চাঁদা একসাথে পাঠাতে পারবেন।</div>'+
       '<div class="field mt14"><label>💰 পরিমাণ (৳) *</label><input id="prAmount" type="number" placeholder="500"/></div>'+
       '<div class="field"><label>📋 কিসের টাকা?</label><select id="prType"><option value="monthly">মাসিক চাঁদা</option><option value="event">ইভেন্ট পেমেন্ট</option><option value="donation">অনুদান</option><option value="extra">অতিরিক্ত জমা</option></select></div>'+
-      '<div class="field"><label>📅 কোন কোন মাসের চাঁদা? (একাধিক সিলেক্ট করুন)</label><div class="month-grid">'+monthCheckboxes+'</div></div>'+
+      '<div class="field" id="monthGridContainer"><label>📅 কোন কোন মাসের চাঁদা? (একাধিক সিলেক্ট করুন)</label><div class="month-grid">'+monthCheckboxes+'</div></div>'+
       '<div class="field"><label>📝 TxID / নোট</label><input id="prNote"/></div>',
     footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="prSend">'+icon('send')+' পাঠান</button>',
     onMount:function(mr){
+      var typeSelect = mr.querySelector('#prType');
+      var monthContainer = mr.querySelector('#monthGridContainer');
+
+      function toggleMonthVisibility() {
+        if (typeSelect.value === 'monthly') {
+          monthContainer.style.display = 'block';
+        } else {
+          monthContainer.style.display = 'none';
+        }
+      }
+
+      // Initial check
+      toggleMonthVisibility();
+
+      // Event listener for changes
+      typeSelect.addEventListener('change', toggleMonthVisibility);
+
       mr.querySelector('#prSend').addEventListener('click',async function(){
         var amount=parseInt(mr.querySelector('#prAmount').value)||0;
         if(amount<=0){toast('সঠিক পরিমাণ','error');return}
-        var type=mr.querySelector('#prType').value;
+        var type=typeSelect.value;
         var selectedMonths = [];
         mr.querySelectorAll('.month-check input[type="checkbox"]:checked').forEach(function(cb){
           selectedMonths.push(parseInt(cb.value));
         });
-        if(selectedMonths.length === 0 && type === 'monthly'){
+        if(type === 'monthly' && selectedMonths.length === 0){
           toast('কমপক্ষে একটি মাস সিলেক্ট করুন','error');return;
         }
         var note=mr.querySelector('#prNote').value.trim();
@@ -1005,7 +1020,7 @@ auth.onAuthStateChanged(async function(user){
     if(!member){state.member=null;state.loading=false;render();return}
     if(!member.accountSetup){try{await db.collection('members').doc(member._docId).update({accountSetup:true,authUid:user.uid,updatedAt:Date.now()});member.accountSetup=true}catch(e){}}
     state.member=member;
-    requestNotificationPermission(); // Request permission on login
+    requestNotificationPermission();
     await loadAllData();
     setupListeners();
     state.loading=false;render();
@@ -1060,13 +1075,11 @@ function setupListeners(){
   
   db.collection('notifications').onSnapshot(function(s){
     DB.notifications=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});
-    // Trigger mobile notification for new notifications
     s.docChanges().forEach(function(change){
       if(change.type === 'added'){
         var n = change.doc.data();
-        // Only notify for this user or all
         if(n.target === 'all' || n.userId === state.member.id || !n.userId){
-          if(n.read === false && n.timestamp && (Date.now() - n.timestamp < 10000)) { // only new ones
+          if(n.read === false && n.timestamp && (Date.now() - n.timestamp < 10000)) {
              showLocalNotification(n.title || 'নোটিফিকেশন', n.body || '');
           }
         }
@@ -1081,11 +1094,9 @@ function setupListeners(){
   
   db.collection('messages').onSnapshot(function(s){
     DB.messages=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});
-    // Trigger mobile notification for new messages
     s.docChanges().forEach(function(change){
       if(change.type === 'added'){
         var msg = change.doc.data();
-        // Notify if message is for me and not sent by me
         if(msg.receiverId === state.member.id && msg.senderId !== state.member.id) {
            if(msg.timestamp && (Date.now() - msg.timestamp < 10000)) {
               showLocalNotification('নতুন মেসেজ', msg.senderName + ': ' + msg.text);
@@ -1093,7 +1104,6 @@ function setupListeners(){
         }
       }
     });
-    // If chat is open with this person, update the view
     var currentStack = state.stack[state.stack.length - 1];
     if(currentStack && currentStack.name === 'chat'){
       var chatBox = document.getElementById('chatMessages');
