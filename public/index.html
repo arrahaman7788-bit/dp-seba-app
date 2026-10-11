@@ -235,6 +235,25 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .notif-btn{position:relative;width:36px;height:36px}
 .notif-btn .nbadge{position:absolute;top:-3px;right:-3px;background:#C41E3A;color:#fff;font-size:9px;font-weight:700;border-radius:99px;padding:2px 5px;min-width:16px;text-align:center;line-height:1.2}
 .eh-cell.cost{background:rgba(220,38,38,.22);border-color:rgba(255,255,255,.3)}
+
+/* Chat Styles */
+.chat-container{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.chat-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.chat-bubble{max-width:82%;padding:10px 14px;border-radius:18px;font-size:13.5px;line-height:1.5;word-break:break-word;position:relative}
+.chat-bubble.sent{background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;align-self:flex-end;border-bottom-right-radius:4px;box-shadow:0 4px 10px -4px rgba(14,95,48,.4)}
+.chat-bubble.received{background:var(--card);border:1px solid var(--card-border);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px;box-shadow:0 4px 10px -4px rgba(0,0,0,.1)}
+.chat-time{font-size:9.5px;opacity:.7;margin-top:5px;text-align:right}
+.chat-input-area{padding:10px 14px;background:var(--card);border-top:1px solid var(--card-border);display:flex;gap:8px;align-items:center;flex:none}
+.chat-input-area input{flex:1;border-radius:99px;border:1.5px solid var(--border);padding:0 16px;height:42px;background:var(--bg);outline:none;font-size:13.5px}
+.chat-input-area input:focus{border-color:var(--primary)}
+.chat-send-btn{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 6px 14px -6px rgba(14,95,48,.6)}
+.chat-send-btn:active{transform:scale(.92)}
+/* Multi-month Grid */
+.month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px}
+.month-check{position:relative}
+.month-check input[type="checkbox"]{position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;z-index:2}
+.month-check label{display:block;text-align:center;padding:8px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);font-size:12px;font-weight:600;color:var(--text-2);transition:all .18s;cursor:pointer}
+.month-check input:checked + label{background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;border-color:var(--primary)}
 </style>
 </head>
 <body>
@@ -292,7 +311,7 @@ var I={
 function icon(n){return I[n]||''}
 
 var state={user:null,member:null,tab:'home',theme:'light',stack:[],loading:true,authMode:'login'};
-var DB={org:{},members:[],contributions:[],transactions:[],events:[],announcements:[],notifications:[],paymentRequests:[],userPosts:[],extraPayments:[]};
+var DB={org:{},members:[],contributions:[],transactions:[],events:[],announcements:[],notifications:[],paymentRequests:[],userPosts:[],extraPayments:[],messages:[]};
 
 function $(s){return document.querySelector(s)}
 function pad2(n){return String(n).padStart(2,'0')}
@@ -328,6 +347,24 @@ function vibrate(ms){try{navigator.vibrate&&navigator.vibrate(ms||8)}catch(e){}}
 function normalizePhone(raw){if(!raw)return '';return String(raw).trim().replace(/[^\d]/g,'')}
 function isValidPhone(n){if(!n)return false;return n.length>=PHONE_MIN_DIGITS&&n.length<=PHONE_MAX_DIGITS}
 
+/* Notification Permission */
+function requestNotificationPermission() {
+  if ('Notification' in window) {
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        console.log('Notification permission granted.');
+      } else {
+        console.log('Notification permission denied.');
+      }
+    });
+  }
+}
+function showLocalNotification(title, body) {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(title, { body: body, icon: LOGO_URL });
+  }
+}
+
 var DATA={
   myContribs:function(){if(!state.member) return [];return DB.contributions.filter(function(c){return c.memberId===state.member.id})},
   mySummary:function(){
@@ -336,8 +373,6 @@ var DATA={
     var paid=cs.reduce(function(a,b){return a+(b.paidAmount||0)},0);
     return {expected:expected,paid:paid,due:expected-paid,percent:expected?Math.round(paid/expected*100):0};
   },
-
-  /* ✅ ইভেন্টের ব্যয় হিসাব — শুধু কার্ডে দেখানোর জন্য, balance-এ ব্যবহার হবে না */
   eventCost:function(event){
     if(!event) return 0;
     if(event.autoExpenseAmount && Number(event.autoExpenseAmount) > 0) return Number(event.autoExpenseAmount);
@@ -347,49 +382,25 @@ var DATA={
     var count = DB.members.filter(function(m){return m.status==='active'}).length;
     return fee * count;
   },
-
-  /* ✅✅✅ FIXED: অ্যাডমিন এপের সাথে হুবহু মিল — শুধু transactions থেকে হিসাব
-     manualIncome / manualExpense যোগ, statsResetAt রেসপেক্ট */
   totalFund:function(){
     var resetAt = (DB.org && DB.org.statsResetAt) ? Number(DB.org.statsResetAt) : 0;
     var income = 0, expense = 0;
-
     DB.transactions.forEach(function(t){
       var ts = 0;
       if(t.createdAt) ts = Number(t.createdAt);
       else if(t.ts) ts = Number(t.ts);
       else if(t.date){ try{ ts = parseISO(t.date).getTime(); }catch(e){ ts = 0; } }
       if(resetAt > 0 && ts > 0 && ts < resetAt) return;
-
       var amt = Number(t.amount||0);
-      if(t.type==='contribution'||t.type==='donation'||t.type==='other_income'||t.type==='extra_payment'){
-        income += amt;
-      } else {
-        expense += amt;
-      }
+      if(t.type==='contribution'||t.type==='donation'||t.type==='other_income'||t.type==='extra_payment'){income += amt;} else {expense += amt;}
     });
-
-    /* ✅ ম্যানুয়াল আয়/ব্যয় যোগ (অ্যাডমিনের সাথে মিল) */
     income  += Number((DB.org && DB.org.manualIncome)  || 0);
     expense += Number((DB.org && DB.org.manualExpense) || 0);
-
     var opening = DB.org && DB.org.manualBalance;
     var hasOpening = (opening!==undefined && opening!==null && opening!=='');
     var openingNum = hasOpening ? Number(opening) : 0;
-
-    return {
-      income: income,
-      expense: expense,
-      opening: openingNum,
-      hasOpening: hasOpening,
-      autoBal: income - expense,
-      balance: openingNum + income - expense,
-      fromCache: false,
-      resetActive: resetAt > 0,
-      resetAt: resetAt
-    };
+    return {income, expense, opening:openingNum, hasOpening, autoBal:income-expense, balance:openingNum+income-expense, fromCache:false, resetActive:resetAt > 0, resetAt:resetAt};
   },
-
   upcomingEvents:function(){return DB.events.filter(function(e){return !e.isCompleted}).sort(function(a,b){return (a.date||'').localeCompare(b.date||'')})},
   pastEvents:function(){return DB.events.filter(function(e){return e.isCompleted}).sort(function(a,b){return (b.date||'').localeCompare(a.date||'')})},
   nextEvent:function(){var u=this.upcomingEvents();return u.length?u[0]:null},
@@ -416,6 +427,13 @@ var DATA={
     var exs=DB.extraPayments.filter(function(x){return x.memberId===memberId});
     var extra=exs.reduce(function(a,b){return a+(b.amount||0)},0);
     return {contributionPaid:paid, extraPaid:extra, totalPaid:paid+extra};
+  },
+  getChatMessages:function(otherMemberId){
+    if(!state.member) return [];
+    var me = state.member.id;
+    return DB.messages.filter(function(m){
+      return (m.senderId === me && m.receiverId === otherMemberId) || (m.senderId === otherMemberId && m.receiverId === me);
+    }).sort(function(a,b){return (a.timestamp||0) - (b.timestamp||0)});
   }
 };
 
@@ -531,6 +549,7 @@ function renderStack(){
     case 'notifications':body=pageNotifications();break;
     case 'myPayment':body=pageMyPayment();break;
     case 'allEvents':body=pageAllEvents();break;
+    case 'chat':body=pageChat(p.id);break;
     default:body=subHeader('—')+'<div class="subbody"></div>';
   }
   return '<div class="subpage">'+body+'</div>';
@@ -673,15 +692,10 @@ function pageMember(id){
   var due=expected-paid;
   var pct=expected?Math.round(paid/expected*100):0;
   var dueCs=cs.filter(function(c){return (c.amount||0)-(c.paidAmount||0)>0}).sort(function(a,b){return (b.year||0)-(a.year||0)||(b.month||0)-(a.month||0)});
-  
-  // ✅ এখানে পরিবর্তন করা হয়েছে: বাটনটি মাঝারি সাইজের এবং সবুজ ব্যাকগ্রাউন্ডের
-  var rb=isMe?'<span class="pill active" style="font-size:10px">আপনি</span>':'<button class="btn small" data-act="message-member" data-id="'+esc(id)+'">'+icon('message')+' মেসেজ করুন</button>';
-  
+  var rb=isMe?'<span class="pill active" style="font-size:10px">আপনি</span>':'<button class="btn small" data-act="page" data-page="chat" data-id="'+esc(id)+'">'+icon('message')+' মেসেজ করুন</button>';
   var h=subHeader(m.name||'সদস্য',rb);
   h+='<div class="subbody">';
-
   h+='<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:20px 16px"><div style="display:flex;justify-content:center">'+avatarHTML(m,110)+'</div><div class="bb" style="font-size:18px;margin-top:12px">'+esc(m.name||'')+'</div><div class="sm muted" style="margin-top:3px">'+(m.id||'')+'</div></div></div>';
-
   h+='<div class="sec"><div class="total-paid-card">'+
       '<div class="tp-header"><div class="tp-icon">'+icon('coins')+'</div><div><div class="tp-title">সর্বমোট টাকা প্রদান</div><div class="tp-sub">চাঁদা + অতিরিক্ত</div></div></div>'+
       '<div class="tp-amount">৳ '+fmtN(totalPaid)+'</div>'+
@@ -690,26 +704,89 @@ function pageMember(id){
         '<div class="tp-cell"><div class="k">⭐ অতিরিক্ত</div><div class="v">৳ '+fmtN(extraTotal)+'</div></div>'+
       '</div>'+
     '</div></div>';
-
   h+='<div class="sec"><div class="stat-grid">'+
       '<div class="stat"><div class="k">প্রত্যাশিত</div><div class="v">৳ '+fmtN(expected)+'</div></div>'+
       '<div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">৳ '+fmtN(paid)+'</div></div>'+
       '<div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(due>0?'var(--expense)':'var(--text-3)')+'">৳ '+fmtN(Math.max(due,0))+'</div></div>'+
       '<div class="stat"><div class="k">অগ্রগতি</div><div class="v">'+pct+'%</div></div>'+
     '</div><div class="prog mt14"><i style="width:'+pct+'%"></i></div></div>';
-
   h+='<div class="sec"><div class="sec-hd"><h2>বাকি থাকা মাস</h2></div>';
   if(!dueCs.length){h+='<div class="all-paid"><div class="ap-ic">'+icon('check')+'</div><div>সব চাঁদা পরিশোধিত — ধন্যবাদ! ✅</div></div>'}
   else{h+=dueCs.map(function(c){var d=(c.amount||0)-(c.paidAmount||0);return '<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 15px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:none;background:var(--card-2)">'+(c.month||0)+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+MN(c.month||1)+' '+c.year+'</div><div class="tiny muted">প্রত্যাশিত ৳'+fmtN(c.amount||0)+' · পরিশোধিত ৳'+fmtN(c.paidAmount||0)+' · <b style="color:var(--expense)">বাকি ৳'+fmtN(d)+'</b></div></div><span class="pill due">বাকি</span></div>'}).join('')}
   h+='</div>';
-
   if(exs.length){
     h+='<div class="sec"><div class="sec-hd"><h2>অতিরিক্ত জমার তালিকা</h2></div>';
     h+=exs.map(function(x){return '<div class="card" style="display:flex;align-items:center;gap:12px;padding:12px 15px;margin-bottom:7px"><div style="width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--accent-soft);color:var(--accent)">'+icon('star')+'</div><div class="grow"><div style="font-size:13.5px;font-weight:600">'+(x.purposeBn||x.purpose||'অতিরিক্ত')+'</div><div class="tiny muted">'+fmtDate(x.date)+'</div></div><div class="b sm" style="color:var(--accent)">৳ '+fmtN(x.amount||0)+'</div></div>'}).join('');
     h+='</div>';
   }
-
   h+='</div>';return h;
+}
+
+function pageChat(otherMemberId){
+  var m=DB.members.filter(function(x){return x.id===otherMemberId})[0];
+  if(!m) return subHeader('চ্যাট')+'<div class="subbody"><div class="empty"><h3>সদস্য পাওয়া যায়নি</h3></div></div>';
+  var h=subHeader(m.name||'চ্যাট');
+  h+='<div class="chat-container">';
+  h+='<div class="chat-messages" id="chatMessages">'+renderChatMessages(otherMemberId)+'</div>';
+  h+='<div class="chat-input-area"><input id="chatInput" type="text" placeholder="মেসেজ লিখুন..." autocomplete="off"/><button class="chat-send-btn" data-act="send-chat" data-id="'+esc(otherMemberId)+'">'+icon('send')+'</button></div>';
+  h+='</div>';
+  return h;
+}
+
+function renderChatMessages(otherMemberId){
+  var msgs = DATA.getChatMessages(otherMemberId);
+  if(!msgs.length) return '<div style="text-align:center;padding:24px;color:var(--text-3);font-size:12px;">এখনো কোনো মেসেজ নেই। প্রথম মেসেজটি আপনি পাঠান!</div>';
+  var me = state.member.id;
+  return msgs.map(function(msg){
+    var isMe = msg.senderId === me;
+    var timeStr = msg.timestamp ? fmtDateTime(msg.timestamp) : '';
+    return '<div class="chat-bubble '+(isMe?'sent':'received')+'">'+esc(msg.text)+'<div class="chat-time">'+timeStr+'</div></div>';
+  }).join('');
+}
+
+async function sendChatMessage(receiverId){
+  var input = document.getElementById('chatInput');
+  if(!input) return;
+  var text = input.value.trim();
+  if(!text) { toast('মেসেজ লিখুন','error'); return; }
+  if(text.length > 1000) { toast('১০০০ অক্ষরের মধ্যে লিখুন','error'); return; }
+  try {
+    await db.collection('messages').add({
+      senderId: state.member.id,
+      senderName: state.member.name || 'সদস্য',
+      receiverId: receiverId,
+      text: text,
+      timestamp: Date.now(),
+      createdAt: Date.now()
+    });
+    input.value = '';
+    // Also create a notification for the receiver
+    var receiver = DB.members.filter(function(x){return x.id===receiverId})[0];
+    if(receiver){
+      await db.collection('notifications').add({
+        userId: receiverId,
+        memberId: receiverId,
+        title: 'নতুন মেসেজ',
+        body: (state.member.name||'কেউ') + ': ' + text.substring(0,50),
+        amount: 0,
+        type: 'message',
+        date: toISO(new Date()),
+        timestamp: Date.now(),
+        read: false,
+        target: 'individual',
+        senderId: state.member.id,
+        senderName: state.member.name||'সদস্য',
+        source: 'chat',
+        createdAt: Date.now()
+      });
+    }
+    toast('✅ মেসেজ পাঠানো হয়েছে','success');
+    // Scroll to bottom
+    var chatBox = document.getElementById('chatMessages');
+    if(chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+  } catch(err) {
+    toast('❌ '+err.message,'error');
+  }
 }
 
 function viewAccounts(){
@@ -826,39 +903,56 @@ function showBkashModal(){
       '<div class="warn-box mt14">📌 Reference-এ লিখুন: <b>DP-'+(state.member.id||'')+'</b></div>'});
 }
 
-async function doQuickPost(){
-  var textarea=document.getElementById('quickStatus')||document.getElementById('feedStatus');
-  if(!textarea){toast('টেক্সট ক্ষেত্র পাওয়া যায়নি','error');return}
-  var text=(textarea.value||'').trim();
-  if(!text){toast('কিছু লিখুন','error');return}
-  if(text.length>1000){toast('১০০০ অক্ষরের মধ্যে লিখুন','error');return}
-  try{await db.collection('userPosts').add({userId:state.member.id,userName:state.member.name||'সদস্য',userImage:state.member.photo||'',statusText:text,timestamp:Date.now(),createdAt:Date.now()});toast('✅ পোস্ট হয়েছে','success');textarea.value=''}catch(err){toast('❌ '+err.message,'error')}
-}
-async function deleteMyPost(id){
-  if(!confirm('পোস্ট মুছবেন?'))return;
-  try{await db.collection('userPosts').doc(id).delete();toast('✅ মুছে ফেলা হয়েছে','success')}catch(err){toast('❌ '+err.message,'error')}
-}
-function openMessageModal(memberId){
-  var m=DB.members.filter(function(x){return x.id===memberId})[0];
-  if(!m){toast('সদস্য পাওয়া যায়নি','error');return}
-  openModal({title:'📩 মেসেজ পাঠান',
-    body:'<div class="card" style="background:var(--card-2);margin-bottom:14px"><div class="row">'+avatarHTML(m,44)+'<div class="grow"><div class="b">'+esc(m.name||'')+'</div><div class="tiny muted mt6">'+(m.id||'')+'</div></div></div></div><div class="field"><label>টাইটেল *</label><input id="msgTitle"/></div><div class="field"><label>মেসেজ *</label><textarea id="msgBody" rows="4"></textarea></div>',
-    footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="msgSendBtn">'+icon('send')+' পাঠান</button>',
-    onMount:function(mr){mr.querySelector('#msgSendBtn').addEventListener('click',async function(){var title=mr.querySelector('#msgTitle').value.trim();var body=mr.querySelector('#msgBody').value.trim();if(!title||!body){toast('সব তথ্য দিন','error');return}try{await db.collection('notifications').add({userId:m.id,memberId:m.id,memberName:m.name||'',title:title,body:body,amount:0,type:'message',date:toISO(new Date()),timestamp:Date.now(),read:false,target:'individual',senderId:state.member.id,senderName:state.member.name||'সদস্য',source:'member-message',createdAt:Date.now()});toast('✅ পাঠানো','success');closeModal()}catch(err){toast('❌ '+err.message,'error')}})}});
-}
 function openPaymentRequestModal(){
+  var monthCheckboxes = BN_MONTHS.map(function(nm, i){
+    var mNum = i + 1;
+    return '<div class="month-check"><input type="checkbox" id="chk_month_'+mNum+'" value="'+mNum+'" '+(mNum === (new Date().getMonth()+1) ? 'checked' : '')+'/><label for="chk_month_'+mNum+'">'+nm+'</label></div>';
+  }).join('');
+
   openModal({title:'💸 আমি টাকা পাঠিয়েছি',
-    body:'<div class="info-box">bKash-এ টাকা পাঠানোর পর এই তথ্য দিন।</div>'+
+    body:'<div class="info-box">bKash-এ টাকা পাঠানোর পর এই তথ্য দিন। আপনি একাধিক মাসের চাঁদা একসাথে পাঠাতে পারবেন।</div>'+
       '<div class="field mt14"><label>💰 পরিমাণ (৳) *</label><input id="prAmount" type="number" placeholder="500"/></div>'+
       '<div class="field"><label>📋 কিসের টাকা?</label><select id="prType"><option value="monthly">মাসিক চাঁদা</option><option value="event">ইভেন্ট পেমেন্ট</option><option value="donation">অনুদান</option><option value="extra">অতিরিক্ত জমা</option></select></div>'+
-      '<div class="field"><label>📅 কোন মাস?</label><select id="prMonth">'+BN_MONTHS.map(function(nm,i){return '<option value="'+(i+1)+'" '+(i+1===(new Date().getMonth()+1)?'selected':'')+'>'+nm+'</option>'}).join('')+'</select></div>'+
+      '<div class="field"><label>📅 কোন কোন মাসের চাঁদা? (একাধিক সিলেক্ট করুন)</label><div class="month-grid">'+monthCheckboxes+'</div></div>'+
       '<div class="field"><label>📝 TxID / নোট</label><input id="prNote"/></div>',
     footer:'<button class="btn ghost grow" data-mclose="1">বাতিল</button><button class="btn grow" id="prSend">'+icon('send')+' পাঠান</button>',
-    onMount:function(mr){mr.querySelector('#prSend').addEventListener('click',async function(){var amount=parseInt(mr.querySelector('#prAmount').value)||0;if(amount<=0){toast('সঠিক পরিমাণ','error');return}var type=mr.querySelector('#prType').value;var month=parseInt(mr.querySelector('#prMonth').value);var note=mr.querySelector('#prNote').value.trim();try{await db.collection('paymentRequests').add({memberId:state.member.id,memberName:state.member.name||'সদস্য',amount:amount,type:type,forMonth:month,forYear:new Date().getFullYear(),note:note,date:toISO(new Date()),ts:Date.now(),status:'pending',createdAt:Date.now()});toast('✅ রিকোয়েস্ট পাঠানো','success');closeModal()}catch(err){toast('❌ '+err.message,'error')}})}});
+    onMount:function(mr){
+      mr.querySelector('#prSend').addEventListener('click',async function(){
+        var amount=parseInt(mr.querySelector('#prAmount').value)||0;
+        if(amount<=0){toast('সঠিক পরিমাণ','error');return}
+        var type=mr.querySelector('#prType').value;
+        var selectedMonths = [];
+        mr.querySelectorAll('.month-check input[type="checkbox"]:checked').forEach(function(cb){
+          selectedMonths.push(parseInt(cb.value));
+        });
+        if(selectedMonths.length === 0 && type === 'monthly'){
+          toast('কমপক্ষে একটি মাস সিলেক্ট করুন','error');return;
+        }
+        var note=mr.querySelector('#prNote').value.trim();
+        try{
+          await db.collection('paymentRequests').add({
+            memberId:state.member.id,
+            memberName:state.member.name||'সদস্য',
+            amount:amount,
+            type:type,
+            months: selectedMonths,
+            forYear:new Date().getFullYear(),
+            note:note,
+            date:toISO(new Date()),
+            ts:Date.now(),
+            status:'pending',
+            createdAt:Date.now()
+          });
+          toast('✅ রিকোয়েস্ট পাঠানো হয়েছে','success');
+          closeModal();
+        }catch(err){toast('❌ '+err.message,'error')}
+      });
+    }
+  });
 }
 
 function pushPage(name,params){state.stack.push(Object.assign({name:name},params||{}));render()}
-function popPage(){state.stack.pop();render()}
+function popPage(){state.popPage ? state.popPage() : state.stack.pop();render()}
 function switchTab(t){if(state.tab===t&&!state.stack.length){var c=$('#content');if(c)c.scrollTop=0;return}state.stack=[];state.tab=t;render();var c=$('#content');if(c)c.scrollTop=0}
 
 document.addEventListener('click',function(ev){
@@ -870,11 +964,11 @@ document.addEventListener('click',function(ev){
     case 'register':doRegister();break;
     case 'logout':if(confirm('লগআউট করবেন?')){try{auth.signOut()}catch(e){}}break;
     case 'tab':switchTab(el.dataset.tab);break;
-    case 'page':pushPage(el.dataset.page);break;
+    case 'page':pushPage(el.dataset.page, {id: el.dataset.id});break;
     case 'back':popPage();break;
     case 'member':pushPage('member',{id:el.dataset.id});break;
     case 'page-event':pushPage('eventDetail',{id:el.dataset.id});break;
-    case 'message-member':openMessageModal(el.dataset.id);break;
+    case 'send-chat':sendChatMessage(el.dataset.id);break;
     case 'quick-post':doQuickPost();break;
     case 'delete-my-post':deleteMyPost(el.dataset.id);break;
     case 'send-payment-request':openPaymentRequestModal();break;
@@ -911,6 +1005,7 @@ auth.onAuthStateChanged(async function(user){
     if(!member){state.member=null;state.loading=false;render();return}
     if(!member.accountSetup){try{await db.collection('members').doc(member._docId).update({accountSetup:true,authUid:user.uid,updatedAt:Date.now()});member.accountSetup=true}catch(e){}}
     state.member=member;
+    requestNotificationPermission(); // Request permission on login
     await loadAllData();
     setupListeners();
     state.loading=false;render();
@@ -932,7 +1027,8 @@ async function loadAllData(){
       db.collection('notifications').get(),
       db.collection('paymentRequests').get(),
       db.collection('userPosts').get(),
-      db.collection('extraPayments').get()
+      db.collection('extraPayments').get(),
+      db.collection('messages').get()
     ]);
     DB.members=results[0].docs.map(function(d){return Object.assign({},d.data(),{_docId:d.id})});
     DB.contributions=results[1].docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});
@@ -943,6 +1039,7 @@ async function loadAllData(){
     DB.paymentRequests=results[6].docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});
     DB.userPosts=results[7].docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});
     DB.extraPayments=results[8].docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});
+    DB.messages=results[9].docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});
   }catch(err){
     console.error('loadAllData error:',err);
     try{var orgSnap2=await db.collection('org').doc('settings').get();if(orgSnap2.exists) DB.org=orgSnap2.data()}catch(e2){}
@@ -960,10 +1057,54 @@ function setupListeners(){
   db.collection('transactions').onSnapshot(function(s){DB.transactions=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()},function(e){});
   db.collection('events').onSnapshot(function(s){DB.events=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()},function(e){});
   db.collection('announcements').onSnapshot(function(s){DB.announcements=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()},function(e){});
-  db.collection('notifications').onSnapshot(function(s){DB.notifications=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()},function(e){});
+  
+  db.collection('notifications').onSnapshot(function(s){
+    DB.notifications=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});
+    // Trigger mobile notification for new notifications
+    s.docChanges().forEach(function(change){
+      if(change.type === 'added'){
+        var n = change.doc.data();
+        // Only notify for this user or all
+        if(n.target === 'all' || n.userId === state.member.id || !n.userId){
+          if(n.read === false && n.timestamp && (Date.now() - n.timestamp < 10000)) { // only new ones
+             showLocalNotification(n.title || 'নোটিফিকেশন', n.body || '');
+          }
+        }
+      }
+    });
+    if(!state.loading)render();
+  },function(e){});
+  
   db.collection('paymentRequests').onSnapshot(function(s){DB.paymentRequests=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()},function(e){});
   db.collection('userPosts').onSnapshot(function(s){DB.userPosts=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()},function(e){});
   db.collection('extraPayments').onSnapshot(function(s){DB.extraPayments=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});if(!state.loading)render()},function(e){});
+  
+  db.collection('messages').onSnapshot(function(s){
+    DB.messages=s.docs.map(function(d){return Object.assign({},d.data(),{id:d.id})});
+    // Trigger mobile notification for new messages
+    s.docChanges().forEach(function(change){
+      if(change.type === 'added'){
+        var msg = change.doc.data();
+        // Notify if message is for me and not sent by me
+        if(msg.receiverId === state.member.id && msg.senderId !== state.member.id) {
+           if(msg.timestamp && (Date.now() - msg.timestamp < 10000)) {
+              showLocalNotification('নতুন মেসেজ', msg.senderName + ': ' + msg.text);
+           }
+        }
+      }
+    });
+    // If chat is open with this person, update the view
+    var currentStack = state.stack[state.stack.length - 1];
+    if(currentStack && currentStack.name === 'chat'){
+      var chatBox = document.getElementById('chatMessages');
+      if(chatBox){
+        var currentOtherId = currentStack.id;
+        chatBox.innerHTML = renderChatMessages(currentOtherId);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    }
+    if(!state.loading)render();
+  },function(e){});
 }
 window.addEventListener('online',function(){if(state.member){render();toast('অনলাইন','success')}});
 window.addEventListener('offline',function(){if(state.member){toast('অফলাইন মোড')}});
