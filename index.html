@@ -219,6 +219,8 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .past-card .pc-title{font-size:13.5px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .past-card .pc-sub{font-size:11px;color:var(--text-3);margin-top:3px}
 .past-card .pc-cost{font-size:11px;color:var(--expense);font-weight:600;margin-top:2px}
+.past-card .pc-image{width:46px;height:46px;border-radius:13px;overflow:hidden;flex:none;box-shadow:0 6px 14px -6px rgba(0,0,0,.2)}
+.past-card .pc-image img{width:100%;height:100%;object-fit:cover;display:block}
 .post-card{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border:1px solid var(--card-border);margin-bottom:10px}
 .post-head{display:flex;gap:10px;align-items:center;margin-bottom:10px}
 .post-body-text{font-size:13.5px;line-height:1.6;color:var(--text);white-space:pre-wrap;word-break:break-word}
@@ -235,8 +237,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .notif-btn{position:relative;width:36px;height:36px}
 .notif-btn .nbadge{position:absolute;top:-3px;right:-3px;background:#C41E3A;color:#fff;font-size:9px;font-weight:700;border-radius:99px;padding:2px 5px;min-width:16px;text-align:center;line-height:1.2}
 .eh-cell.cost{background:rgba(220,38,38,.22);border-color:rgba(255,255,255,.3)}
-
-/* Chat Styles */
 .chat-container{display:flex;flex-direction:column;height:100%;overflow:hidden}
 .chat-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
 .chat-bubble{max-width:82%;padding:10px 14px;border-radius:18px;font-size:13.5px;line-height:1.5;word-break:break-word;position:relative}
@@ -247,20 +247,16 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .msg-status svg{width:14px;height:14px}
 .tick-sent{stroke:rgba(255,255,255,0.7);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
 .tick-seen{stroke:#7DFFAF;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-
 .chat-input-area{padding:10px 14px;background:var(--card);border-top:1px solid var(--card-border);display:flex;gap:8px;align-items:center;flex:none}
 .chat-input-area input{flex:1;border-radius:99px;border:1.5px solid var(--border);padding:0 16px;height:42px;background:var(--bg);outline:none;font-size:13.5px}
 .chat-input-area input:focus{border-color:var(--primary)}
 .chat-send-btn{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;display:flex;align-items:center;justify-content:center;flex:none;box-shadow:0 6px 14px -6px rgba(14,95,48,.6)}
 .chat-send-btn:active{transform:scale(.92)}
-/* Multi-month Grid */
 .month-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px}
 .month-check{position:relative}
 .month-check input[type="checkbox"]{position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;z-index:2}
 .month-check label{display:block;text-align:center;padding:8px 4px;border-radius:10px;border:1.5px solid var(--border);background:var(--card);font-size:12px;font-weight:600;color:var(--text-2);transition:all .18s;cursor:pointer}
 .month-check input:checked + label{background:linear-gradient(135deg,var(--primary-l),var(--primary));color:#fff;border-color:var(--primary)}
-
-/* ================= CALLING UI ================= */
 .call-overlay{position:fixed;inset:0;background:#0a0a0a;z-index:500;display:flex;flex-direction:column;color:#fff;max-width:540px;margin:0 auto}
 .call-header{padding:16px 20px;text-align:center;flex:none;background:rgba(0,0,0,0.4);backdrop-filter:blur(20px);z-index:3}
 .call-header .name{font-size:20px;font-weight:700}
@@ -298,7 +294,6 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .call-incoming .btns{display:flex;gap:40px;margin-top:30px}
 .call-incoming .btns .call-btn{width:70px;height:70px}
 .call-incoming .btns .call-btn svg{width:30px;height:30px}
-/* Group member selection */
 .member-select-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;margin-bottom:8px;background:var(--card);border:1.5px solid var(--border);cursor:pointer;transition:all 0.2s}
 .member-select-item.selected{background:linear-gradient(135deg,rgba(27,128,68,.15),rgba(14,95,48,.1));border-color:var(--primary)}
 .member-select-item .chk{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex:none;transition:all 0.2s}
@@ -337,7 +332,6 @@ var AUTH_DOMAIN = '@dpseba.local';
 var PHONE_MIN_DIGITS = 7;
 var PHONE_MAX_DIGITS = 15;
 
-/* WebRTC Config */
 var RTC_CONFIG = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
@@ -384,7 +378,6 @@ function icon(n){return I[n]||''}
 var state={user:null,member:null,tab:'home',theme:'light',stack:[],loading:true,authMode:'login'};
 var DB={org:{},members:[],contributions:[],transactions:[],events:[],announcements:[],notifications:[],paymentRequests:[],userPosts:[],extraPayments:[],messages:[]};
 
-/* ================= CALL STATE ================= */
 var CALL = {
   active: false,
   callId: null,
@@ -407,7 +400,6 @@ var CALL = {
   pendingCandidates: {}
 };
 
-/* ============ Utilities ============ */
 function $(s){return document.querySelector(s)}
 function pad2(n){return String(n).padStart(2,'0')}
 function fmtN(n){return Math.round(n).toLocaleString('en-IN')}
@@ -526,7 +518,6 @@ var DATA={
   }
 };
 
-/* ============ CALLING SYSTEM ============ */
 function playRingtone(){
   try{
     stopRingtone();
@@ -1024,7 +1015,6 @@ function setupCallListeners(){
   setupIncomingCallListener();
 }
 
-/* ============ Chat read receipts ============ */
 async function markMessagesAsRead(otherMemberId){
   if(!state.member) return;
   try{
@@ -1040,7 +1030,6 @@ async function markMessagesAsRead(otherMemberId){
   }catch(err){}
 }
 
-/* ============ Modal ============ */
 function openModal(opts){
   var root=$('#modalRoot');
   var back=document.createElement('div');
@@ -1053,7 +1042,6 @@ function openModal(opts){
 }
 function closeModal(){var b=$('.modal-back');if(b)b.remove()}
 
-/* ============ Views ============ */
 function viewLogin(){
   var isLogin=state.authMode==='login';
   return '<div class="content" style="padding-bottom:0"><div class="login">'+
@@ -1184,8 +1172,7 @@ function viewHome(){
   var postCount=DB.userPosts.length;
   var h='';
   h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">স্বাগতম</div><div class="bb" style="font-size:14px">'+esc(me.name||'সদস্য')+'</div></div></div><button class="icon-btn notif-btn" data-act="page" data-page="notifications">'+icon('bell')+(unread>0?'<span class="nbadge">'+(unread>9?'9+':unread)+'</span>':'')+'</button></div>';
-  
-  // 💥 আয় বাদ দেওয়া হয়েছে এবং ব্যয়-এর নাম পরিবর্তন করা হয়েছে, 'মোট তহবিল' থেকে 'বর্তমান ক্যাশ' 💥
+
   h+='<div class="sec anim anim-d1" style="margin-top:2px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · আর্ত অসহায়ের পাশে আমরা</div></div></div><div class="bc-row"><div><div class="bc-label">বর্তমান ক্যাশ</div><div class="bc-amount">৳ '+fmtN(fund.balance)+'</div></div><div class="bc-stats"><div class="bc-stat"><div class="k">মোট ইভেন্ট খরচ</div><div class="v">'+shortMoney(fund.expense)+'</div></div></div></div></div></div>';
 
   if(myTotal.totalPaid > 0){
@@ -1212,7 +1199,7 @@ function viewHome(){
   '</div></div>';
   if(nextEv){
     var d=parseISO(nextEv.date);
-    h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2></div><div class="event-hero compact" data-act="page-event" data-id="'+esc(nextEv.id)+'"><div class="eh-tag">🎯 '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div><div class="eh-title" style="position:relative;z-index:2">'+esc(nextEv.title)+'</div>'+(nextEv.description?'<div class="eh-desc">'+esc(nextEv.description)+'</div>':'')+'<div class="eh-meta"><div class="eh-cell"><div class="k">💰 চাঁদা</div><div class="v">৳ '+fmtN(nextEv.fee||0)+'</div></div><div class="eh-cell"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+(nextEv.deadline?fmtDate(nextEv.deadline):'—')+'</div></div></div></div></div>';
+    h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2></div><div class="event-hero compact" data-act="page-event" data-id="'+esc(nextEv.id)+'"><div class="eh-tag">🎯 '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div><div class="eh-title" style="position:relative;z-index:2">'+esc(nextEv.title)+'</div>'+(nextEv.description?'<div class="eh-desc">'+esc(nextEv.description)+'</div>':'')+(nextEv.image?'<div style="margin:0 0 9px;display:inline-block;border-radius:11px;overflow:hidden;border:1.5px solid rgba(255,255,255,.4);position:relative;z-index:2;max-width:55%"><img src="'+esc(nextEv.image)+'" style="display:block;width:100%;max-height:100px;object-fit:cover" onerror="this.parentNode.style.display=\'none\'"/></div>':'')+'<div class="eh-meta"><div class="eh-cell"><div class="k">💰 চাঁদা</div><div class="v">৳ '+fmtN(nextEv.fee||0)+'</div></div><div class="eh-cell"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+(nextEv.deadline?fmtDate(nextEv.deadline):'—')+'</div></div></div></div></div>';
   }
   h+='<div class="sec anim anim-d5"><div class="sec-hd"><h2>💰 আমার চাঁদা</h2><span class="link" data-act="page" data-page="myPayment">বিস্তারিত →</span></div><div class="stat-grid cols-3"><div class="stat"><div class="k">পরিশোধিত</div><div class="v" style="color:var(--income)">৳ '+fmtN(mySum.paid)+'</div></div><div class="stat"><div class="k">বাকি</div><div class="v" style="color:'+(mySum.due>0?'var(--expense)':'var(--text-3)')+'">৳ '+fmtN(Math.max(mySum.due,0))+'</div></div><div class="stat"><div class="k">অগ্রগতি</div><div class="v">'+mySum.percent+'%</div></div></div></div>';
   if(past.length){
@@ -1220,8 +1207,10 @@ function viewHome(){
       past.map(function(e){
         var d=parseISO(e.date);
         var cost=DATA.eventCost(e);
-        return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'">'+
-          '<div class="pc-date"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div>'+
+        var thumb = e.image
+          ? '<div class="pc-image"><img src="'+esc(e.image)+'" onerror="this.parentNode.outerHTML=\'<div class=&quot;pc-date&quot;><div class=&quot;d&quot;>'+d.getDate()+'</div><div class=&quot;m&quot;>'+MNS(d.getMonth()+1)+'</div></div>\'"/></div>'
+          : '<div class="pc-date"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div>';
+        return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'">'+thumb+
           '<div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+'</div>'+(cost>0?'<div class="pc-cost">💸 ব্যয়: ৳ '+fmtN(cost)+'</div>':'')+'</div>'+
           '<div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div>'+
         '</div>';
@@ -1241,7 +1230,10 @@ function pageAllEvents(){
       h+='<div class="sec" style="margin-top:16px"><div class="sec-hd"><h2>🎯 আগামী ইভেন্ট</h2></div>';
       h+=up.map(function(e){
         var d=parseISO(e.date);
-        return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'" style="border-left-color:var(--primary);margin-bottom:9px"><div class="pc-date" style="background:linear-gradient(135deg,var(--primary-l),var(--primary))"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div><div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+(e.fee?' · ৳'+fmtN(e.fee):'')+'</div></div><div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div></div>';
+        var thumb = e.image
+          ? '<div class="pc-image"><img src="'+esc(e.image)+'" onerror="this.parentNode.outerHTML=\'<div class=&quot;pc-date&quot; style=&quot;background:linear-gradient(135deg,var(--primary-l),var(--primary))&quot;><div class=&quot;d&quot;>'+d.getDate()+'</div><div class=&quot;m&quot;>'+MNS(d.getMonth()+1)+'</div></div>\'"/></div>'
+          : '<div class="pc-date" style="background:linear-gradient(135deg,var(--primary-l),var(--primary))"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div>';
+        return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'" style="border-left-color:var(--primary);margin-bottom:9px">'+thumb+'<div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+(e.fee?' · ৳'+fmtN(e.fee):'')+'</div></div><div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div></div>';
       }).join('');
       h+='</div>';
     }
@@ -1250,7 +1242,10 @@ function pageAllEvents(){
       h+=past.map(function(e){
         var d=parseISO(e.date);
         var cost=DATA.eventCost(e);
-        return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'" style="margin-bottom:9px"><div class="pc-date"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div><div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+'</div>'+(cost>0?'<div class="pc-cost">💸 ব্যয়: ৳ '+fmtN(cost)+'</div>':'')+'</div><div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div></div>';
+        var thumb = e.image
+          ? '<div class="pc-image"><img src="'+esc(e.image)+'" onerror="this.parentNode.outerHTML=\'<div class=&quot;pc-date&quot;><div class=&quot;d&quot;>'+d.getDate()+'</div><div class=&quot;m&quot;>'+MNS(d.getMonth()+1)+'</div></div>\'"/></div>'
+          : '<div class="pc-date"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div>';
+        return '<div class="past-card" data-act="page-event" data-id="'+esc(e.id)+'" style="margin-bottom:9px">'+thumb+'<div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+'</div>'+(cost>0?'<div class="pc-cost">💸 ব্যয়: ৳ '+fmtN(cost)+'</div>':'')+'</div><div class="chev" style="width:20px;height:20px;color:var(--text-3)">'+icon('chevron')+'</div></div>';
       }).join('');
       h+='</div>';
     }
@@ -1486,6 +1481,7 @@ function pageEventDetail(id){
     '<div class="eh-tag">'+(isUp?'🎯 আগামী':'✓ সম্পন্ন')+' · '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div>'+
     '<div class="eh-title">'+esc(e.title)+'</div>'+
     (e.description?'<div class="eh-desc">'+esc(e.description)+'</div>':'')+
+    (e.image?'<div style="margin:2px 0 12px;display:inline-block;border-radius:14px;overflow:hidden;border:2px solid rgba(255,255,255,.4);box-shadow:0 8px 20px -8px rgba(0,0,0,.45);position:relative;z-index:2;max-width:70%"><img src="'+esc(e.image)+'" alt="'+esc(e.title)+'" style="display:block;width:100%;max-height:180px;object-fit:cover" onerror="this.parentNode.style.display=\'none\'"/></div>':'')+
     '<div class="eh-meta">'+
       '<div class="eh-cell"><div class="k">💰 চাঁদা</div><div class="v">৳ '+fmtN(e.fee||0)+'</div></div>'+
       '<div class="eh-cell"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+(e.deadline?fmtDate(e.deadline):'—')+'</div></div>'+
