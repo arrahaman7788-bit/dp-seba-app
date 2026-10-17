@@ -77,7 +77,7 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .bc-stat:active{background:rgba(255,255,255,.25)}
 .bc-stat .k{font-size:9.5px;opacity:.92;display:flex;align-items:center;gap:4px}
 .bc-stat .k svg{width:10px;height:10px}
-.bc-stat .v{font-size:13.5px;font-weight:700;margin-top:2px}
+.bc-stat .v{font-size:13.5px;font-weight:700;margin-top:2px;line-height:1.3}
 .bc-manual-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.3);padding:2px 7px;border-radius:99px;font-size:9px;font-weight:600;backdrop-filter:blur(6px)}
 .bc-reset-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(220,38,38,.4);border:1px solid rgba(255,255,255,.4);padding:2px 7px;border-radius:99px;font-size:9px;font-weight:600;backdrop-filter:blur(6px)}
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -204,6 +204,8 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .past-card .pc-body{flex:1;min-width:0}
 .past-card .pc-title{font-size:13.5px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .past-card .pc-sub{font-size:11px;color:var(--text-3);margin-top:3px}
+.past-card .pc-image{width:46px;height:46px;border-radius:13px;overflow:hidden;flex:none;box-shadow:0 6px 14px -6px rgba(0,0,0,.2)}
+.past-card .pc-image img{width:100%;height:100%;object-fit:cover;display:block}
 .post-card{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border:1px solid var(--card-border);margin-bottom:10px;position:relative;overflow:hidden;backdrop-filter:blur(20px) saturate(160%)}
 .post-card::before{content:'';position:absolute;top:0;left:14px;right:14px;height:1px;background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
 .post-head{display:flex;gap:10px;align-items:center;margin-bottom:10px}
@@ -307,6 +309,35 @@ function fmtN(n){return Math.round(n).toLocaleString('en-IN')}
 function money(n){return '৳ '+fmtN(n)}
 function money2(n){return '৳ '+Number(n).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function shortMoney(n){n=Math.abs(n);if(n>=1e7)return '৳'+(n/1e7).toFixed(2)+'কো';if(n>=1e5)return '৳'+(n/1e5).toFixed(2)+'লা';if(n>=1e3)return '৳'+(n/1e3).toFixed(1)+'হা';return '৳'+Math.round(n)}
+
+// ✅ নতুন ফাংশন: সংখ্যাকে কথায় রূপান্তর ✅
+function numberToWordsBn(num) {
+  num = Math.round(Number(num));
+  if (isNaN(num) || num === 0) return 'শূন্য টাকা';
+  var ones = ['', 'এক', 'দুই', 'তিন', 'চার', 'পাঁচ', 'ছয়', 'সাত', 'আট', 'নয়', 'দশ', 'এগারো', 'বারো', 'তেরো', 'চৌদ্দ', 'পনেরো', 'ষোলো', 'সতেরো', 'আঠারো', 'উনিশ', 'বিশ', 'একুশ', 'বাইশ', 'তেইশ', 'চব্বিশ', 'পঁচিশ', 'ছাব্বিশ', 'সাতাশ', 'আঠাশ', 'ঊনত্রিশ', 'ত্রিশ', 'একত্রিশ', 'বত্রিশ', 'তেত্রিশ', 'চৌত্রিশ', 'পঁয়ত্রিশ', 'ছত্রিশ', 'সাঁইত্রিশ', 'আটত্রিশ', 'ঊনচল্লিশ', 'চল্লিশ', 'একচল্লিশ', 'বিয়াল্লিশ', 'তেতাল্লিশ', 'চুয়াল্লিশ', 'পঁয়তাল্লিশ', 'ছেচল্লিশ', 'সাতচল্লিশ', 'আটচল্লিশ', 'ঊনপঞ্চাশ', 'পঞ্চাশ', 'একান্ন', 'বায়ান্ন', 'তিপ্পান্ন', 'চুয়ান্ন', 'পঞ্চান্ন', 'ছাপ্পান্ন', 'সাতান্ন', 'আটান্ন', 'ঊনষাট', 'ষাট', 'একষট্টি', 'বাষট্টি', 'তেষট্টি', 'চৌষট্টি', 'পঁয়ষট্টি', 'ছেষট্টি', 'সাতষট্টি', 'আটষট্টি', 'ঊনসত্তর', 'সত্তর', 'একাত্তর', 'বাহাত্তর', 'তিয়াত্তর', 'চুয়াত্তর', 'পঁচাত্তর', 'ছিয়াত্তর', 'সাতাত্তর', 'আটাত্তর', 'ঊনআশি', 'আশি', 'একাশি', 'বিরাশি', 'তিরাশি', 'চুরাশি', 'পঁচাশি', 'ছিয়াশি', 'সাতাশি', 'আটাশি', 'ঊননব্বই', 'নব্বই', 'একানব্বই', 'বিরানব্বই', 'তিরানব্বই', 'চুরানব্বই', 'পঁচানব্বই', 'ছিয়ানব্বই', 'সাতানব্বই', 'আটানব্বই', 'নিরানব্বই'];
+  var result = '';
+  if (num >= 10000000) {
+      result += numberToWordsBn(Math.floor(num / 10000000)).replace(' টাকা','') + ' কোটি ';
+      num %= 10000000;
+  }
+  if (num >= 100000) {
+      result += numberToWordsBn(Math.floor(num / 100000)).replace(' টাকা','') + ' লক্ষ ';
+      num %= 100000;
+  }
+  if (num >= 1000) {
+      result += numberToWordsBn(Math.floor(num / 1000)).replace(' টাকা','') + ' হাজার ';
+      num %= 1000;
+  }
+  if (num >= 100) {
+      result += ones[Math.floor(num / 100)] + 'শত ';
+      num %= 100;
+  }
+  if (num > 0) {
+      result += ones[num];
+  }
+  return result.trim() + ' টাকা';
+}
+
 function MN(m){return BN_MONTHS[m-1]}
 function MNS(m){return BN_MONTHS_SHORT[m-1]}
 function mname(m){return m.name||m.nameEn||'—'}
@@ -342,7 +373,6 @@ function catBn(k,arr){var c=arr.filter(function(x){return x.k===k})[0];return c?
 function purposeBn(k){var p=EXTRA_PAYMENT_PURPOSES.filter(function(x){return x.k===k})[0];return p?p.bn:k}
 
 var DATA={
-  /* ✅✅✅ FIXED: manualIncome/manualExpense হিসাবে যোগ */
   stats:function(){
     var resetAt=statsResetAt();
     var income=0,expense=0;
@@ -353,7 +383,6 @@ var DATA={
       else expense+=Number(t.amount||0);
     });
 
-    /* ✅ ম্যানুয়াল আয়/ব্যয় (edit-income / edit-expense মডাল থেকে) */
     var mInc = Number((DB.org && DB.org.manualIncome) || 0);
     var mExp = Number((DB.org && DB.org.manualExpense) || 0);
     income += mInc;
@@ -618,8 +647,8 @@ function viewDashboard(){
   var h='';
   h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">'+role.bn+'</div><div class="bb" style="font-size:13px">'+esc(state.admin.name)+'</div></div></div><div class="row gap6"><button class="icon-btn sm" data-act="page" data-page="search">'+icon('search')+'</button><button class="icon-btn sm" data-act="page" data-page="sentNotifications">'+icon('bell')+'</button></div></div>';
   
-  // 💥 আয় বাদ দেওয়া হয়েছে, ব্যয় -> মোট ইভেন্ট খরচ 💥
-  h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="balance-card"><button class="bc-edit" data-act="edit-balance" title="ব্যালেন্স">'+icon('edit')+'</button><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · আর্ত অসহায়ের পাশে আমরা</div></div></div><div class="bc-label">মোট ব্যালেন্স'+badges+'</div><div class="bc-amount">'+money2(st.balance)+'</div><div class="bc-breakdown">'+(st.hasOpening?'📌 '+money(st.opening)+' ওপেনিং · ':'')+'📉 মোট ইভেন্ট খরচ '+money(st.expense)+'</div><div class="bc-stats"><div class="bc-stat" data-act="edit-expense"><div class="k">মোট ইভেন্ট খরচ '+icon('edit')+'</div><div class="v">'+shortMoney(st.expense)+'</div></div></div></div></div>';
+  // 💥 সম্পূর্ণ অংক এবং ব্রেকডাউন কথায় দেখানো হয়েছে 💥
+  h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="balance-card"><button class="bc-edit" data-act="edit-balance" title="ব্যালেন্স">'+icon('edit')+'</button><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · আর্ত অসহায়ের পাশে আমরা</div></div></div><div class="bc-label">মোট ব্যালেন্স'+badges+'</div><div class="bc-amount">'+money2(st.balance)+'</div><div class="bc-breakdown">'+(st.hasOpening?'📌 '+money(st.opening)+' ওপেনিং · ':'')+'📉 মোট ইভেন্ট খরচ '+money(st.expense)+'</div><div class="bc-stats"><div class="bc-stat" data-act="edit-expense"><div class="k">মোট ইভেন্ট খরচ '+icon('edit')+'</div><div class="v" style="font-size:13.5px;line-height:1.3">'+money(st.expense)+'</div><div style="font-size:9.5px;opacity:0.85;font-weight:500;margin-top:3px;line-height:1.4;letter-spacing:0.1px">('+numberToWordsBn(st.expense)+')</div></div></div></div></div>';
 
   h+='<div class="sec anim anim-d2"><div class="quick-grid">'+
     '<button class="quick-btn" data-act="add-member"><div class="qb-ic">➕</div><div class="qb-lbl">সদস্য</div></button>'+
@@ -631,7 +660,14 @@ function viewDashboard(){
   '</div></div>';
   if(nextEv){var d=parseISO(nextEv.date);h+='<div class="sec anim anim-d3"><div class="sec-hd"><h2>🎉 আগামী ইভেন্ট</h2><span class="link" data-act="page" data-page="events">সব →</span></div><div class="event-hero compact" data-act="page-event-detail" data-id="'+esc(nextEv.id)+'"><div class="eh-tag">🎯 '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div><div class="eh-title">'+esc(nextEv.title)+'</div>'+(nextEv.description?'<div class="eh-desc">'+esc(nextEv.description)+'</div>':'')+'<div class="eh-meta"><div class="eh-cell"><div class="k">💰 চাঁদা</div><div class="v">'+money(nextEv.fee||0)+'</div></div><div class="eh-cell"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+(nextEv.deadline?fmtDate(nextEv.deadline):'—')+'</div></div></div></div></div>';}
   if(pendingPay>0){h+='<div class="sec anim anim-d3"><div class="card" style="background:linear-gradient(135deg,rgba(251,243,220,.9),rgba(254,243,199,.85));border:1px solid rgba(212,160,23,.3);cursor:pointer;padding:13px" data-act="page" data-page="paymentRequests"><div class="row"><div style="width:40px;height:40px;border-radius:12px;background:var(--gold);color:#fff;display:flex;align-items:center;justify-content:center;flex:none">'+icon('receipt')+'</div><div class="grow"><div class="bb" style="font-size:13px">⏳ '+pendingPay+' টি পেমেন্ট রিকোয়েস্ট</div><div class="tiny muted mt6">যাচাই করুন</div></div>'+icon('chevron')+'</div></div></div>';}
-  if(pastEvs.length){h+='<div class="sec anim anim-d4"><div class="sec-hd"><h2>📁 পূর্ববর্তী ইভেন্ট</h2></div><div style="display:grid;gap:8px">'+pastEvs.map(function(e){var d=parseISO(e.date);return '<div class="past-card" data-act="page-event-detail" data-id="'+esc(e.id)+'" style="padding:10px 13px"><div class="pc-date" style="width:42px;height:42px"><div class="d" style="font-size:15px">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div><div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+'</div></div>'+chev()+'</div>'}).join('')+'</div></div>';}
+  
+  if(pastEvs.length){
+    h+='<div class="sec anim anim-d4"><div class="sec-hd"><h2>📁 পূর্ববর্তী ইভেন্ট</h2></div><div style="display:grid;gap:8px">'+pastEvs.map(function(e){var d=parseISO(e.date);
+      var thumb = e.image ? '<div class="pc-image"><img src="'+esc(e.image)+'" onerror="this.parentNode.outerHTML=\'<div class=\\\'pc-date\\\'><div class=\\\'d\\\'>'+d.getDate()+'</div><div class=\\\'m\\\'>'+MNS(d.getMonth()+1)+'</div></div>\'"/></div>' : '<div class="pc-date"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div>';
+      return '<div class="past-card" data-act="page-event-detail" data-id="'+esc(e.id)+'" style="padding:10px 13px">'+thumb+'<div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+'</div></div>'+chev()+'</div>'
+    }).join('')+'</div></div>';
+  }
+  
   h+='<div class="sec anim anim-d5" style="padding-bottom:20px"><div class="sec-hd"><h2>সদস্য পরিসংখ্যান</h2></div><div class="stat-grid cols-3"><div class="stat" style="padding:11px"><div class="k">মোট</div><div class="v">'+DB.members.length+'</div></div><div class="stat" style="padding:11px"><div class="k">সক্রিয়</div><div class="v" style="color:var(--income)">'+active+'</div></div><div class="stat" style="padding:11px"><div class="k">বাকি</div><div class="v" style="color:var(--expense)">'+shortMoney(totalDue)+'</div></div></div></div>';
   return h;
 }
@@ -721,7 +757,10 @@ function viewEventsTab(){
   if(nextEv){var d=parseISO(nextEv.date);h+='<div class="sec anim anim-d1"><div class="event-hero" data-act="page-event-detail" data-id="'+esc(nextEv.id)+'"><div class="eh-tag">🎯 '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div><div class="eh-title">'+esc(nextEv.title)+'</div>'+(nextEv.description?'<div class="eh-desc">'+esc(nextEv.description)+'</div>':'')+'<div class="eh-meta"><div class="eh-cell"><div class="k">💰 চাঁদা</div><div class="v">'+money(nextEv.fee||0)+'</div></div><div class="eh-cell"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+(nextEv.deadline?fmtDate(nextEv.deadline):'—')+'</div></div></div></div></div>';}
   h+='<div class="sec anim anim-d2"><div class="sec-hd"><h2>সব ইভেন্ট</h2></div>';
   if(!DB.events.length){h+='<div class="empty"><div class="eic">'+icon('calendar')+'</div><h3>নেই</h3></div>';}
-  else{DB.events.slice().sort(function(a,b){return (b.date||'').localeCompare(a.date||'')}).forEach(function(e){var d=parseISO(e.date);var iu=!e.isCompleted;h+='<div class="past-card" data-act="page-event-detail" data-id="'+esc(e.id)+'" style="border-left-color:'+(iu?'var(--primary)':'var(--text-3)')+';margin-bottom:9px"><div class="pc-date" style="background:'+(iu?'linear-gradient(135deg,var(--primary-l),var(--primary))':'linear-gradient(135deg,#6B7280,#4B5563)')+'"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div><div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+(e.fee?' · ৳'+fmtN(e.fee):'')+(iu?' · 🎯':' · ✓')+'</div></div>'+chev()+'</div>';});}
+  else{DB.events.slice().sort(function(a,b){return (b.date||'').localeCompare(a.date||'')}).forEach(function(e){var d=parseISO(e.date);var iu=!e.isCompleted;
+    var thumb = e.image ? '<div class="pc-image"><img src="'+esc(e.image)+'" onerror="this.parentNode.outerHTML=\'<div class=\\\'pc-date\\\'><div class=\\\'d\\\'>'+d.getDate()+'</div><div class=\\\'m\\\'>'+MNS(d.getMonth()+1)+'</div></div>\'"/></div>' : '<div class="pc-date" style="background:'+(iu?'linear-gradient(135deg,var(--primary-l),var(--primary))':'linear-gradient(135deg,#6B7280,#4B5563)')+'"><div class="d">'+d.getDate()+'</div><div class="m">'+MNS(d.getMonth()+1)+'</div></div>';
+    h+='<div class="past-card" data-act="page-event-detail" data-id="'+esc(e.id)+'" style="border-left-color:'+(iu?'var(--primary)':'var(--text-3)')+';margin-bottom:9px">'+thumb+'<div class="pc-body"><div class="pc-title">'+esc(e.title)+'</div><div class="pc-sub">'+fmtDate(e.date)+(e.fee?' · ৳'+fmtN(e.fee):'')+(iu?' · 🎯':' · ✓')+'</div></div>'+chev()+'</div>';
+  });}
   h+='</div>';return h;
 }
 function pageEventDetail(id){
@@ -729,7 +768,13 @@ function pageEventDetail(id){
   if(!e) return subHeader('—')+'<div class="subbody"><div class="empty"><h3>নেই</h3></div></div>';
   var d=parseISO(e.date),iu=!e.isCompleted;
   var h=subHeader(iu?'আগামী ইভেন্ট':'পূর্ববর্তী ইভেন্ট','<button class="icon-btn sm" data-act="event-edit" data-id="'+esc(e.id)+'">'+icon('edit')+'</button>');
-  h+='<div class="subbody"><div class="sec" style="margin-top:16px"><div class="event-hero" style="cursor:default"><div class="eh-tag">'+(iu?'🎯':'✓')+' · '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div><div class="eh-title">'+esc(e.title)+'</div>'+(e.description?'<div class="eh-desc">'+esc(e.description)+'</div>':'')+'<div class="eh-meta"><div class="eh-cell"><div class="k">💰 চাঁদা</div><div class="v">'+money(e.fee||0)+'</div></div><div class="eh-cell"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+(e.deadline?fmtDate(e.deadline):'—')+'</div></div></div></div></div>';
+  h+='<div class="subbody">';
+  
+  if(e.image){
+    h+='<div class="sec" style="margin-top:16px"><div class="card" style="padding:0;overflow:hidden"><img src="'+esc(e.image)+'" style="width:100%;height:220px;object-fit:cover;display:block" onerror="this.style.display=\'none\'"/></div></div>';
+  }
+  
+  h+='<div class="sec" style="'+(e.image?'':'margin-top:16px')+'"><div class="event-hero" style="cursor:default"><div class="eh-tag">'+(iu?'🎯':'✓')+' · '+d.getDate()+' '+MN(d.getMonth()+1)+' '+d.getFullYear()+'</div><div class="eh-title">'+esc(e.title)+'</div>'+(e.description?'<div class="eh-desc">'+esc(e.description)+'</div>':'')+'<div class="eh-meta"><div class="eh-cell"><div class="k">💰 চাঁদা</div><div class="v">'+money(e.fee||0)+'</div></div><div class="eh-cell"><div class="k">⏰ শেষ তারিখ</div><div class="v">'+(e.deadline?fmtDate(e.deadline):'—')+'</div></div></div></div></div>';
   h+='<div class="sec"><div class="list"><div class="li" data-act="event-edit" data-id="'+esc(e.id)+'"><div class="ic" style="background:var(--primary-soft);color:var(--primary)">'+icon('edit')+'</div><div class="grow"><div class="t">ইভেন্ট এডিট</div></div>'+chev()+'</div><div class="li" data-act="event-delete" data-id="'+esc(e.id)+'"><div class="ic" style="background:var(--danger-soft);color:var(--danger)">'+icon('trash')+'</div><div class="grow"><div class="t" style="color:var(--danger)">ইভেন্ট মুছুন</div></div>'+chev()+'</div></div></div></div>';
   return h;
 }
@@ -750,6 +795,7 @@ function formEventPage(existing){
   h+='<div class="field-row"><div class="field"><label>📅 তারিখ *</label><input id="evDate" type="date" value="'+(e.date||toISO(new Date()))+'"/></div><div class="field"><label>⏰ শেষ</label><input id="evDeadline" type="date" value="'+(e.deadline||'')+'"/></div></div>';
   h+='<div class="field-row"><div class="field"><label>💰 চাঁদা</label><input id="evFee" type="number" value="'+(e.fee||0)+'"/></div><div class="field"><label>📍 স্থান</label><input id="evLocation" value="'+esc(e.location||'')+'"/></div></div>';
   h+='<div class="field"><label>💸 মোট খরচ</label><input id="evTotalCost" type="number" value="'+(e.totalCost||0)+'"/></div>';
+  h+='<div class="field"><label>🖼️ ছবির লিংক</label><input id="evImage" type="url" value="'+esc(e.image||'')+'" placeholder="https://i.postimg.cc/..."/></div>';
   h+='<div class="field"><label>স্ট্যাটাস</label><select id="evStatus"><option value="upcoming" '+(e.isCompleted?'':'selected')+'>🎯 আগামী</option><option value="past" '+(e.isCompleted?'selected':'')+'>✓ সম্পন্ন</option></select></div>';
   h+='</div>';
   if(isEdit)h+='<div class="sec"><button class="btn danger block" data-act="event-delete" data-id="'+esc(e.id)+'">'+icon('trash')+' মুছুন</button></div>';
@@ -768,10 +814,11 @@ async function saveEvent(eventId){
   var loc=(document.getElementById('evLocation')||{}).value.trim();
   var stat=(document.getElementById('evStatus')||{}).value;
   var tc=parseInt((document.getElementById('evTotalCost')||{}).value)||0;
+  var img=(document.getElementById('evImage')||{}).value.trim();
   if(!title){toast('শিরোনাম দিন','error');return}
   if(!date){toast('তারিখ দিন','error');return}
   var isNowC=(stat==='past');
-  var data={title:title,description:desc,date:date,deadline:dl||null,fee:fee,totalCost:tc,location:loc,isCompleted:isNowC,updatedAt:Date.now()};
+  var data={title:title,description:desc,date:date,deadline:dl||null,fee:fee,totalCost:tc,location:loc,isCompleted:isNowC,image:img,updatedAt:Date.now()};
   try{
     var sid;
     if(isEdit){await db.collection('events').doc(id).update(data);sid=id;audit('event_edit',id,title,'','');toast('হালনাগাদ','success');}
