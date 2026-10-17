@@ -404,6 +404,35 @@ function $(s){return document.querySelector(s)}
 function pad2(n){return String(n).padStart(2,'0')}
 function fmtN(n){return Math.round(n).toLocaleString('en-IN')}
 function shortMoney(n){n=Math.abs(n);if(n>=1e7)return '৳'+(n/1e7).toFixed(2)+'কো';if(n>=1e5)return '৳'+(n/1e5).toFixed(2)+'লা';if(n>=1e3)return '৳'+(n/1e3).toFixed(1)+'হা';return '৳'+Math.round(n)}
+
+// ✅ নতুন ফাংশন: সংখ্যাকে কথায় রূপান্তর ✅
+function numberToWordsBn(num) {
+  num = Math.round(Number(num));
+  if (isNaN(num) || num === 0) return 'শূন্য টাকা';
+  var ones = ['', 'এক', 'দুই', 'তিন', 'চার', 'পাঁচ', 'ছয়', 'সাত', 'আট', 'নয়', 'দশ', 'এগারো', 'বারো', 'তেরো', 'চৌদ্দ', 'পনেরো', 'ষোলো', 'সতেরো', 'আঠারো', 'উনিশ', 'বিশ', 'একুশ', 'বাইশ', 'তেইশ', 'চব্বিশ', 'পঁচিশ', 'ছাব্বিশ', 'সাতাশ', 'আঠাশ', 'ঊনত্রিশ', 'ত্রিশ', 'একত্রিশ', 'বত্রিশ', 'তেত্রিশ', 'চৌত্রিশ', 'পঁয়ত্রিশ', 'ছত্রিশ', 'সাঁইত্রিশ', 'আটত্রিশ', 'ঊনচল্লিশ', 'চল্লিশ', 'একচল্লিশ', 'বিয়াল্লিশ', 'তেতাল্লিশ', 'চুয়াল্লিশ', 'পঁয়তাল্লিশ', 'ছেচল্লিশ', 'সাতচল্লিশ', 'আটচল্লিশ', 'ঊনপঞ্চাশ', 'পঞ্চাশ', 'একান্ন', 'বায়ান্ন', 'তিপ্পান্ন', 'চুয়ান্ন', 'পঞ্চান্ন', 'ছাপ্পান্ন', 'সাতান্ন', 'আটান্ন', 'ঊনষাট', 'ষাট', 'একষট্টি', 'বাষট্টি', 'তেষট্টি', 'চৌষট্টি', 'পঁয়ষট্টি', 'ছেষট্টি', 'সাতষট্টি', 'আটষট্টি', 'ঊনসত্তর', 'সত্তর', 'একাত্তর', 'বাহাত্তর', 'তিয়াত্তর', 'চুয়াত্তর', 'পঁচাত্তর', 'ছিয়াত্তর', 'সাতাত্তর', 'আটাত্তর', 'ঊনআশি', 'আশি', 'একাশি', 'বিরাশি', 'তিরাশি', 'চুরাশি', 'পঁচাশি', 'ছিয়াশি', 'সাতাশি', 'আটাশি', 'ঊননব্বই', 'নব্বই', 'একানব্বই', 'বিরানব্বই', 'তিরানব্বই', 'চুরানব্বই', 'পঁচানব্বই', 'ছিয়ানব্বই', 'সাতানব্বই', 'আটানব্বই', 'নিরানব্বই'];
+  var result = '';
+  if (num >= 10000000) {
+      result += numberToWordsBn(Math.floor(num / 10000000)).replace(' টাকা','') + ' কোটি ';
+      num %= 10000000;
+  }
+  if (num >= 100000) {
+      result += numberToWordsBn(Math.floor(num / 100000)).replace(' টাকা','') + ' লক্ষ ';
+      num %= 100000;
+  }
+  if (num >= 1000) {
+      result += numberToWordsBn(Math.floor(num / 1000)).replace(' টাকা','') + ' হাজার ';
+      num %= 1000;
+  }
+  if (num >= 100) {
+      result += ones[Math.floor(num / 100)] + 'শত ';
+      num %= 100;
+  }
+  if (num > 0) {
+      result += ones[num];
+  }
+  return result.trim() + ' টাকা';
+}
+
 function MN(m){return BN_MONTHS[m-1]}
 function MNS(m){return BN_MONTHS_SHORT[m-1]}
 function toISO(d){return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())}
@@ -1173,7 +1202,8 @@ function viewHome(){
   var h='';
   h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">স্বাগতম</div><div class="bb" style="font-size:14px">'+esc(me.name||'সদস্য')+'</div></div></div><button class="icon-btn notif-btn" data-act="page" data-page="notifications">'+icon('bell')+(unread>0?'<span class="nbadge">'+(unread>9?'9+':unread)+'</span>':'')+'</button></div>';
 
-  h+='<div class="sec anim anim-d1" style="margin-top:2px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · আর্ত অসহায়ের পাশে আমরা</div></div></div><div class="bc-row"><div><div class="bc-label">বর্তমান ক্যাশ</div><div class="bc-amount">৳ '+fmtN(fund.balance)+'</div></div><div class="bc-stats"><div class="bc-stat"><div class="k">মোট ইভেন্ট খরচ</div><div class="v">'+shortMoney(fund.expense)+'</div></div></div></div></div></div>';
+  // 💥 এখানে মোট ইভেন্ট খরচের পাশে অংকে এবং ব্র্যাকেটে কথায় দেখানো হয়েছে 💥
+  h+='<div class="sec anim anim-d1" style="margin-top:2px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · আর্ত অসহায়ের পাশে আমরা</div></div></div><div class="bc-row"><div><div class="bc-label">বর্তমান ক্যাশ</div><div class="bc-amount">৳ '+fmtN(fund.balance)+'</div></div><div class="bc-stats" style="max-width:70%;justify-content:flex-end;"><div class="bc-stat" style="width:100%;text-align:right;"><div class="k" style="justify-content:flex-end;white-space:normal;">মোট ইভেন্ট খরচ</div><div class="v" style="display:flex;align-items:baseline;justify-content:flex-end;flex-wrap:wrap;gap:4px;margin-top:2px;"><span style="font-size:13px;">৳ '+fmtN(fund.expense)+'</span><span style="font-size:9.5px;font-weight:500;opacity:0.9;line-height:1.2;">('+numberToWordsBn(fund.expense)+')</span></div></div></div></div></div></div>';
 
   if(myTotal.totalPaid > 0){
     h+='<div class="sec anim anim-d2" style="margin-top:10px"><div class="total-paid-card">'+
