@@ -35,6 +35,12 @@ input,select,textarea{font-family:inherit;font-size:14px;color:var(--text)}
 .card::before{content:'';position:absolute;top:0;left:14px;right:14px;height:1px;background:linear-gradient(90deg,transparent,var(--glass-hi),transparent);pointer-events:none}
 .avatar{border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(140deg,var(--c,#0E5F30),#000);color:#fff;font-weight:700;flex:none;overflow:hidden;position:relative}
 .avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+
+/* ✅ নতুন যোগ করা অনলাইন/অফলাইন CSS */
+.avatar-wrap{position:relative;display:flex;flex:none;border-radius:50%}
+.online-dot{position:absolute;bottom:0;right:0;background:#22C55E;border-style:solid;border-color:var(--bg);border-radius:50%;z-index:2;box-sizing:border-box;box-shadow:0 0 4px rgba(0,0,0,0.1)}
+.offline-dot{position:absolute;bottom:0;right:0;background:#9CA3AF;border-style:solid;border-color:var(--bg);border-radius:50%;z-index:2;box-sizing:border-box}
+
 .pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10.5px;font-weight:600;line-height:1.6}
 .pill.paid,.pill.active,.pill.approved,.pill.upcoming{background:var(--income-soft);color:var(--income)}
 .pill.due,.pill.suspended,.pill.rejected{background:var(--expense-soft);color:var(--expense)}
@@ -405,7 +411,6 @@ function pad2(n){return String(n).padStart(2,'0')}
 function fmtN(n){return Math.round(n).toLocaleString('en-IN')}
 function shortMoney(n){n=Math.abs(n);if(n>=1e7)return '৳'+(n/1e7).toFixed(2)+'কো';if(n>=1e5)return '৳'+(n/1e5).toFixed(2)+'লা';if(n>=1e3)return '৳'+(n/1e3).toFixed(1)+'হা';return '৳'+Math.round(n)}
 
-// ✅ নতুন ফাংশন: সংখ্যাকে কথায় রূপান্তর ✅
 function numberToWordsBn(num) {
   num = Math.round(Number(num));
   if (isNaN(num) || num === 0) return 'শূন্য টাকা';
@@ -442,19 +447,65 @@ function fmtDateTime(ts){if(!ts)return '—';var d=new Date(ts);var hr=d.getHour
 function fmtTimer(ms){var s=Math.floor(ms/1000);var m=Math.floor(s/60);s=s%60;var h=Math.floor(m/60);m=m%60;if(h>0)return pad2(h)+':'+pad2(m)+':'+pad2(s);return pad2(m)+':'+pad2(s)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
 
-function avatarHTML(m,size){
+// ✅ অনলাইন/অফলাইন হেল্পার ফাংশন ✅
+function isMemberOnline(m) {
+  if(!m || !m.lastActive) return false;
+  return (Date.now() - m.lastActive) < 120000; // ২ মিনিট
+}
+
+function getLastSeenText(m) {
+  if(!m || !m.lastActive) return 'অফলাইন';
+  var diff = Date.now() - m.lastActive;
+  if(diff < 120000) return 'অনলাইনে আছে';
+  var mins = Math.floor(diff / 60000);
+  if(mins < 60) return mins + ' মিনিট আগে ছিলেন';
+  var hrs = Math.floor(mins / 60);
+  if(hrs < 24) return hrs + ' ঘণ্টা আগে ছিলেন';
+  var days = Math.floor(hrs / 24);
+  return days + ' দিন আগে ছিলেন';
+}
+
+// ✅ প্রেজেন্স ট্র্যাকিং (হার্টবিট) ✅
+function startPresenceTracking(){
+  if(!state.member) return;
+  var update = function(){
+    if(!state.member || !state.member._docId) return;
+    var now = Date.now();
+    if(state.member) state.member.lastActive = now;
+    db.collection('members').doc(state.member._docId).update({lastActive: now}).catch(function(){});
+  };
+  update();
+  if(window._presenceInt) clearInterval(window._presenceInt);
+  window._presenceInt = setInterval(update, 60000); // প্রতি ১ মিনিটে আপডেট হবে
+  document.addEventListener('visibilitychange', function(){
+    if(document.visibilityState === 'visible') update();
+  });
+}
+
+function avatarHTML(m,size,showDot){
   size=size||46;
   var color=(m&&m.color)||'#0E5F30';
   var nm=(m&&(m.name||m.nameEn))||'?';
   var ini=nm.split(' ').filter(Boolean).map(function(w){return w[0]}).slice(0,2).join('').toUpperCase() || '?';
   var photoUrl = m && m.photo ? String(m.photo).trim() : '';
+  var inner = '';
   if(photoUrl){
-    return '<div class="avatar" style="width:'+size+'px;height:'+size+'px;background:'+color+';padding:0;overflow:hidden;border:2px solid '+color+'">'+
+    inner = '<div class="avatar" style="width:'+size+'px;height:'+size+'px;background:'+color+';padding:0;overflow:hidden;border:2px solid '+color+'">'+
       '<img src="'+esc(photoUrl)+'" alt="'+esc(nm)+'" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<span style=&quot;color:#fff;font-weight:700;font-size:'+Math.round(size*0.36)+'px&quot;>'+ini+'</span>\'"/>'+
     '</div>';
+  } else {
+    inner = '<div class="avatar" style="--c:'+color+';width:'+size+'px;height:'+size+'px;font-size:'+Math.round(size*0.36)+'px">'+ini+'</div>';
   }
-  return '<div class="avatar" style="--c:'+color+';width:'+size+'px;height:'+size+'px;font-size:'+Math.round(size*0.36)+'px">'+ini+'</div>';
+
+  if (showDot) {
+    var isOn = isMemberOnline(m);
+    var dotSize = Math.max(10, Math.round(size * 0.25));
+    var dot = '<span class="' + (isOn ? 'online-dot' : 'offline-dot') + '" style="width:'+dotSize+'px;height:'+dotSize+'px;border-width:'+Math.max(2, Math.round(dotSize*0.2))+'px;"></span>';
+    return '<div class="avatar-wrap" style="width:'+size+'px;height:'+size+'px;">' + inner + dot + '</div>';
+  }
+  return inner;
 }
+
 function toast(msg,type){
   var t=$('#toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');
   clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove('show')},2600);
@@ -1176,7 +1227,7 @@ function renderStack(){
   }
   return '<div class="subpage">'+body+'</div>';
 }
-function subHeader(title,right){return '<div class="subhd"><button class="icon-btn" data-act="back" style="width:34px;height:34px">'+icon('back')+'</button><h1>'+title+'</h1>'+(right||'')+'</div>'}
+function subHeader(title,right){return '<div class="subhd"><button class="icon-btn" data-act="back" style="width:34px;height:34px">'+icon('back')+'</button><h1 style="display:flex;align-items:center;">'+title+'</h1>'+(right||'')+'</div>'}
 function chev(){return '<div class="chev">'+icon('chevron')+'</div>'}
 
 function buildMarqueeTrack(items){
@@ -1202,7 +1253,6 @@ function viewHome(){
   var h='';
   h+='<div class="hd anim"><div class="row"><div class="hd-logo">'+logoSrc+'</div><div><div class="sm muted">স্বাগতম</div><div class="bb" style="font-size:14px">'+esc(me.name||'সদস্য')+'</div></div></div><button class="icon-btn notif-btn" data-act="page" data-page="notifications">'+icon('bell')+(unread>0?'<span class="nbadge">'+(unread>9?'9+':unread)+'</span>':'')+'</button></div>';
 
-  // 💥 এখানে মোট ইভেন্ট খরচের পাশে অংকে এবং ব্র্যাকেটে কথায় দেখানো হয়েছে 💥
   h+='<div class="sec anim anim-d1" style="margin-top:2px"><div class="balance-card"><div class="bc-header"><div class="bc-logo">'+logoSrc+'</div><div class="bc-org"><div class="bc-org-name">দাড়িপাকা প্রবাসী কল্যাণ ফাউন্ডেশন</div><div class="bc-org-sub">DP সেবা · আর্ত অসহায়ের পাশে আমরা</div></div></div><div class="bc-row"><div><div class="bc-label">বর্তমান ক্যাশ</div><div class="bc-amount">৳ '+fmtN(fund.balance)+'</div></div><div class="bc-stats" style="max-width:70%;justify-content:flex-end;"><div class="bc-stat" style="width:100%;text-align:right;"><div class="k" style="justify-content:flex-end;white-space:normal;">মোট ইভেন্ট খরচ</div><div class="v" style="display:flex;align-items:baseline;justify-content:flex-end;flex-wrap:wrap;gap:4px;margin-top:2px;"><span style="font-size:13px;">৳ '+fmtN(fund.expense)+'</span><span style="font-size:9.5px;font-weight:500;opacity:0.9;line-height:1.2;">('+numberToWordsBn(fund.expense)+')</span></div></div></div></div></div></div>';
 
   if(myTotal.totalPaid > 0){
@@ -1292,7 +1342,7 @@ function viewMembers(){
     h+=list.map(function(m){
       var isMe=m.id===state.member.id;
       var tot=DATA.memberTotalPaid(m.id);
-      return '<div class="card" style="margin-bottom:10px;padding:13px;cursor:pointer" data-act="member" data-id="'+esc(m.id)+'"><div class="row">'+avatarHTML(m,54)+'<div class="grow"><div class="b ell" style="font-size:14px">'+esc(m.name||'')+(isMe?' <span class="pill paid" style="font-size:9px;margin-left:5px">আপনি</span>':'')+'</div><div class="tiny muted mt6">'+(m.id||'')+' · '+(m.phone||'—')+'</div><div class="mt6"><span class="pill paid" style="font-size:9.5px">সর্বমোট ৳'+fmtN(tot.totalPaid)+'</span></div></div><div class="chev">'+icon('chevron')+'</div></div></div>';
+      return '<div class="card" style="margin-bottom:10px;padding:13px;cursor:pointer" data-act="member" data-id="'+esc(m.id)+'"><div class="row">'+avatarHTML(m,54,true)+'<div class="grow"><div class="b ell" style="font-size:14px">'+esc(m.name||'')+(isMe?' <span class="pill paid" style="font-size:9px;margin-left:5px">আপনি</span>':'')+'</div><div class="tiny muted mt6">'+(m.id||'')+' · '+(m.phone||'—')+'</div><div class="mt6"><span class="pill paid" style="font-size:9.5px">সর্বমোট ৳'+fmtN(tot.totalPaid)+'</span></div></div><div class="chev">'+icon('chevron')+'</div></div></div>';
     }).join('');
   }
   h+='</div>';return h;
@@ -1314,7 +1364,11 @@ function pageMember(id){
   var rb=isMe?'<span class="pill active" style="font-size:10px">আপনি</span>':'<button class="btn small" data-act="page" data-page="chat" data-id="'+esc(id)+'">'+icon('message')+' মেসেজ করুন</button>';
   var h=subHeader(m.name||'সদস্য',rb);
   h+='<div class="subbody">';
-  h+='<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:20px 16px"><div style="display:flex;justify-content:center">'+avatarHTML(m,110)+'</div><div class="bb" style="font-size:18px;margin-top:12px">'+esc(m.name||'')+'</div><div class="sm muted" style="margin-top:3px">'+(m.id||'')+'</div>';
+  
+  var isOn = isMemberOnline(m);
+  var lastSeenText = getLastSeenText(m);
+
+  h+='<div class="sec" style="margin-top:16px"><div class="card" style="text-align:center;padding:20px 16px"><div style="display:flex;justify-content:center">'+avatarHTML(m,110,true)+'</div><div class="bb" style="font-size:18px;margin-top:12px">'+esc(m.name||'')+'</div><div class="tiny muted" style="margin-top:2px">'+(m.id||'')+'</div><div class="sm" style="margin-top:4px;color:'+(isOn?'#22C55E':'var(--text-3)')+';font-weight:600;font-size:12px">'+lastSeenText+'</div>';
   if(!isMe){
     h+='<div style="display:flex;gap:10px;justify-content:center;margin-top:16px">'+
        '<button class="btn small" data-act="call-audio" data-id="'+esc(id)+'">'+icon('phone')+' অডিও কল</button>'+
@@ -1351,11 +1405,17 @@ function pageMember(id){
 function pageChat(otherMemberId){
   var m=DB.members.filter(function(x){return x.id===otherMemberId})[0];
   if(!m) return subHeader('চ্যাট')+'<div class="subbody"><div class="empty"><h3>সদস্য পাওয়া যায়নি</h3></div></div>';
+  
+  var isOn = isMemberOnline(m);
+  var lastSeenText = getLastSeenText(m);
+  var titleHTML = '<div style="display:flex;flex-direction:column;line-height:1.2;"><span style="font-size:16.5px;font-weight:700;">'+esc(m.name||'চ্যাট')+'</span><span style="font-size:11px;color:'+(isOn?'#22C55E':'var(--text-3)')+';font-weight:500;margin-top:2px;">'+lastSeenText+'</span></div>';
+
   var callBtns = '<div style="display:flex;gap:6px">'+
     '<button class="icon-btn" style="width:36px;height:36px" data-act="call-audio" data-id="'+esc(otherMemberId)+'">'+icon('phone')+'</button>'+
     '<button class="icon-btn" style="width:36px;height:36px" data-act="call-video" data-id="'+esc(otherMemberId)+'">'+icon('video')+'</button>'+
   '</div>';
-  var h=subHeader(m.name||'চ্যাট', callBtns);
+  
+  var h=subHeader(titleHTML, callBtns);
   h+='<div class="chat-container">';
   h+='<div class="chat-messages" id="chatMessages">'+renderChatMessages(otherMemberId)+'</div>';
   h+='<div class="chat-input-area"><input id="chatInput" type="text" placeholder="মেসেজ লিখুন..." autocomplete="off"/><button class="chat-send-btn" data-act="send-chat" data-id="'+esc(otherMemberId)+'">'+icon('send')+'</button></div>';
@@ -1399,6 +1459,11 @@ async function sendChatMessage(receiverId){
       createdAt: Date.now(),
       read: false
     });
+    
+    var now = Date.now();
+    state.member.lastActive = now;
+    db.collection('members').doc(state.member._docId).update({lastActive: now}).catch(function(){});
+
     input.value = '';
     var receiver = DB.members.filter(function(x){return x.id===receiverId})[0];
     if(receiver){
@@ -1453,7 +1518,7 @@ function viewProfile(){
   var me=state.member;
   var myTotal=DATA.memberTotalPaid(me.id);
   var h='<div class="hd anim"><h1>আমার প্রোফাইল</h1></div>';
-  h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="card" style="text-align:center;padding:22px"><div style="display:flex;justify-content:center">'+avatarHTML(me,110)+'</div><div class="bb" style="font-size:18px;margin-top:12px">'+esc(me.name||'')+'</div><div class="sm muted mt6">'+(me.id||'')+'</div><div class="row" style="justify-content:center;gap:6px;margin-top:11px"><span class="pill active">সদস্য</span>'+(me.accountSetup?'<span class="pill paid">✅ সক্রিয়</span>':'<span class="pill important">⏳ সেটআপ বাকি</span>')+'</div></div></div>';
+  h+='<div class="sec anim anim-d1" style="margin-top:6px"><div class="card" style="text-align:center;padding:22px"><div style="display:flex;justify-content:center">'+avatarHTML(me,110,true)+'</div><div class="bb" style="font-size:18px;margin-top:12px">'+esc(me.name||'')+'</div><div class="sm muted mt6">'+(me.id||'')+'</div><div class="row" style="justify-content:center;gap:6px;margin-top:11px"><span class="pill active">সদস্য</span>'+(me.accountSetup?'<span class="pill paid">✅ সক্রিয়</span>':'<span class="pill important">⏳ সেটআপ বাকি</span>')+'</div></div></div>';
   h+='<div class="sec anim anim-d2"><div class="total-paid-card">'+
       '<div class="tp-header"><div class="tp-icon">'+icon('coins')+'</div><div><div class="tp-title">সর্বমোট টাকা প্রদান</div><div class="tp-sub">চাঁদা + অতিরিক্ত</div></div></div>'+
       '<div class="tp-amount">৳ '+fmtN(myTotal.totalPaid)+'</div>'+
@@ -1622,7 +1687,13 @@ async function doQuickPost(){
   var text=(textarea.value||'').trim();
   if(!text){toast('কিছু লিখুন','error');return}
   if(text.length>1000){toast('১০০০ অক্ষরের মধ্যে লিখুন','error');return}
-  try{await db.collection('userPosts').add({userId:state.member.id,userName:state.member.name||'সদস্য',userImage:state.member.photo||'',statusText:text,timestamp:Date.now(),createdAt:Date.now()});toast('✅ পোস্ট হয়েছে','success');textarea.value=''}catch(err){toast('❌ '+err.message,'error')}
+  try{
+    await db.collection('userPosts').add({userId:state.member.id,userName:state.member.name||'সদস্য',userImage:state.member.photo||'',statusText:text,timestamp:Date.now(),createdAt:Date.now()});
+    var now = Date.now();
+    state.member.lastActive = now;
+    db.collection('members').doc(state.member._docId).update({lastActive: now}).catch(function(){});
+    toast('✅ পোস্ট হয়েছে','success');textarea.value=''
+  }catch(err){toast('❌ '+err.message,'error')}
 }
 async function deleteMyPost(id){
   if(!confirm('পোস্ট মুছবেন?'))return;
@@ -1647,6 +1718,7 @@ auth.onAuthStateChanged(async function(user){
     if(!member){state.member=null;state.loading=false;render();return}
     if(!member.accountSetup){try{await db.collection('members').doc(member._docId).update({accountSetup:true,authUid:user.uid,updatedAt:Date.now()});member.accountSetup=true}catch(e){}}
     state.member=member;
+    startPresenceTracking(); // ✅ প্রেজেন্স ট্র্যাকিং চালু
     requestNotificationPermission();
     await loadAllData();
     setupListeners();
